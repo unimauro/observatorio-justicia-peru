@@ -1,0 +1,32 @@
+[
+ {
+  "indicador": "Tasa de resolucion (Clearance Rate)",
+  "formula": "Resueltos / Ingresados",
+  "interpretacion": ">1 el sistema reduce backlog; <1 lo acumula."
+ },
+ {
+  "indicador": "Congestion procesal",
+  "formula": "(Pendientes + Ingresados) / Resueltos",
+  "interpretacion": "Mayor valor = mayor saturacion."
+ },
+ {
+  "indicador": "Indice de mora",
+  "formula": "Pendientes / (Pendientes + Resueltos)",
+  "interpretacion": "Proporcion de carga sin resolver."
+ },
+ {
+  "indicador": "Carga por juez",
+  "formula": "Ingresados / N de jueces",
+  "interpretacion": "Volumen de trabajo por magistrado."
+ },
+ {
+  "indicador": "Tiempo promedio de resolucion",
+  "formula": "Promedio ponderado de dias hasta resolucion",
+  "interpretacion": "Duracion real del proceso."
+ },
+ {
+  "indicador": "Procesos por 1000 hab.",
+  "formula": "Ingresados / Poblacion * 1000",
+  "interpretacion": "Litigiosidad relativa del territorio."
+ }
+]

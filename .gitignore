@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.eggs/
+*.egg-info/
+
+# --- Datos crudos / intermedios / procesados (NO versionar) ---
+data/raw/
+data/interim/
+data/processed/
+data/external/
+*.duckdb
+*.duckdb.wal
+
+# --- Mantener las carpetas vacias en git ---
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+
+# --- NOTA: site/data/*.json SI se versiona (GitHub Pages los sirve) ---
+
+# --- Entorno / secretos ---
+.env
+.env.*
+.vercel
+
+# --- Node ---
+node_modules/
+
+# --- OS / editores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

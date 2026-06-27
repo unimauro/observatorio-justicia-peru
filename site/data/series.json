@@ -1,0 +1,138 @@
+[
+ {
+  "anio": 2010,
+  "ingresados": 2377216,
+  "resueltos": 2197790,
+  "pendientes": 2732215,
+  "demora_dias": 550,
+  "clearance_rate": 0.925
+ },
+ {
+  "anio": 2011,
+  "ingresados": 2428917,
+  "resueltos": 2262493,
+  "pendientes": 2898639,
+  "demora_dias": 553,
+  "clearance_rate": 0.931
+ },
+ {
+  "anio": 2012,
+  "ingresados": 2537349,
+  "resueltos": 2279681,
+  "pendientes": 3156307,
+  "demora_dias": 567,
+  "clearance_rate": 0.898
+ },
+ {
+  "anio": 2013,
+  "ingresados": 2574716,
+  "resueltos": 2463781,
+  "pendientes": 3267242,
+  "demora_dias": 601,
+  "clearance_rate": 0.957
+ },
+ {
+  "anio": 2014,
+  "ingresados": 2562690,
+  "resueltos": 2402802,
+  "pendientes": 3427130,
+  "demora_dias": 603,
+  "clearance_rate": 0.938
+ },
+ {
+  "anio": 2015,
+  "ingresados": 2765743,
+  "resueltos": 2653658,
+  "pendientes": 3539215,
+  "demora_dias": 637,
+  "clearance_rate": 0.959
+ },
+ {
+  "anio": 2016,
+  "ingresados": 2660024,
+  "resueltos": 2525490,
+  "pendientes": 3673749,
+  "demora_dias": 641,
+  "clearance_rate": 0.949
+ },
+ {
+  "anio": 2017,
+  "ingresados": 2814974,
+  "resueltos": 2650903,
+  "pendientes": 3837820,
+  "demora_dias": 655,
+  "clearance_rate": 0.942
+ },
+ {
+  "anio": 2018,
+  "ingresados": 2901052,
+  "resueltos": 2775870,
+  "pendientes": 3963002,
+  "demora_dias": 693,
+  "clearance_rate": 0.957
+ },
+ {
+  "anio": 2019,
+  "ingresados": 3024432,
+  "resueltos": 2681218,
+  "pendientes": 4306216,
+  "demora_dias": 711,
+  "clearance_rate": 0.887
+ },
+ {
+  "anio": 2020,
+  "ingresados": 1938908,
+  "resueltos": 1905501,
+  "pendientes": 4339623,
+  "demora_dias": 682,
+  "clearance_rate": 0.983
+ },
+ {
+  "anio": 2021,
+  "ingresados": 2593716,
+  "resueltos": 2623465,
+  "pendientes": 4309874,
+  "demora_dias": 717,
+  "clearance_rate": 1.011
+ },
+ {
+  "anio": 2022,
+  "ingresados": 3256559,
+  "resueltos": 3085922,
+  "pendientes": 4480511,
+  "demora_dias": 704,
+  "clearance_rate": 0.948
+ },
+ {
+  "anio": 2023,
+  "ingresados": 3413043,
+  "resueltos": 3170298,
+  "pendientes": 4723256,
+  "demora_dias": 708,
+  "clearance_rate": 0.929
+ },
+ {
+  "anio": 2024,
+  "ingresados": 3343883,
+  "resueltos": 3221273,
+  "pendientes": 4845866,
+  "demora_dias": 704,
+  "clearance_rate": 0.963
+ },
+ {
+  "anio": 2025,
+  "ingresados": 3446837,
+  "resueltos": 3481800,
+  "pendientes": 4810903,
+  "demora_dias": 738,
+  "clearance_rate": 1.01
+ },
+ {
+  "anio": 2026,
+  "ingresados": 3461817,
+  "resueltos": 3420217,
+  "pendientes": 4852503,
+  "demora_dias": 749,
+  "clearance_rate": 0.988
+ }
+]

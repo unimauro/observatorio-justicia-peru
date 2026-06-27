@@ -1,0 +1,10 @@
+pandas
+polars
+pyarrow
+duckdb
+requests
+beautifulsoup4
+lxml
+openpyxl
+tqdm
+python-slugify

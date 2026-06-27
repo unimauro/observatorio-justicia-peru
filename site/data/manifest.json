@@ -1,0 +1,24 @@
+{
+ "generado": "sintetico",
+ "anio_actual": 2026,
+ "anio_inicio": 2010,
+ "seed": 27806,
+ "n_cortes": 35,
+ "n_departamentos": 25,
+ "n_jueces": 320,
+ "n_fiscales": 280,
+ "n_casos_seguridad": 60,
+ "datasets": [
+  "nacional",
+  "departamentos",
+  "cortes",
+  "series",
+  "tipos_proceso",
+  "embudo",
+  "backlog",
+  "jueces",
+  "fiscales",
+  "casos_seguridad",
+  "indicadores"
+ ]
+}

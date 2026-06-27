@@ -1,0 +1,30 @@
+[
+ {
+  "etapa": "Ingresados",
+  "expedientes": 3713150
+ },
+ {
+  "etapa": "Admitidos",
+  "expedientes": 3453229
+ },
+ {
+  "etapa": "En tramite",
+  "expedientes": 2970520
+ },
+ {
+  "etapa": "Sentenciados",
+  "expedientes": 1930838
+ },
+ {
+  "etapa": "Apelados",
+  "expedientes": 1002550
+ },
+ {
+  "etapa": "Ejecutados",
+  "expedientes": 705498
+ },
+ {
+  "etapa": "Archivados",
+  "expedientes": 2747731
+ }
+]

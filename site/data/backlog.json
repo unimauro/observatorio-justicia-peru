@@ -1,0 +1,1002 @@
+[
+ {
+  "id": 43,
+  "juzgado": "3to Juzgado Civil",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 14739,
+  "demora_dias": 801,
+  "carga": 19039
+ },
+ {
+  "id": 31,
+  "juzgado": "6er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 14574,
+  "demora_dias": 987,
+  "carga": 19034
+ },
+ {
+  "id": 59,
+  "juzgado": "2to Juzgado Laboral",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 14414,
+  "demora_dias": 909,
+  "carga": 23686
+ },
+ {
+  "id": 38,
+  "juzgado": "11mo Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 14363,
+  "demora_dias": 755,
+  "carga": 23972
+ },
+ {
+  "id": 57,
+  "juzgado": "5er Juzgado Civil",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 14033,
+  "demora_dias": 756,
+  "carga": 22548
+ },
+ {
+  "id": 172,
+  "juzgado": "11er Juzgado Familia",
+  "corte": "CSJ Selva Central",
+  "departamento": "Junin",
+  "especialidad": "Familia",
+  "pendientes": 13755,
+  "demora_dias": 756,
+  "carga": 15629
+ },
+ {
+  "id": 176,
+  "juzgado": "6er Juzgado Laboral",
+  "corte": "CSJ Selva Central",
+  "departamento": "Junin",
+  "especialidad": "Laboral",
+  "pendientes": 13638,
+  "demora_dias": 644,
+  "carga": 22163
+ },
+ {
+  "id": 211,
+  "juzgado": "10mo Juzgado Penal",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Penal",
+  "pendientes": 13633,
+  "demora_dias": 718,
+  "carga": 16840
+ },
+ {
+  "id": 41,
+  "juzgado": "1to Juzgado Laboral",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 13519,
+  "demora_dias": 893,
+  "carga": 19407
+ },
+ {
+  "id": 58,
+  "juzgado": "8do Juzgado Penal",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Penal",
+  "pendientes": 13398,
+  "demora_dias": 945,
+  "carga": 15229
+ },
+ {
+  "id": 37,
+  "juzgado": "7er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 13240,
+  "demora_dias": 871,
+  "carga": 20751
+ },
+ {
+  "id": 259,
+  "juzgado": "8to Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 13223,
+  "demora_dias": 641,
+  "carga": 17283
+ },
+ {
+  "id": 33,
+  "juzgado": "3er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 13197,
+  "demora_dias": 741,
+  "carga": 20210
+ },
+ {
+  "id": 222,
+  "juzgado": "5mo Juzgado Civil",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Civil",
+  "pendientes": 13096,
+  "demora_dias": 819,
+  "carga": 21097
+ },
+ {
+  "id": 209,
+  "juzgado": "10do Juzgado Constitucional",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Constitucional",
+  "pendientes": 12945,
+  "demora_dias": 759,
+  "carga": 20966
+ },
+ {
+  "id": 170,
+  "juzgado": "5mo Juzgado Constitucional",
+  "corte": "CSJ Selva Central",
+  "departamento": "Junin",
+  "especialidad": "Constitucional",
+  "pendientes": 12911,
+  "demora_dias": 864,
+  "carga": 21570
+ },
+ {
+  "id": 21,
+  "juzgado": "7er Juzgado Penal",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Penal",
+  "pendientes": 12782,
+  "demora_dias": 933,
+  "carga": 19686
+ },
+ {
+  "id": 221,
+  "juzgado": "2to Juzgado Civil",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Civil",
+  "pendientes": 12738,
+  "demora_dias": 771,
+  "carga": 18487
+ },
+ {
+  "id": 55,
+  "juzgado": "3er Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 12734,
+  "demora_dias": 910,
+  "carga": 15794
+ },
+ {
+  "id": 39,
+  "juzgado": "12to Juzgado Civil",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 12705,
+  "demora_dias": 1037,
+  "carga": 19864
+ },
+ {
+  "id": 17,
+  "juzgado": "12er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 12666,
+  "demora_dias": 799,
+  "carga": 18679
+ },
+ {
+  "id": 250,
+  "juzgado": "5to Juzgado Laboral",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 12531,
+  "demora_dias": 649,
+  "carga": 20590
+ },
+ {
+  "id": 65,
+  "juzgado": "7er Juzgado Civil",
+  "corte": "CSJ Tumbes",
+  "departamento": "Tumbes",
+  "especialidad": "Civil",
+  "pendientes": 12524,
+  "demora_dias": 1026,
+  "carga": 17166
+ },
+ {
+  "id": 28,
+  "juzgado": "2to Juzgado Familia",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 12517,
+  "demora_dias": 917,
+  "carga": 17547
+ },
+ {
+  "id": 61,
+  "juzgado": "1do Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 12494,
+  "demora_dias": 1060,
+  "carga": 19018
+ },
+ {
+  "id": 270,
+  "juzgado": "3er Juzgado Laboral",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 12475,
+  "demora_dias": 708,
+  "carga": 18242
+ },
+ {
+  "id": 205,
+  "juzgado": "9er Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 12399,
+  "demora_dias": 569,
+  "carga": 14159
+ },
+ {
+  "id": 264,
+  "juzgado": "10to Juzgado Constitucional",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Constitucional",
+  "pendientes": 12384,
+  "demora_dias": 756,
+  "carga": 14650
+ },
+ {
+  "id": 249,
+  "juzgado": "10mo Juzgado Civil",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 12346,
+  "demora_dias": 867,
+  "carga": 17829
+ },
+ {
+  "id": 2,
+  "juzgado": "7to Juzgado Civil",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 12307,
+  "demora_dias": 798,
+  "carga": 13895
+ },
+ {
+  "id": 179,
+  "juzgado": "5do Juzgado Laboral",
+  "corte": "CSJ Ucayali",
+  "departamento": "Ucayali",
+  "especialidad": "Laboral",
+  "pendientes": 12248,
+  "demora_dias": 1052,
+  "carga": 15453
+ },
+ {
+  "id": 445,
+  "juzgado": "2er Juzgado Constitucional",
+  "corte": "CSJ Puno",
+  "departamento": "Puno",
+  "especialidad": "Constitucional",
+  "pendientes": 12193,
+  "demora_dias": 797,
+  "carga": 14229
+ },
+ {
+  "id": 191,
+  "juzgado": "7do Juzgado Civil",
+  "corte": "CSJ Ventanilla",
+  "departamento": "Callao",
+  "especialidad": "Civil",
+  "pendientes": 12180,
+  "demora_dias": 939,
+  "carga": 18446
+ },
+ {
+  "id": 25,
+  "juzgado": "5er Juzgado Civil",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 12149,
+  "demora_dias": 773,
+  "carga": 17285
+ },
+ {
+  "id": 212,
+  "juzgado": "2do Juzgado Constitucional",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Constitucional",
+  "pendientes": 12120,
+  "demora_dias": 699,
+  "carga": 17316
+ },
+ {
+  "id": 11,
+  "juzgado": "7do Juzgado Constitucional",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Constitucional",
+  "pendientes": 12079,
+  "demora_dias": 870,
+  "carga": 19652
+ },
+ {
+  "id": 215,
+  "juzgado": "10mo Juzgado Familia",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Familia",
+  "pendientes": 12032,
+  "demora_dias": 715,
+  "carga": 15415
+ },
+ {
+  "id": 207,
+  "juzgado": "9to Juzgado Constitucional",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Constitucional",
+  "pendientes": 11992,
+  "demora_dias": 638,
+  "carga": 18645
+ },
+ {
+  "id": 272,
+  "juzgado": "1to Juzgado Constitucional",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Constitucional",
+  "pendientes": 11976,
+  "demora_dias": 753,
+  "carga": 15835
+ },
+ {
+  "id": 183,
+  "juzgado": "11do Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Ucayali",
+  "departamento": "Ucayali",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 11939,
+  "demora_dias": 1001,
+  "carga": 17494
+ },
+ {
+  "id": 14,
+  "juzgado": "5mo Juzgado Laboral",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11866,
+  "demora_dias": 659,
+  "carga": 14556
+ },
+ {
+  "id": 1,
+  "juzgado": "5er Juzgado Laboral",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11865,
+  "demora_dias": 834,
+  "carga": 15415
+ },
+ {
+  "id": 247,
+  "juzgado": "6er Juzgado Civil",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 11736,
+  "demora_dias": 776,
+  "carga": 13407
+ },
+ {
+  "id": 447,
+  "juzgado": "10to Juzgado Constitucional",
+  "corte": "CSJ Puno",
+  "departamento": "Puno",
+  "especialidad": "Constitucional",
+  "pendientes": 11719,
+  "demora_dias": 681,
+  "carga": 15225
+ },
+ {
+  "id": 63,
+  "juzgado": "8to Juzgado Familia",
+  "corte": "CSJ Tumbes",
+  "departamento": "Tumbes",
+  "especialidad": "Familia",
+  "pendientes": 11694,
+  "demora_dias": 778,
+  "carga": 17276
+ },
+ {
+  "id": 260,
+  "juzgado": "3er Juzgado Civil",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 11655,
+  "demora_dias": 788,
+  "carga": 17991
+ },
+ {
+  "id": 238,
+  "juzgado": "1to Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11631,
+  "demora_dias": 993,
+  "carga": 15622
+ },
+ {
+  "id": 350,
+  "juzgado": "7er Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ San Roman",
+  "departamento": "Puno",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 11531,
+  "demora_dias": 748,
+  "carga": 17729
+ },
+ {
+  "id": 228,
+  "juzgado": "3do Juzgado Laboral",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11454,
+  "demora_dias": 916,
+  "carga": 18346
+ },
+ {
+  "id": 342,
+  "juzgado": "6do Juzgado Penal",
+  "corte": "CSJ Huanuco",
+  "departamento": "Huanuco",
+  "especialidad": "Penal",
+  "pendientes": 11433,
+  "demora_dias": 941,
+  "carga": 13698
+ },
+ {
+  "id": 223,
+  "juzgado": "11er Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 11427,
+  "demora_dias": 1028,
+  "carga": 15169
+ },
+ {
+  "id": 52,
+  "juzgado": "7er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11329,
+  "demora_dias": 719,
+  "carga": 14602
+ },
+ {
+  "id": 193,
+  "juzgado": "7mo Juzgado Constitucional",
+  "corte": "CSJ Ventanilla",
+  "departamento": "Callao",
+  "especialidad": "Constitucional",
+  "pendientes": 11322,
+  "demora_dias": 904,
+  "carga": 12886
+ },
+ {
+  "id": 465,
+  "juzgado": "6to Juzgado Anticorrupcion",
+  "corte": "CSJ Cajamarca",
+  "departamento": "Cajamarca",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11282,
+  "demora_dias": 626,
+  "carga": 18037
+ },
+ {
+  "id": 53,
+  "juzgado": "7er Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 11266,
+  "demora_dias": 729,
+  "carga": 18675
+ },
+ {
+  "id": 125,
+  "juzgado": "9mo Juzgado Laboral",
+  "corte": "CSJ Lima Norte",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11247,
+  "demora_dias": 908,
+  "carga": 18783
+ },
+ {
+  "id": 164,
+  "juzgado": "10er Juzgado Penal",
+  "corte": "CSJ Junin",
+  "departamento": "Junin",
+  "especialidad": "Penal",
+  "pendientes": 11245,
+  "demora_dias": 1021,
+  "carga": 17467
+ },
+ {
+  "id": 145,
+  "juzgado": "12er Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Lima Norte",
+  "departamento": "Lima",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 11223,
+  "demora_dias": 1090,
+  "carga": 14198
+ },
+ {
+  "id": 54,
+  "juzgado": "8do Juzgado Laboral",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11219,
+  "demora_dias": 865,
+  "carga": 12847
+ },
+ {
+  "id": 241,
+  "juzgado": "12do Juzgado Laboral",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11213,
+  "demora_dias": 970,
+  "carga": 14835
+ },
+ {
+  "id": 178,
+  "juzgado": "6er Juzgado Anticorrupcion",
+  "corte": "CSJ Ucayali",
+  "departamento": "Ucayali",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11168,
+  "demora_dias": 820,
+  "carga": 15388
+ },
+ {
+  "id": 174,
+  "juzgado": "3mo Juzgado Constitucional",
+  "corte": "CSJ Selva Central",
+  "departamento": "Junin",
+  "especialidad": "Constitucional",
+  "pendientes": 11152,
+  "demora_dias": 829,
+  "carga": 13326
+ },
+ {
+  "id": 216,
+  "juzgado": "4to Juzgado Laboral",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Laboral",
+  "pendientes": 11130,
+  "demora_dias": 738,
+  "carga": 12856
+ },
+ {
+  "id": 354,
+  "juzgado": "1mo Juzgado Laboral",
+  "corte": "CSJ San Roman",
+  "departamento": "Puno",
+  "especialidad": "Laboral",
+  "pendientes": 11116,
+  "demora_dias": 569,
+  "carga": 16229
+ },
+ {
+  "id": 138,
+  "juzgado": "2mo Juzgado Laboral",
+  "corte": "CSJ Lima Norte",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 11111,
+  "demora_dias": 865,
+  "carga": 17631
+ },
+ {
+  "id": 236,
+  "juzgado": "11er Juzgado Civil",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 11082,
+  "demora_dias": 794,
+  "carga": 17600
+ },
+ {
+  "id": 30,
+  "juzgado": "7er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11080,
+  "demora_dias": 815,
+  "carga": 17283
+ },
+ {
+  "id": 129,
+  "juzgado": "12do Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Norte",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11079,
+  "demora_dias": 830,
+  "carga": 16530
+ },
+ {
+  "id": 451,
+  "juzgado": "1er Juzgado Familia",
+  "corte": "CSJ Puno",
+  "departamento": "Puno",
+  "especialidad": "Familia",
+  "pendientes": 11026,
+  "demora_dias": 724,
+  "carga": 14829
+ },
+ {
+  "id": 20,
+  "juzgado": "9er Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 11015,
+  "demora_dias": 730,
+  "carga": 16926
+ },
+ {
+  "id": 461,
+  "juzgado": "9to Juzgado Constitucional",
+  "corte": "CSJ Cajamarca",
+  "departamento": "Cajamarca",
+  "especialidad": "Constitucional",
+  "pendientes": 10996,
+  "demora_dias": 854,
+  "carga": 13842
+ },
+ {
+  "id": 13,
+  "juzgado": "9to Juzgado Penal",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Penal",
+  "pendientes": 10961,
+  "demora_dias": 777,
+  "carga": 17560
+ },
+ {
+  "id": 186,
+  "juzgado": "3mo Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Ucayali",
+  "departamento": "Ucayali",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 10949,
+  "demora_dias": 887,
+  "carga": 17976
+ },
+ {
+  "id": 453,
+  "juzgado": "11er Juzgado Constitucional",
+  "corte": "CSJ Cajamarca",
+  "departamento": "Cajamarca",
+  "especialidad": "Constitucional",
+  "pendientes": 10911,
+  "demora_dias": 820,
+  "carga": 17838
+ },
+ {
+  "id": 116,
+  "juzgado": "1er Juzgado Civil",
+  "corte": "CSJ Lima Norte",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 10895,
+  "demora_dias": 943,
+  "carga": 16725
+ },
+ {
+  "id": 274,
+  "juzgado": "3to Juzgado Civil",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 10885,
+  "demora_dias": 732,
+  "carga": 13040
+ },
+ {
+  "id": 292,
+  "juzgado": "1er Juzgado Civil",
+  "corte": "CSJ Canete",
+  "departamento": "Lima",
+  "especialidad": "Civil",
+  "pendientes": 10863,
+  "demora_dias": 754,
+  "carga": 15058
+ },
+ {
+  "id": 213,
+  "juzgado": "2do Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 10837,
+  "demora_dias": 790,
+  "carga": 16429
+ },
+ {
+  "id": 154,
+  "juzgado": "10mo Juzgado Anticorrupcion",
+  "corte": "CSJ Callao",
+  "departamento": "Callao",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 10815,
+  "demora_dias": 1215,
+  "carga": 17000
+ },
+ {
+  "id": 246,
+  "juzgado": "8er Juzgado Laboral",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 10810,
+  "demora_dias": 840,
+  "carga": 14214
+ },
+ {
+  "id": 32,
+  "juzgado": "6er Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 10798,
+  "demora_dias": 808,
+  "carga": 17038
+ },
+ {
+  "id": 361,
+  "juzgado": "1do Juzgado Anticorrupcion",
+  "corte": "CSJ Ica",
+  "departamento": "Ica",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 10780,
+  "demora_dias": 808,
+  "carga": 17805
+ },
+ {
+  "id": 166,
+  "juzgado": "8er Juzgado Laboral",
+  "corte": "CSJ Junin",
+  "departamento": "Junin",
+  "especialidad": "Laboral",
+  "pendientes": 10776,
+  "demora_dias": 734,
+  "carga": 14616
+ },
+ {
+  "id": 197,
+  "juzgado": "6do Juzgado Anticorrupcion",
+  "corte": "CSJ Arequipa",
+  "departamento": "Arequipa",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 10759,
+  "demora_dias": 762,
+  "carga": 12354
+ },
+ {
+  "id": 248,
+  "juzgado": "4er Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 10729,
+  "demora_dias": 775,
+  "carga": 13944
+ },
+ {
+  "id": 363,
+  "juzgado": "11to Juzgado Penal",
+  "corte": "CSJ Ica",
+  "departamento": "Ica",
+  "especialidad": "Penal",
+  "pendientes": 10693,
+  "demora_dias": 819,
+  "carga": 14991
+ },
+ {
+  "id": 245,
+  "juzgado": "2do Juzgado Penal",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Penal",
+  "pendientes": 10691,
+  "demora_dias": 1015,
+  "carga": 15912
+ },
+ {
+  "id": 280,
+  "juzgado": "5mo Juzgado Penal",
+  "corte": "CSJ Canete",
+  "departamento": "Lima",
+  "especialidad": "Penal",
+  "pendientes": 10669,
+  "demora_dias": 1085,
+  "carga": 16550
+ },
+ {
+  "id": 237,
+  "juzgado": "8do Juzgado Penal - Crimen Organizado",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Penal - Crimen Organizado",
+  "pendientes": 10660,
+  "demora_dias": 862,
+  "carga": 13872
+ },
+ {
+  "id": 189,
+  "juzgado": "4er Juzgado Laboral",
+  "corte": "CSJ Ventanilla",
+  "departamento": "Callao",
+  "especialidad": "Laboral",
+  "pendientes": 10659,
+  "demora_dias": 816,
+  "carga": 13389
+ },
+ {
+  "id": 268,
+  "juzgado": "4do Juzgado Laboral",
+  "corte": "CSJ Lima Sur",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 10639,
+  "demora_dias": 954,
+  "carga": 13833
+ },
+ {
+  "id": 182,
+  "juzgado": "8to Juzgado Laboral",
+  "corte": "CSJ Ucayali",
+  "departamento": "Ucayali",
+  "especialidad": "Laboral",
+  "pendientes": 10623,
+  "demora_dias": 935,
+  "carga": 16101
+ },
+ {
+  "id": 3,
+  "juzgado": "3er Juzgado Familia",
+  "corte": "CSJ Lima Noroeste",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 10611,
+  "demora_dias": 930,
+  "carga": 14842
+ },
+ {
+  "id": 450,
+  "juzgado": "6to Juzgado Constitucional",
+  "corte": "CSJ Puno",
+  "departamento": "Puno",
+  "especialidad": "Constitucional",
+  "pendientes": 10602,
+  "demora_dias": 780,
+  "carga": 14285
+ },
+ {
+  "id": 89,
+  "juzgado": "7to Juzgado Penal",
+  "corte": "CSJ La Libertad",
+  "departamento": "La Libertad",
+  "especialidad": "Penal",
+  "pendientes": 10592,
+  "demora_dias": 770,
+  "carga": 13024
+ },
+ {
+  "id": 469,
+  "juzgado": "11er Juzgado Constitucional",
+  "corte": "CSJ Cajamarca",
+  "departamento": "Cajamarca",
+  "especialidad": "Constitucional",
+  "pendientes": 10586,
+  "demora_dias": 789,
+  "carga": 15192
+ },
+ {
+  "id": 225,
+  "juzgado": "2do Juzgado Anticorrupcion",
+  "corte": "CSJ Lima Este",
+  "departamento": "Lima",
+  "especialidad": "Anticorrupcion",
+  "pendientes": 10577,
+  "demora_dias": 763,
+  "carga": 11872
+ },
+ {
+  "id": 34,
+  "juzgado": "3er Juzgado Familia",
+  "corte": "CSJ Lima",
+  "departamento": "Lima",
+  "especialidad": "Familia",
+  "pendientes": 10573,
+  "demora_dias": 884,
+  "carga": 11879
+ },
+ {
+  "id": 299,
+  "juzgado": "12er Juzgado Constitucional",
+  "corte": "CSJ Canete",
+  "departamento": "Lima",
+  "especialidad": "Constitucional",
+  "pendientes": 10562,
+  "demora_dias": 893,
+  "carga": 14641
+ },
+ {
+  "id": 279,
+  "juzgado": "9er Juzgado Laboral",
+  "corte": "CSJ Canete",
+  "departamento": "Lima",
+  "especialidad": "Laboral",
+  "pendientes": 10535,
+  "demora_dias": 889,
+  "carga": 12780
+ }
+]

@@ -1,0 +1,82 @@
+[
+ {
+  "tipo": "Penal",
+  "materia": "Penal",
+  "casos": 1020585,
+  "demora_mediana_dias": 514,
+  "demora_p90_dias": 965,
+  "tasa_apelacion": 0.296
+ },
+ {
+  "tipo": "Civil",
+  "materia": "Civil",
+  "casos": 679671,
+  "demora_mediana_dias": 784,
+  "demora_p90_dias": 1607,
+  "tasa_apelacion": 0.189
+ },
+ {
+  "tipo": "Familia",
+  "materia": "Familia",
+  "casos": 606565,
+  "demora_mediana_dias": 356,
+  "demora_p90_dias": 667,
+  "tasa_apelacion": 0.172
+ },
+ {
+  "tipo": "Laboral",
+  "materia": "Laboral",
+  "casos": 362768,
+  "demora_mediana_dias": 429,
+  "demora_p90_dias": 867,
+  "tasa_apelacion": 0.359
+ },
+ {
+  "tipo": "Familia - Alimentos",
+  "materia": "Familia",
+  "casos": 341084,
+  "demora_mediana_dias": 132,
+  "demora_p90_dias": 262,
+  "tasa_apelacion": 0.156
+ },
+ {
+  "tipo": "Contencioso Adm.",
+  "materia": "Contencioso",
+  "casos": 227890,
+  "demora_mediana_dias": 601,
+  "demora_p90_dias": 1084,
+  "tasa_apelacion": 0.157
+ },
+ {
+  "tipo": "Constitucional",
+  "materia": "Constitucional",
+  "casos": 190646,
+  "demora_mediana_dias": 207,
+  "demora_p90_dias": 403,
+  "tasa_apelacion": 0.151
+ },
+ {
+  "tipo": "Comercial",
+  "materia": "Comercial",
+  "casos": 155006,
+  "demora_mediana_dias": 498,
+  "demora_p90_dias": 966,
+  "tasa_apelacion": 0.145
+ },
+ {
+  "tipo": "Tributario",
+  "materia": "Tributario",
+  "casos": 108175,
+  "demora_mediana_dias": 539,
+  "demora_p90_dias": 1105,
+  "tasa_apelacion": 0.146
+ },
+ {
+  "tipo": "Notarial / No Cont.",
+  "materia": "Notarial",
+  "casos": 75062,
+  "demora_mediana_dias": 92,
+  "demora_p90_dias": 177,
+  "tasa_apelacion": 0.214
+ }
+]

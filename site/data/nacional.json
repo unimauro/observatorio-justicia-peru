@@ -1,0 +1,15 @@
+{
+ "anio": 2026,
+ "expedientes_ingresados": 3713150,
+ "expedientes_resueltos": 3250302,
+ "expedientes_pendientes": 4580433,
+ "expedientes_activos": 5043281,
+ "clearance_rate": 0.875,
+ "tiempo_promedio_dias": 636,
+ "jueces": 3354,
+ "carga_por_juez": 1107.1,
+ "congestion": 2.55,
+ "indice_mora": 0.585,
+ "cortes_superiores": 35,
+ "nota": "DATOS SINTETICOS calibrados con ordenes de magnitud publicos. Ver docs/DATA_CATALOG.md"
+}
