@@ -62,9 +62,10 @@ function setupTabs() {
 function renderPanel(id) {
   if (rendered[id]) { if (id === "mapa" && charts.map) charts.map.invalidateSize(); return; }
   rendered[id] = true;
-  ({ resumen: renderResumen, mapa: renderMapa, cortes: renderCortes, procesos: renderProcesos,
-     embudo: renderEmbudo, magistrados: renderMagistrados, seguridad: renderSeguridad,
-     series: renderSeries, indicadores: renderIndicadores }[id] || (() => {}))();
+  ({ resumen: renderResumen, reales: renderReales, mapa: renderMapa, cortes: renderCortes,
+     procesos: renderProcesos, embudo: renderEmbudo, magistrados: renderMagistrados,
+     seguridad: renderSeguridad, series: renderSeries, indicadores: renderIndicadores,
+     faq: renderFaq }[id] || (() => {}))();
 }
 function mkChart(elId) {
   const c = echarts.init($("#" + elId), null, { renderer: "canvas" });
@@ -414,6 +415,140 @@ function renderIndicadores() {
      <tbody>${DATA.indicadores.map((i) => `<tr><td><b>${i.indicador}</b></td><td><code>${i.formula}</code></td><td>${i.interpretacion}</td></tr>`).join("")}</tbody>`;
 }
 
+/* ============================================================ DATOS REALES */
+async function fetchReal(name) {
+  try { const r = await fetch(`data/real/${name}.json`); if (!r.ok) return null; return await r.json(); }
+  catch (e) { return null; }
+}
+function metaFoot(m) {
+  if (!m) return "";
+  const parts = [];
+  if (m.fuente) parts.push(`Fuente: ${m.fuente}`);
+  if (m.fecha_corte) parts.push(`Corte: ${m.fecha_corte}`);
+  if (m.cobertura) parts.push(`Cobertura: ${m.cobertura}`);
+  if (m.granularidad) parts.push(`Granularidad: ${m.granularidad}`);
+  return `<p class="card-sub" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">📑 ${parts.join(" · ")}${m.url ? ` · <a href="${m.url}" target="_blank" rel="noopener">recurso</a>` : ""}</p>`;
+}
+async function renderReales() {
+  const box = $("#reales-content");
+  const manifest = await fetchReal("manifest");
+  const [fis, casos, delitos, pj, demora] = await Promise.all(
+    ["mpfn_fiscales", "mpfn_casos", "mpfn_delitos", "pj_carga_nacional", "demora_piura"].map(fetchReal));
+
+  if (!manifest && !fis && !casos && !delitos && !pj && !demora) {
+    box.innerHTML = `<div class="card" style="text-align:center">
+      <h3>🛠️ Datos reales en preparación</h3>
+      <p class="card-sub" style="max-width:640px;margin:8px auto">El pipeline ETL (Track A) está descargando y normalizando las fuentes oficiales
+      inventariadas en la <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md" target="_blank" rel="noopener">Fase 0</a>
+      (Poder Judicial, Ministerio Público, INEI). Cuando termine, esta pestaña mostrará indicadores
+      construidos con datos reales, cada uno con su fuente y fecha de corte. El resto del tablero es un
+      prototipo con datos sintéticos, claramente señalizado.</p></div>`;
+    return;
+  }
+
+  let html = "";
+  // --- Fuentes (manifest) ---
+  if (manifest && manifest.datasets) {
+    html += `<div class="card"><h3>📚 Fuentes integradas</h3><div class="table-wrap"><table>
+      <thead><tr><th>Dataset</th><th>Institución</th><th>Cobertura</th><th>Granularidad</th><th>Fecha corte</th><th class="num">Registros</th></tr></thead>
+      <tbody>${manifest.datasets.map((d) => `<tr>
+        <td><b>${d.titulo || d.id}</b></td><td>${d.institucion || d.fuente || "—"}</td><td>${d.cobertura || "—"}</td>
+        <td><span class="pill ${d.granularidad === "expediente" ? "blue" : "amber"}">${d.granularidad || "—"}</span></td>
+        <td>${d.fecha_corte || "—"}</td><td class="num">${d.n_registros == null ? (d.error ? "❌" : "—") : fmt(d.n_registros)}</td></tr>`).join("")}</tbody></table></div></div>`;
+  }
+
+  // --- KPIs reales ---
+  const kpis = [];
+  if (pj && pj.nacional) kpis.push(["Tasa de resolución (PJ nacional)", pj.nacional.clearance != null ? pj.nacional.clearance + "%" : "—", "resueltos/ingresos · datos reales", pj.nacional.clearance < 100 ? "warn" : "ok"]);
+  if (pj && pj.nacional) kpis.push(["Congestión (PJ nacional)", fmt1(pj.nacional.congestion), "(pend+ing)/resueltos", pj.nacional.congestion > 2 ? "alert" : "warn"]);
+  if (fis) kpis.push(["Fiscales (MPFN)", fmt(fis.total_fiscales), "dotación · dato real", ""]);
+  if (delitos) kpis.push(["Delitos denunciados (MPFN)", fmt(delitos.total_denuncias), "acumulado · dato real", "alert"]);
+  if (demora && demora.por_proceso && demora.por_proceso.length) {
+    const nlpt = demora.por_proceso.find((p) => /nlpt|laboral/i.test(p.proceso)) || demora.por_proceso[0];
+    kpis.push([`Demora mediana (${nlpt.proceso})`, fmt(nlpt.mediana_dias) + " días", "microdata real (Piura)", nlpt.mediana_dias > 365 ? "warn" : "ok"]);
+  }
+  if (kpis.length) html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
+
+  // contenedores de charts
+  const charts2 = [];
+  if (pj && pj.por_especialidad) { html += card("Carga procesal por especialidad (PJ nacional)", "rc-pj", pj._meta); charts2.push(["rc-pj", () => barIngRes("rc-pj", pj.por_especialidad, "especialidad")]); }
+  if (delitos && delitos.por_departamento) { html += card("Delitos denunciados por departamento (MPFN)", "rc-del", delitos._meta); charts2.push(["rc-del", () => barSimple("rc-del", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#e74c3c")]); }
+  if (delitos && delitos.top_delitos) { html += card("Top delitos denunciados (MPFN)", "rc-deltop", delitos._meta); charts2.push(["rc-deltop", () => barSimple("rc-deltop", delitos.top_delitos.slice(0, 12), "generico", "cantidad", "#9b59b6")]); }
+  if (fis && fis.por_cargo) { html += card("Fiscales por cargo (MPFN)", "rc-fis", fis._meta); charts2.push(["rc-fis", () => barSimple("rc-fis", fis.por_cargo, "cargo", "total", "#4f8cff")]); }
+  if (demora && demora.por_proceso) { html += card("Demora real por proceso — mediana vs P90 (microdata Piura)", "rc-dem", demora._meta); charts2.push(["rc-dem", () => demoraChart("rc-dem", demora.por_proceso)]); }
+  if (casos && casos.por_materia) { html += card("Casos fiscales por materia — ingresado vs atendido (MPFN)", "rc-cas", casos._meta); charts2.push(["rc-cas", () => barIngRes2("rc-cas", casos.por_materia, "materia", "ingresado", "atendido")]); }
+
+  box.innerHTML = html;
+  charts2.forEach(([id, fn]) => { try { fn(); } catch (e) { console.warn("chart", id, e); } });
+
+  function card(title, id, meta) {
+    return `<div class="card"><h3>🟢 ${title}</h3><div class="chart" id="${id}"></div>${metaFoot(meta)}</div>`;
+  }
+}
+function barSimple(id, rows, kx, ky, color) {
+  rows = [...rows].sort((a, b) => b[ky] - a[ky]);
+  mkChart(id).setOption({ ...echartsTheme(), color: [color], tooltip: { trigger: "axis" },
+    grid: { left: 150, right: 30, top: 10, bottom: 24 }, xAxis: { type: "value" },
+    yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
+    series: [{ type: "bar", data: rows.map((r) => r[ky]).reverse() }] });
+}
+function barIngRes(id, rows, kx) {
+  rows = [...rows].sort((a, b) => (b.ingresos || 0) - (a.ingresos || 0));
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#2ecc71"], tooltip: { trigger: "axis" },
+    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 140, right: 30, top: 36, bottom: 24 },
+    xAxis: { type: "value" }, yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
+    series: [{ name: "Ingresos", type: "bar", data: rows.map((r) => r.ingresos).reverse() },
+             { name: "Resueltos", type: "bar", data: rows.map((r) => r.resueltos).reverse() }] });
+}
+function barIngRes2(id, rows, kx, k1, k2) {
+  rows = [...rows].sort((a, b) => (b[k1] || 0) - (a[k1] || 0));
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#4f8cff"], tooltip: { trigger: "axis" },
+    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 140, right: 30, top: 36, bottom: 24 },
+    xAxis: { type: "value" }, yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
+    series: [{ name: k1, type: "bar", data: rows.map((r) => r[k1]).reverse() },
+             { name: k2, type: "bar", data: rows.map((r) => r[k2]).reverse() }] });
+}
+function demoraChart(id, rows) {
+  rows = [...rows].sort((a, b) => b.p90_dias - a.p90_dias);
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#e74c3c"], tooltip: { trigger: "axis" },
+    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 160, right: 30, top: 36, bottom: 24 },
+    xAxis: { type: "value", name: "días" }, yAxis: { type: "category", data: rows.map((r) => r.proceso) },
+    series: [{ name: "Mediana", type: "bar", data: rows.map((r) => r.mediana_dias) },
+             { name: "P90", type: "bar", data: rows.map((r) => r.p90_dias) }] });
+}
+
+/* ============================================================ FAQ */
+const FAQ = [
+  ["¿Los datos de este tablero son reales?",
+   "Depende de la pestaña. La pestaña <b>🟢 Datos Reales</b> usa datos abiertos oficiales (Poder Judicial, Ministerio Público, INEI) con su fuente y fecha de corte. El resto del tablero (Resumen, Mapa, Cortes, Jueces & Fiscales, etc.) es un <b>prototipo con datos SINTÉTICOS</b> —simulados pero calibrados con órdenes de magnitud reales— para validar la interfaz mientras se integran todas las fuentes. Siempre verás la insignia 🧪 cuando el dato es sintético."],
+  ["¿Por qué usan datos sintéticos al inicio?",
+   "Porque no existe una API nacional única con 'expedientes estancados por juzgado y días de demora'. Las fuentes reales son heterogéneas (CSV, PDF, tableros que bloquean scraping). El prototipo sintético permitió diseñar y probar el tablero; ahora el ETL va reemplazando esos datos por oficiales, pestaña por pestaña."],
+  ["¿Por qué no muestran la 'demora en días' en todo el país?",
+   "Porque la demora literal (fecha de ingreso → fecha de resolución) solo es calculable donde hay <b>microdata por expediente</b>: hoy, ciertos procesos de la Corte Superior de Piura (NLPT laboral, alimentos, penal) y el Tribunal Constitucional. Para el resto, derivar 'días' desde cifras agregadas sería inventar; ahí mostramos índices de <b>congestión</b> y <b>tasa de resolución</b>."],
+  ["¿Qué indicadores usan y cómo se calculan?",
+   "Tasa de resolución (clearance) = resueltos/ingresos·100; Congestión = (pendientes+ingresos)/resueltos; Tasa de pendencia = pendientes_fin/carga·100; Demora real = fecha_resolución − fecha_ingreso (mediana y P90). Ver la pestaña 📐 <b>Indicadores</b> para el glosario completo, basado en metodología CEPEJ y Banco Mundial."],
+  ["¿De dónde salen los datos reales?",
+   "De <a href='https://www.datosabiertos.gob.pe' target='_blank' rel='noopener'>datosabiertos.gob.pe</a> (API CKAN del Estado), más descargas oficiales del Portal Estadístico del PJ, INEI y CNPJ. El inventario completo y verificado está en <a href='https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md' target='_blank' rel='noopener'>data/INVENTARIO.md</a>."],
+  ["¿Rastrean jueces y fiscales con nombre propio? ¿Y su privacidad?",
+   "Mostramos <b>dotación y carga agregada</b> de fiscales (por cargo, condición, distrito) con datos oficiales del MPFN. Las 'rotaciones' individuales del prototipo son <b>ilustrativas</b>: no existe un dataset abierto oficial de rotaciones. Además, los microdata por expediente se <b>anonimizan</b> (se eliminan DNI y fecha de nacimiento) antes de procesar; nunca exponemos datos personales."],
+  ["¿El asistente IA es real?",
+   "El copiloto responde localmente sobre los datos cargados. Para respuestas con IA generativa se conecta a un endpoint configurable del ecosistema <b>tunky.net</b>; como el sitio es estático (GitHub Pages), la clave de IA nunca vive en el navegador, sino en ese servicio."],
+  ["¿Puedo usar o auditar estos datos?",
+   "Sí. El proyecto es de código abierto (licencia MIT) y los datasets sintéticos y reales están versionados en el <a href='https://github.com/unimauro/observatorio-justicia-peru' target='_blank' rel='noopener'>repositorio</a>. Es un proyecto de transparencia para ciudadanía, periodismo de datos, investigación y políticas públicas."],
+];
+function renderFaq() {
+  $("#faq-content").innerHTML = FAQ.map(([q, a], i) => `
+    <div class="card" style="cursor:pointer" data-faq="${i}">
+      <h3 style="display:flex;justify-content:space-between;gap:10px">${q}<span class="faq-arrow" style="color:var(--gold)">＋</span></h3>
+      <div class="faq-a" style="display:none;color:var(--text)"><p class="card-sub" style="font-size:13.5px;color:var(--muted)">${a}</p></div>
+    </div>`).join("");
+  $$("#faq-content [data-faq]").forEach((c) => c.addEventListener("click", () => {
+    const a = c.querySelector(".faq-a"), arr = c.querySelector(".faq-arrow");
+    const open = a.style.display !== "none";
+    a.style.display = open ? "none" : "block"; arr.textContent = open ? "＋" : "−";
+  }));
+}
+
 /* ---------- helpers ---------- */
 function groupCount(arr, key) {
   const m = {}; arr.forEach((x) => { m[x[key]] = (m[x[key]] || 0) + 1; });
@@ -452,10 +587,37 @@ function setupAI() {
 }
 function aiBot(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg bot">${t}</div>`); $("#ai-msgs").scrollTop = 1e9; }
 function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg user">${t}</div>`); $("#ai-msgs").scrollTop = 1e9; }
-function aiAsk(q) {
+
+/* Endpoint del copiloto (ecosistema tunky.net). Debe ser un proxy serverless que reciba
+   {question, context} y use la Claude API server-side (la API key NUNCA va en el cliente).
+   Si el endpoint no responde, se usa el motor local de respuestas. Configurable por ?ai= o window.AI_ENDPOINT. */
+const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/v1/justicia/chat";
+function aiContext() {
+  const n = DATA.nacional;
+  return {
+    nacional: n,
+    top_cortes_congestion: DATA.cortes.slice(0, 5).map((c) => ({ corte: c.corte, congestion: c.congestion, pendientes: c.pendientes })),
+    casos_seguridad_criticos: DATA.casos_seguridad.filter((x) => x.nivel_alerta === "Critico").length,
+    nota: "Datos sintéticos del prototipo salvo la pestaña Datos Reales.",
+  };
+}
+async function aiAsk(q) {
   q = (q || "").trim(); if (!q) return;
   aiUser(q); $("#ai-input").value = "";
-  setTimeout(() => aiBot(aiAnswer(q)), 250);
+  const thinking = `<div class="msg bot" id="ai-think"><span class="spin"></span> pensando…</div>`;
+  $("#ai-msgs").insertAdjacentHTML("beforeend", thinking); $("#ai-msgs").scrollTop = 1e9;
+  let answer = null;
+  try {
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 6000);
+    const r = await fetch(AI_ENDPOINT, {
+      method: "POST", headers: { "Content-Type": "application/json" }, signal: ctl.signal,
+      body: JSON.stringify({ question: q, context: aiContext() }),
+    });
+    clearTimeout(t);
+    if (r.ok) { const j = await r.json(); answer = j.answer || j.text || j.message || null; }
+  } catch (e) { /* sin conexión al endpoint: fallback local */ }
+  $("#ai-think") && $("#ai-think").remove();
+  aiBot(answer || aiAnswer(q));
 }
 /* Motor local de respuestas (sin backend). En producción: conectar a un endpoint
    tipo ai.tunky.net que reciba la pregunta + el contexto JSON y use Claude API. */

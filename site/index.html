@@ -9,8 +9,15 @@
 <meta name="description" content="Observatorio Nacional del Sistema de Justicia del Perú: datos abiertos e inteligencia territorial sobre carga procesal, demora judicial, congestión, jueces y fiscales, rotaciones y casos álgidos de seguridad. Dashboard interactivo por departamento y corte superior." />
 <meta name="keywords" content="Poder Judicial Perú, justicia abierta, carga procesal, demora judicial, congestión judicial, jueces, fiscales, rotaciones, crimen organizado, datos abiertos, INEI, observatorio justicia, expedientes, backlog judicial" />
 <meta name="author" content="Carlos Mauro (unimauro)" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 <link rel="canonical" href="https://unimauro.github.io/observatorio-justicia-peru/" />
+<link rel="alternate" hreflang="es-PE" href="https://unimauro.github.io/observatorio-justicia-peru/" />
+<link rel="alternate" hreflang="es" href="https://unimauro.github.io/observatorio-justicia-peru/" />
+<link rel="alternate" hreflang="x-default" href="https://unimauro.github.io/observatorio-justicia-peru/" />
+<!-- Geo -->
+<meta name="geo.region" content="PE" />
+<meta name="geo.placename" content="Lima, Perú" />
+<meta name="ICBM" content="-12.046374, -77.042793" />
 
 <!-- ===================== Open Graph (WhatsApp / Facebook / LinkedIn) ===================== -->
 <meta property="og:type" content="website" />
@@ -18,8 +25,11 @@
 <meta property="og:title" content="⚖️ Observatorio Nacional de Justicia del Perú" />
 <meta property="og:description" content="Inteligencia territorial sobre el sistema de justicia: carga procesal, demora, congestión, jueces y fiscales, rotaciones y casos álgidos de seguridad. Mapa interactivo del Perú." />
 <meta property="og:image" content="https://unimauro.github.io/observatorio-justicia-peru/assets/og-image.png" />
+<meta property="og:image:secure_url" content="https://unimauro.github.io/observatorio-justicia-peru/assets/og-image.png" />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Observatorio Nacional de Justicia del Perú — carga procesal, demora y congestión judicial" />
 <meta property="og:url" content="https://unimauro.github.io/observatorio-justicia-peru/" />
 <meta property="og:locale" content="es_PE" />
 
@@ -28,6 +38,8 @@
 <meta name="twitter:title" content="⚖️ Observatorio Nacional de Justicia del Perú" />
 <meta name="twitter:description" content="Carga procesal, demora, congestión, jueces, fiscales y casos de seguridad. Dashboard interactivo del sistema de justicia peruano." />
 <meta name="twitter:image" content="https://unimauro.github.io/observatorio-justicia-peru/assets/og-image.png" />
+<meta name="twitter:site" content="@unimauro" />
+<meta name="twitter:creator" content="@unimauro" />
 
 <meta name="theme-color" content="#0b1b3b" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E" />
@@ -42,12 +54,34 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Dataset",
-  "name": "Observatorio Nacional de Justicia del Perú",
-  "description": "Indicadores del sistema de justicia peruano: carga procesal, demora, congestión, jueces, fiscales, rotaciones y casos de seguridad.",
-  "creator": { "@type": "Person", "name": "Carlos Mauro" },
-  "spatialCoverage": "Perú",
-  "license": "https://opensource.org/licenses/MIT"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://unimauro.github.io/observatorio-justicia-peru/#website",
+      "url": "https://unimauro.github.io/observatorio-justicia-peru/",
+      "name": "Observatorio Nacional de Justicia del Perú",
+      "description": "Datos abiertos e inteligencia territorial del sistema de justicia peruano.",
+      "inLanguage": "es-PE",
+      "publisher": { "@id": "https://github.com/unimauro#person" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://github.com/unimauro#person",
+      "name": "Carlos Mauro",
+      "url": "https://github.com/unimauro"
+    },
+    {
+      "@type": "Dataset",
+      "name": "Observatorio Nacional de Justicia del Perú",
+      "description": "Indicadores del sistema de justicia peruano: carga procesal, demora, congestión, tasa de resolución, jueces y fiscales, y casos de seguridad, por departamento y corte superior. Incluye datos oficiales (Poder Judicial, Ministerio Público, INEI) y un prototipo con datos sintéticos claramente señalizado.",
+      "creator": { "@id": "https://github.com/unimauro#person" },
+      "spatialCoverage": { "@type": "Place", "name": "Perú" },
+      "temporalCoverage": "2010/2026",
+      "keywords": ["Poder Judicial", "carga procesal", "demora judicial", "congestión", "Ministerio Público", "fiscales", "seguridad", "datos abiertos"],
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT"
+    }
+  ]
 }
 </script>
 
@@ -81,6 +115,7 @@
 <nav class="tabs">
   <div class="tabs-inner" id="tabs">
     <button class="tab active" data-panel="resumen">📊 Resumen Nacional</button>
+    <button class="tab" data-panel="reales">🟢 Datos Reales</button>
     <button class="tab" data-panel="mapa">🗺️ Mapa</button>
     <button class="tab" data-panel="cortes">🏛️ Cortes Superiores</button>
     <button class="tab" data-panel="procesos">📁 Tipos de Proceso</button>
@@ -89,12 +124,13 @@
     <button class="tab" data-panel="seguridad">🚨 Seguridad</button>
     <button class="tab" data-panel="series">📈 Series de Tiempo</button>
     <button class="tab" data-panel="indicadores">📐 Indicadores</button>
+    <button class="tab" data-panel="faq">❓ FAQ</button>
   </div>
 </nav>
 
 <main>
   <div class="disclaimer">
-    ⚠️ <b>Aviso:</b> esta es la <b>Fase 1</b> del proyecto. Los datos mostrados son <b>sintéticos</b>, calibrados con órdenes de magnitud de cifras públicas, y sirven para construir y validar el tablero mientras se integran las fuentes oficiales (Poder Judicial, Ministerio Público, JNJ, INEI). No deben usarse como dato real. Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/DATA_CATALOG.md" target="_blank" rel="noopener">catálogo de fuentes</a>.
+    ⚠️ <b>Cómo leer este tablero:</b> la pestaña <b>🟢 Datos Reales</b> usa <b>datos abiertos oficiales</b> (Poder Judicial, Ministerio Público, INEI) con su fuente y fecha de corte. El resto es un <b>prototipo con datos SINTÉTICOS</b> (insignia 🧪), calibrados con órdenes de magnitud reales para validar la interfaz mientras se integran todas las fuentes. Detalle en la pestaña <b>❓ FAQ</b>, el <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md" target="_blank" rel="noopener">inventario de datos</a> y el <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/DATA_CATALOG.md" target="_blank" rel="noopener">catálogo de fuentes</a>.
   </div>
 
   <!-- ============ RESUMEN ============ -->
@@ -106,6 +142,13 @@
       <div class="card"><h3>Evolución nacional 2010–2026</h3><p class="card-sub">Expedientes ingresados vs. resueltos vs. pendientes.</p><div class="chart" id="chart-evol"></div></div>
       <div class="card"><h3>Tasa de resolución (Clearance Rate)</h3><p class="card-sub">Resueltos / ingresados por año. Línea de 100% = equilibrio.</p><div class="chart" id="chart-clearance"></div></div>
     </div>
+  </section>
+
+  <!-- ============ DATOS REALES ============ -->
+  <section class="panel" id="reales">
+    <h2 class="section-title">🟢 Datos Reales — fuentes oficiales</h2>
+    <p class="section-sub">Indicadores construidos con <b>datos abiertos oficiales</b> (Poder Judicial, Ministerio Público, INEI) descargados de <a href="https://www.datosabiertos.gob.pe" target="_blank" rel="noopener">datosabiertos.gob.pe</a>. Cada cifra cita su <b>fuente</b> y <b>fecha de corte</b>. Lo demás del tablero es un <b>prototipo con datos sintéticos</b> (claramente marcado).</p>
+    <div id="reales-content"><div class="loading"><span class="spin"></span> Cargando datos reales…</div></div>
   </section>
 
   <!-- ============ MAPA ============ -->
@@ -196,6 +239,13 @@
     <h2 class="section-title">Glosario de Indicadores</h2>
     <p class="section-sub">Definiciones y fórmulas de los indicadores judiciales utilizados.</p>
     <div class="table-wrap"><table id="tbl-ind"></table></div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="panel" id="faq">
+    <h2 class="section-title">Preguntas frecuentes</h2>
+    <p class="section-sub">Transparencia sobre los datos, la metodología y los límites del observatorio.</p>
+    <div id="faq-content"></div>
   </section>
 </main>
 
