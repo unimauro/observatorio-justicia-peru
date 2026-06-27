@@ -1,15 +1,41 @@
 # 🗺️ Roadmap — Observatorio Nacional del Sistema de Justicia del Perú
 
-El proyecto avanza en **5 fases**, de un MVP estático con datos sintéticos hacia una plataforma
-de inteligencia con machine learning y un asistente IA. Cada fase es entregable por sí misma.
+> ⚠️ **La fuente de la verdad del proyecto es [`SPEC.md`](../SPEC.md).** A partir de la versión de
+> datos reales, el trabajo se rige por ese spec y por su principio rector: **nunca inventar datos;
+> citar fuente + fecha de corte; no derivar demoras en días desde datos agregados.** La Fase 1
+> sintética fue solo un prototipo de UI; el dashboard de producción se construye sobre **datos
+> oficiales** inventariados en la [FASE 0](../data/INVENTARIO.md).
+
+El proyecto avanza en fases, de un MVP estático con datos sintéticos hacia una plataforma de
+inteligencia con datos reales, indicadores estándar, ML y asistente IA. Cada fase es entregable.
 
 | Fase | Nombre | Estado |
 |------|--------|--------|
-| 1 | Dashboard nacional + datos sintéticos | ✅ **Hecho** |
-| 2 | Integración de datos reales (ETL oficial) + mapa | 🔜 Planificado |
-| 3 | Analítica avanzada + benchmark territorial | 🔜 Planificado |
+| 0 | Inventario de datos reales (datosabiertos API + manuales) | ✅ **Hecho** — pendiente revisión |
+| 1 (proto) | Dashboard nacional + datos **sintéticos** (prototipo UI) | ✅ **Hecho** (live GH Pages) |
+| 1 (real) | ETL de fuentes oficiales → esquema tidy en `data/processed/` | 🔜 Siguiente |
+| 2 | Indicadores estándar (clearance, congestión, demora real microdata) | 🔜 Planificado |
+| 3 | Dashboard de producción (Streamlit / FastAPI) + vista calidad del dato | 🔜 Planificado |
 | 4 | Machine Learning predictivo | 🔮 Futuro |
 | 5 | Asistente IA (LLM) + capa socioeconómica | 🔮 Futuro |
+
+### 🔌 Infraestructura
+Datos livianos (agregados, JSON de presentación) → **repo + GitHub Pages**. Datos pesados
+(microdata por expediente, históricos, Parquet) → **VPS Hostinger** ([redacted-host]) para
+procesamiento y, si hace falta, API FastAPI detrás de Caddy. Ver [`SPEC.md` §9](../SPEC.md).
+
+---
+
+## ✅ FASE 0 — Inventario de datos reales `[HECHO — pendiente de revisión]`
+
+**Objetivo:** No asumir; saber exactamente qué datos abiertos existen antes de codear el ETL.
+
+**Entregables**
+- [x] Detectar API que responde en datosabiertos.gob.pe (CKAN-compat `package_list`/`package_show`).
+- [x] Inventariar 4,665 datasets → 155 relevantes → núcleos judiciales/fiscales curados.
+- [x] Documentar columnas reales, granularidad (expediente vs agregado) y demora calculable.
+- [x] `data/INVENTARIO.md` + `data/raw/MANUAL_DOWNLOADS.md`.
+- [ ] **Revisión del usuario antes de iniciar la FASE 1 real.**
 
 ---
 
