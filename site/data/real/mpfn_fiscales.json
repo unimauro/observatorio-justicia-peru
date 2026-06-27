@@ -1,0 +1,236 @@
+{
+  "_meta": {
+    "fuente": "Ministerio Publico - Fiscalia de la Nacion (datosabiertos.gob.pe)",
+    "fecha_corte": "2026-05-20",
+    "cobertura": "Nacional, 2026 (snapshot mes 4)",
+    "granularidad": "agregado",
+    "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-fiscales"
+  },
+  "total_fiscales": 8531,
+  "por_anio": [
+    {
+      "anio": 2019,
+      "total": 7127
+    },
+    {
+      "anio": 2020,
+      "total": 7696
+    },
+    {
+      "anio": 2021,
+      "total": 8028
+    },
+    {
+      "anio": 2022,
+      "total": 8099
+    },
+    {
+      "anio": 2023,
+      "total": 8338
+    },
+    {
+      "anio": 2024,
+      "total": 8385
+    },
+    {
+      "anio": 2025,
+      "total": 8537
+    },
+    {
+      "anio": 2026,
+      "total": 8531
+    }
+  ],
+  "por_distrito_fiscal": [
+    {
+      "distrito_fiscal": "LIMA CENTRO",
+      "total": 1645
+    },
+    {
+      "distrito_fiscal": "LIMA NORTE",
+      "total": 542
+    },
+    {
+      "distrito_fiscal": "LIMA ESTE",
+      "total": 453
+    },
+    {
+      "distrito_fiscal": "CALLAO",
+      "total": 353
+    },
+    {
+      "distrito_fiscal": "AREQUIPA",
+      "total": 348
+    },
+    {
+      "distrito_fiscal": "ANCASH",
+      "total": 317
+    },
+    {
+      "distrito_fiscal": "CUSCO",
+      "total": 305
+    },
+    {
+      "distrito_fiscal": "JUNIN",
+      "total": 273
+    },
+    {
+      "distrito_fiscal": "LA LIBERTAD",
+      "total": 263
+    },
+    {
+      "distrito_fiscal": "HUANUCO",
+      "total": 260
+    },
+    {
+      "distrito_fiscal": "AYACUCHO",
+      "total": 253
+    },
+    {
+      "distrito_fiscal": "LIMA NOROESTE",
+      "total": 248
+    },
+    {
+      "distrito_fiscal": "LAMBAYEQUE",
+      "total": 248
+    },
+    {
+      "distrito_fiscal": "LIMA SUR",
+      "total": 241
+    },
+    {
+      "distrito_fiscal": "SAN MARTIN",
+      "total": 224
+    },
+    {
+      "distrito_fiscal": "CAJAMARCA",
+      "total": 217
+    },
+    {
+      "distrito_fiscal": "PUNO",
+      "total": 216
+    },
+    {
+      "distrito_fiscal": "UCAYALI",
+      "total": 205
+    },
+    {
+      "distrito_fiscal": "PIURA",
+      "total": 197
+    },
+    {
+      "distrito_fiscal": "SANTA",
+      "total": 188
+    },
+    {
+      "distrito_fiscal": "LORETO",
+      "total": 183
+    },
+    {
+      "distrito_fiscal": "AMAZONAS",
+      "total": 174
+    },
+    {
+      "distrito_fiscal": "ICA",
+      "total": 157
+    },
+    {
+      "distrito_fiscal": "APURIMAC",
+      "total": 145
+    },
+    {
+      "distrito_fiscal": "HUAURA",
+      "total": 111
+    },
+    {
+      "distrito_fiscal": "TACNA",
+      "total": 107
+    },
+    {
+      "distrito_fiscal": "HUANCAVELICA",
+      "total": 99
+    },
+    {
+      "distrito_fiscal": "TUMBES",
+      "total": 92
+    },
+    {
+      "distrito_fiscal": "MADRE DE DIOS",
+      "total": 85
+    },
+    {
+      "distrito_fiscal": "SELVA CENTRAL",
+      "total": 84
+    },
+    {
+      "distrito_fiscal": "MOQUEGUA",
+      "total": 83
+    },
+    {
+      "distrito_fiscal": "PASCO",
+      "total": 76
+    },
+    {
+      "distrito_fiscal": "SULLANA",
+      "total": 70
+    },
+    {
+      "distrito_fiscal": "CAÑETE",
+      "total": 69
+    }
+  ],
+  "por_cargo": [
+    {
+      "cargo": "FISCAL ADJUNTO PROVINCIAL",
+      "total": 5352
+    },
+    {
+      "cargo": "FISCAL PROVINCIAL",
+      "total": 2322
+    },
+    {
+      "cargo": "FISCAL ADJUNTO SUPERIOR",
+      "total": 538
+    },
+    {
+      "cargo": "FISCAL SUPERIOR",
+      "total": 283
+    },
+    {
+      "cargo": "FISCAL ADJUNTO SUPREMO",
+      "total": 29
+    },
+    {
+      "cargo": "FISCAL SUPREMO",
+      "total": 6
+    },
+    {
+      "cargo": "FISCAL DE LA NACION",
+      "total": 1
+    }
+  ],
+  "por_condicion": [
+    {
+      "condicion": "PROVISIONAL",
+      "total": 4838
+    },
+    {
+      "condicion": "TITULAR",
+      "total": 2734
+    },
+    {
+      "condicion": "PROVISIONAL (Titular Promovido)",
+      "total": 959
+    }
+  ],
+  "por_sexo": [
+    {
+      "sexo": "FEMENINO",
+      "total": 4397
+    },
+    {
+      "sexo": "MASCULINO",
+      "total": 4134
+    }
+  ]
+}

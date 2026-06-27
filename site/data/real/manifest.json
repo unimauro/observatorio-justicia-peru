@@ -1,0 +1,60 @@
+{
+  "generado_utc": "2026-06-27T04:37:35.418869+00:00",
+  "datasets": [
+    {
+      "id": "pj_carga_nacional",
+      "titulo": "Carga procesal a nivel nacional",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Poder Judicial",
+      "fecha_corte": "2024-12",
+      "cobertura": "Nacional, 2024 (mensual Ene-Dic)",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/procesos-judiciales-principales-nivel-nacional-partir-del-2023-poder-judicial",
+      "n_registros": 58568
+    },
+    {
+      "id": "mpfn_fiscales",
+      "titulo": "Fiscales (dotacion)",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2026-05-20",
+      "cobertura": "Nacional, 2026 (snapshot mes 4)",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-fiscales",
+      "n_registros": 17147
+    },
+    {
+      "id": "mpfn_casos",
+      "titulo": "Casos fiscales",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2026-06-23",
+      "cobertura": "Nacional, 2019-2026",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-casos-fiscales",
+      "n_registros": 9593
+    },
+    {
+      "id": "mpfn_delitos",
+      "titulo": "Delitos denunciados",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2026-06-23",
+      "cobertura": "Nacional, 2019-2026",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-delitos-denunciados",
+      "n_registros": 73448
+    },
+    {
+      "id": "demora_piura",
+      "titulo": "Demora real (dias) por proceso - CSJ Piura",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Poder Judicial - CSJ Piura",
+      "fecha_corte": "2026-06-23",
+      "cobertura": "Corte Superior de Justicia de Piura",
+      "granularidad": "expediente",
+      "url": "https://www.datosabiertos.gob.pe/dataset/demandas-con-sentencias-de-la-nueva-ley-procesal-de-trabajo-nlpt-de-la-corte-superior-de",
+      "n_registros": 11737
+    }
+  ]
+}

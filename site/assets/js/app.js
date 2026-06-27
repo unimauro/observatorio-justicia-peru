@@ -427,7 +427,8 @@ function metaFoot(m) {
   if (m.fecha_corte) parts.push(`Corte: ${m.fecha_corte}`);
   if (m.cobertura) parts.push(`Cobertura: ${m.cobertura}`);
   if (m.granularidad) parts.push(`Granularidad: ${m.granularidad}`);
-  return `<p class="card-sub" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">📑 ${parts.join(" · ")}${m.url ? ` · <a href="${m.url}" target="_blank" rel="noopener">recurso</a>` : ""}</p>`;
+  const nota = m.nota ? `<p class="card-sub" style="color:var(--amber);margin-top:6px">⚠️ ${m.nota}</p>` : "";
+  return `<p class="card-sub" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">📑 ${parts.join(" · ")}${m.url ? ` · <a href="${m.url}" target="_blank" rel="noopener">recurso</a>` : ""}</p>${nota}`;
 }
 async function renderReales() {
   const box = $("#reales-content");
@@ -459,8 +460,9 @@ async function renderReales() {
 
   // --- KPIs reales ---
   const kpis = [];
-  if (pj && pj.nacional) kpis.push(["Tasa de resolución (PJ nacional)", pj.nacional.clearance != null ? pj.nacional.clearance + "%" : "—", "resueltos/ingresos · datos reales", pj.nacional.clearance < 100 ? "warn" : "ok"]);
-  if (pj && pj.nacional) kpis.push(["Congestión (PJ nacional)", fmt1(pj.nacional.congestion), "(pend+ing)/resueltos", pj.nacional.congestion > 2 ? "alert" : "warn"]);
+  if (pj && pj.nacional) kpis.push(["Tasa de resolución (PJ nacional)", pj.nacional.clearance != null ? pj.nacional.clearance + "% ⚠️" : "—", "provisional · ver nota metodológica", "warn"]);
+  if (pj && pj.nacional) kpis.push(["Ingresos PJ (2024)", fmt(pj.nacional.ingresos), "expedientes · dato real", ""]);
+  if (pj && pj.nacional) kpis.push(["Resueltos PJ (2024)", fmt(pj.nacional.resueltos), "expedientes · dato real", "ok"]);
   if (fis) kpis.push(["Fiscales (MPFN)", fmt(fis.total_fiscales), "dotación · dato real", ""]);
   if (delitos) kpis.push(["Delitos denunciados (MPFN)", fmt(delitos.total_denuncias), "acumulado · dato real", "alert"]);
   if (demora && demora.por_proceso && demora.por_proceso.length) {

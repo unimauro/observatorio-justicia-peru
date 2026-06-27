@@ -1,0 +1,354 @@
+{
+ "_meta": {
+  "fuente": "Poder Judicial - Subgerencia de Estadistica (datosabiertos.gob.pe)",
+  "fecha_corte": "2024-12",
+  "cobertura": "Nacional, 2024 (mensual Ene-Dic)",
+  "granularidad": "agregado",
+  "url": "https://www.datosabiertos.gob.pe/dataset/procesos-judiciales-principales-nivel-nacional-partir-del-2023-poder-judicial",
+  "nota": "Clearance y congestión PROVISIONALES: este dataset del PJ no publica diccionario de datos y la semántica de las columnas INGRESO_SIN/INGRESO_CON es ambigua. Según la interpretación, el clearance va de 38% a ~96%. Los conteos de ingresos/resueltos/pendientes son sumas reales del CSV; la TASA derivada está en validación. No tomar como cifra oficial."
+ },
+ "nacional": {
+  "ingresos": 4807977,
+  "resueltos": 2142286,
+  "pendientes": 3570862,
+  "clearance": 44.6,
+  "congestion": 3.91,
+  "clearance_provisional": true
+ },
+ "por_distrito_judicial": [
+  {
+   "distrito_judicial": "Lima",
+   "ingresos": 640397,
+   "resueltos": 318648,
+   "pendientes": 440711,
+   "clearance": 49.8,
+   "congestion": 3.39
+  },
+  {
+   "distrito_judicial": "Arequipa",
+   "ingresos": 313504,
+   "resueltos": 139345,
+   "pendientes": 197026,
+   "clearance": 44.4,
+   "congestion": 3.66
+  },
+  {
+   "distrito_judicial": "Lima Este",
+   "ingresos": 305976,
+   "resueltos": 158605,
+   "pendientes": 233512,
+   "clearance": 51.8,
+   "congestion": 3.4
+  },
+  {
+   "distrito_judicial": "Lima Norte",
+   "ingresos": 303465,
+   "resueltos": 94257,
+   "pendientes": 92374,
+   "clearance": 31.1,
+   "congestion": 4.2
+  },
+  {
+   "distrito_judicial": "Lambayeque",
+   "ingresos": 270365,
+   "resueltos": 114390,
+   "pendientes": 211777,
+   "clearance": 42.3,
+   "congestion": 4.21
+  },
+  {
+   "distrito_judicial": "La Libertad",
+   "ingresos": 263620,
+   "resueltos": 98901,
+   "pendientes": 199055,
+   "clearance": 37.5,
+   "congestion": 4.68
+  },
+  {
+   "distrito_judicial": "Cusco",
+   "ingresos": 260238,
+   "resueltos": 108107,
+   "pendientes": 175030,
+   "clearance": 41.5,
+   "congestion": 4.03
+  },
+  {
+   "distrito_judicial": "Junín",
+   "ingresos": 199739,
+   "resueltos": 74294,
+   "pendientes": 152626,
+   "clearance": 37.2,
+   "congestion": 4.74
+  },
+  {
+   "distrito_judicial": "Ica",
+   "ingresos": 181868,
+   "resueltos": 67306,
+   "pendientes": 166492,
+   "clearance": 37.0,
+   "congestion": 5.18
+  },
+  {
+   "distrito_judicial": "Lima Sur",
+   "ingresos": 162523,
+   "resueltos": 72468,
+   "pendientes": 126014,
+   "clearance": 44.6,
+   "congestion": 3.98
+  },
+  {
+   "distrito_judicial": "Piura",
+   "ingresos": 160744,
+   "resueltos": 115223,
+   "pendientes": 228671,
+   "clearance": 71.7,
+   "congestion": 3.38
+  },
+  {
+   "distrito_judicial": "San Martín",
+   "ingresos": 137235,
+   "resueltos": 59381,
+   "pendientes": 99357,
+   "clearance": 43.3,
+   "congestion": 3.98
+  },
+  {
+   "distrito_judicial": "Santa",
+   "ingresos": 118377,
+   "resueltos": 59888,
+   "pendientes": 97447,
+   "clearance": 50.6,
+   "congestion": 3.6
+  },
+  {
+   "distrito_judicial": "Cajamarca",
+   "ingresos": 115278,
+   "resueltos": 47858,
+   "pendientes": 133070,
+   "clearance": 41.5,
+   "congestion": 5.19
+  },
+  {
+   "distrito_judicial": "Ayacucho",
+   "ingresos": 113188,
+   "resueltos": 45053,
+   "pendientes": 94270,
+   "clearance": 39.8,
+   "congestion": 4.6
+  },
+  {
+   "distrito_judicial": "Puno",
+   "ingresos": 111946,
+   "resueltos": 46497,
+   "pendientes": 62741,
+   "clearance": 41.5,
+   "congestion": 3.76
+  },
+  {
+   "distrito_judicial": "Callao",
+   "ingresos": 102844,
+   "resueltos": 44386,
+   "pendientes": 63145,
+   "clearance": 43.2,
+   "congestion": 3.74
+  },
+  {
+   "distrito_judicial": "Ancash",
+   "ingresos": 100796,
+   "resueltos": 43025,
+   "pendientes": 85371,
+   "clearance": 42.7,
+   "congestion": 4.33
+  },
+  {
+   "distrito_judicial": "Huánuco",
+   "ingresos": 100763,
+   "resueltos": 47732,
+   "pendientes": 123655,
+   "clearance": 47.4,
+   "congestion": 4.7
+  },
+  {
+   "distrito_judicial": "Selva Central",
+   "ingresos": 94043,
+   "resueltos": 42196,
+   "pendientes": 63499,
+   "clearance": 44.9,
+   "congestion": 3.73
+  },
+  {
+   "distrito_judicial": "Huaura",
+   "ingresos": 83431,
+   "resueltos": 36801,
+   "pendientes": 64183,
+   "clearance": 44.1,
+   "congestion": 4.01
+  },
+  {
+   "distrito_judicial": "Apurímac",
+   "ingresos": 77264,
+   "resueltos": 33886,
+   "pendientes": 56840,
+   "clearance": 43.9,
+   "congestion": 3.96
+  },
+  {
+   "distrito_judicial": "Ucayali",
+   "ingresos": 69916,
+   "resueltos": 37411,
+   "pendientes": 45255,
+   "clearance": 53.5,
+   "congestion": 3.08
+  },
+  {
+   "distrito_judicial": "Puente Piedra-Ventanilla",
+   "ingresos": 67307,
+   "resueltos": 28708,
+   "pendientes": 43311,
+   "clearance": 42.7,
+   "congestion": 3.85
+  },
+  {
+   "distrito_judicial": "Tacna",
+   "ingresos": 65950,
+   "resueltos": 30106,
+   "pendientes": 34237,
+   "clearance": 45.6,
+   "congestion": 3.33
+  },
+  {
+   "distrito_judicial": "Loreto",
+   "ingresos": 64995,
+   "resueltos": 31557,
+   "pendientes": 46766,
+   "clearance": 48.6,
+   "congestion": 3.54
+  },
+  {
+   "distrito_judicial": "Amazonas",
+   "ingresos": 55149,
+   "resueltos": 21428,
+   "pendientes": 34984,
+   "clearance": 38.9,
+   "congestion": 4.21
+  },
+  {
+   "distrito_judicial": "Sullana",
+   "ingresos": 53276,
+   "resueltos": 28789,
+   "pendientes": 52697,
+   "clearance": 54.0,
+   "congestion": 3.68
+  },
+  {
+   "distrito_judicial": "Cañete",
+   "ingresos": 45691,
+   "resueltos": 21673,
+   "pendientes": 22684,
+   "clearance": 47.4,
+   "congestion": 3.15
+  },
+  {
+   "distrito_judicial": "Moquegua",
+   "ingresos": 39585,
+   "resueltos": 16290,
+   "pendientes": 15658,
+   "clearance": 41.2,
+   "congestion": 3.39
+  },
+  {
+   "distrito_judicial": "Huancavelica",
+   "ingresos": 38414,
+   "resueltos": 15389,
+   "pendientes": 21913,
+   "clearance": 40.1,
+   "congestion": 3.92
+  },
+  {
+   "distrito_judicial": "Tumbes",
+   "ingresos": 35551,
+   "resueltos": 16500,
+   "pendientes": 26027,
+   "clearance": 46.4,
+   "congestion": 3.73
+  },
+  {
+   "distrito_judicial": "Madre de Dios",
+   "ingresos": 28521,
+   "resueltos": 13651,
+   "pendientes": 26752,
+   "clearance": 47.9,
+   "congestion": 4.05
+  },
+  {
+   "distrito_judicial": "Pasco",
+   "ingresos": 23439,
+   "resueltos": 11567,
+   "pendientes": 31951,
+   "clearance": 49.3,
+   "congestion": 4.79
+  },
+  {
+   "distrito_judicial": "CSNJ Penal Especializada",
+   "ingresos": 2167,
+   "resueltos": 838,
+   "pendientes": 1655,
+   "clearance": 38.7,
+   "congestion": 4.56
+  },
+  {
+   "distrito_judicial": "Subsistema Extinción Dominio",
+   "ingresos": 412,
+   "resueltos": 132,
+   "pendientes": 106,
+   "clearance": 32.0,
+   "congestion": 3.92
+  }
+ ],
+ "por_especialidad": [
+  {
+   "especialidad": "Familia",
+   "ingresos": 1612064,
+   "resueltos": 697455,
+   "pendientes": 1462738,
+   "clearance": 43.3
+  },
+  {
+   "especialidad": "Penal",
+   "ingresos": 1270758,
+   "resueltos": 635377,
+   "pendientes": 862422,
+   "clearance": 50.0
+  },
+  {
+   "especialidad": "Laboral",
+   "ingresos": 1076692,
+   "resueltos": 389311,
+   "pendientes": 686931,
+   "clearance": 36.2
+  },
+  {
+   "especialidad": "Civil",
+   "ingresos": 845809,
+   "resueltos": 419030,
+   "pendientes": 557723,
+   "clearance": 49.5
+  },
+  {
+   "especialidad": "Extinción de Dominio",
+   "ingresos": 2654,
+   "resueltos": 1113,
+   "pendientes": 1048,
+   "clearance": 41.9
+  }
+ ],
+ "anios": [
+  2024
+ ],
+ "columnas_sumadas": {
+  "ingresos": "INGRESO_SIN + INGRESO_CON",
+  "resueltos": "RESUELTO",
+  "pendientes": "PENDIENTE",
+  "nota": "Sufijo T=tramite, E=ejecucion, sin sufijo=total (verificado: INGRESO_SIN+INGRESO_CON=INGRESOT+INGRESOE, RESUELTO=RESUELTOT+RESUELTOE, PENDIENTE=PENDIENTET+PENDIENTEE). ingresos incluye nuevos (SIN) y con tramite/reingreso previo (CON); resueltos es flujo anual; PENDIENTE es el stock pendiente_inicio (reportado solo en Enero). congestion=(pendientes+ingresos)/resueltos."
+ }
+}

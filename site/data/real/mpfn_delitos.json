@@ -1,0 +1,232 @@
+{
+  "_meta": {
+    "fuente": "Ministerio Publico - Fiscalia de la Nacion (datosabiertos.gob.pe)",
+    "fecha_corte": "2026-06-23",
+    "cobertura": "Nacional, 2019-2026",
+    "granularidad": "agregado",
+    "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-delitos-denunciados"
+  },
+  "total_denuncias": 8156028,
+  "por_departamento": [
+    {
+      "departamento": "LIMA",
+      "cantidad": 2494640
+    },
+    {
+      "departamento": "LAMBAYEQUE",
+      "cantidad": 575417
+    },
+    {
+      "departamento": "AREQUIPA",
+      "cantidad": 494098
+    },
+    {
+      "departamento": "LA LIBERTAD",
+      "cantidad": 413514
+    },
+    {
+      "departamento": "PIURA",
+      "cantidad": 409579
+    },
+    {
+      "departamento": "JUNIN",
+      "cantidad": 407790
+    },
+    {
+      "departamento": "CALLAO",
+      "cantidad": 390180
+    },
+    {
+      "departamento": "ANCASH",
+      "cantidad": 331563
+    },
+    {
+      "departamento": "CUSCO",
+      "cantidad": 326494
+    },
+    {
+      "departamento": "ICA",
+      "cantidad": 298258
+    },
+    {
+      "departamento": "HUANUCO",
+      "cantidad": 228419
+    },
+    {
+      "departamento": "PUNO",
+      "cantidad": 194215
+    },
+    {
+      "departamento": "AYACUCHO",
+      "cantidad": 189054
+    },
+    {
+      "departamento": "CAJAMARCA",
+      "cantidad": 178880
+    },
+    {
+      "departamento": "LORETO",
+      "cantidad": 149037
+    },
+    {
+      "departamento": "UCAYALI",
+      "cantidad": 147561
+    },
+    {
+      "departamento": "SAN MARTIN",
+      "cantidad": 143900
+    },
+    {
+      "departamento": "#N/D",
+      "cantidad": 123943
+    },
+    {
+      "departamento": "APURIMAC",
+      "cantidad": 119133
+    },
+    {
+      "departamento": "TACNA",
+      "cantidad": 115357
+    },
+    {
+      "departamento": "MADRE DE DIOS",
+      "cantidad": 98454
+    },
+    {
+      "departamento": "AMAZONAS",
+      "cantidad": 96216
+    },
+    {
+      "departamento": "TUMBES",
+      "cantidad": 74105
+    },
+    {
+      "departamento": "MOQUEGUA",
+      "cantidad": 73557
+    },
+    {
+      "departamento": "HUANCAVELICA",
+      "cantidad": 42260
+    },
+    {
+      "departamento": "PASCO",
+      "cantidad": 40404
+    }
+  ],
+  "top_delitos": [
+    {
+      "generico": "CONTRA LA VIDA/EL CUERPO Y LA SALUD",
+      "cantidad": 2755779
+    },
+    {
+      "generico": "CONTRA EL PATRIMONIO",
+      "cantidad": 2410886
+    },
+    {
+      "generico": "CONTRA LA SEGURIDAD PUBLICA",
+      "cantidad": 693827
+    },
+    {
+      "generico": "CONTRA LA FAMILIA",
+      "cantidad": 560877
+    },
+    {
+      "generico": "CONTRA LA ADMINISTRACION PUBLICA",
+      "cantidad": 488994
+    },
+    {
+      "generico": "CONTRA LA LIBERTAD",
+      "cantidad": 452913
+    },
+    {
+      "generico": "NO TIPIFICADOS",
+      "cantidad": 229056
+    },
+    {
+      "generico": "LEY Nº 30096, LEY DE DELITOS INFORMATICOS",
+      "cantidad": 189626
+    },
+    {
+      "generico": "CONTRA LA FE PUBLICA",
+      "cantidad": 173220
+    },
+    {
+      "generico": "DELITOS AMBIENTALES",
+      "cantidad": 79723
+    },
+    {
+      "generico": "CONTRA LA HUMANIDAD",
+      "cantidad": 24420
+    },
+    {
+      "generico": "CONTRA LA TRANQUILIDAD PUBLICA",
+      "cantidad": 23275
+    },
+    {
+      "generico": "DELITOS ADUANEROS (LEY 28008)",
+      "cantidad": 16284
+    },
+    {
+      "generico": "CONTRA LOS DERECHOS INTELECTUALES",
+      "cantidad": 14529
+    },
+    {
+      "generico": "D.LEG. 1106 LAVADO DE ACTIVOS",
+      "cantidad": 7198
+    },
+    {
+      "generico": "CONTRA LA DIGNIDAD HUMANA",
+      "cantidad": 6165
+    },
+    {
+      "generico": "CONTRA EL ORDEN FINANCIERO Y MONETARIO",
+      "cantidad": 6141
+    },
+    {
+      "generico": "CONTRA EL HONOR",
+      "cantidad": 5985
+    },
+    {
+      "generico": "CONTRA LA CONF.Y.LA.BUEN.FE.EN.NEGOCIOS",
+      "cantidad": 4755
+    },
+    {
+      "generico": "CONTRA EL PATRIMONIO CULTURAL",
+      "cantidad": 3866
+    }
+  ],
+  "por_anio": [
+    {
+      "anio": 2019,
+      "cantidad": 1081851
+    },
+    {
+      "anio": 2020,
+      "cantidad": 693475
+    },
+    {
+      "anio": 2021,
+      "cantidad": 1025359
+    },
+    {
+      "anio": 2022,
+      "cantidad": 1126824
+    },
+    {
+      "anio": 2023,
+      "cantidad": 1233421
+    },
+    {
+      "anio": 2024,
+      "cantidad": 1246999
+    },
+    {
+      "anio": 2025,
+      "cantidad": 1234300
+    },
+    {
+      "anio": 2026,
+      "cantidad": 513799
+    }
+  ]
+}

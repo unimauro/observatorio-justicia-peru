@@ -1,0 +1,282 @@
+{
+  "_meta": {
+    "fuente": "Ministerio Publico - Fiscalia de la Nacion (datosabiertos.gob.pe)",
+    "fecha_corte": "2026-06-23",
+    "cobertura": "Nacional, 2019-2026",
+    "granularidad": "agregado",
+    "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-casos-fiscales"
+  },
+  "por_anio": [
+    {
+      "anio": 2019,
+      "ingresado": 1400736,
+      "atendido": 1220349,
+      "clearance": 87.1
+    },
+    {
+      "anio": 2020,
+      "ingresado": 863288,
+      "atendido": 688925,
+      "clearance": 79.8
+    },
+    {
+      "anio": 2021,
+      "ingresado": 1298697,
+      "atendido": 1140369,
+      "clearance": 87.8
+    },
+    {
+      "anio": 2022,
+      "ingresado": 1404619,
+      "atendido": 1275920,
+      "clearance": 90.8
+    },
+    {
+      "anio": 2023,
+      "ingresado": 1503919,
+      "atendido": 1375892,
+      "clearance": 91.5
+    },
+    {
+      "anio": 2024,
+      "ingresado": 1527838,
+      "atendido": 1406157,
+      "clearance": 92.0
+    },
+    {
+      "anio": 2025,
+      "ingresado": 1492353,
+      "atendido": 1363570,
+      "clearance": 91.4
+    },
+    {
+      "anio": 2026,
+      "ingresado": 622744,
+      "atendido": 530831,
+      "clearance": 85.2
+    }
+  ],
+  "por_materia": [
+    {
+      "materia": "PENAL",
+      "ingresado": 573492,
+      "atendido": 489335
+    },
+    {
+      "materia": "FAMILIA",
+      "ingresado": 48193,
+      "atendido": 40636
+    },
+    {
+      "materia": "CIVIL",
+      "ingresado": 1059,
+      "atendido": 860
+    }
+  ],
+  "por_distrito_fiscal": [
+    {
+      "distrito_fiscal": "LIMA CENTRO",
+      "ingresado": 67520,
+      "atendido": 53829,
+      "clearance": 79.7
+    },
+    {
+      "distrito_fiscal": "LAMBAYEQUE",
+      "ingresado": 43762,
+      "atendido": 36327,
+      "clearance": 83.0
+    },
+    {
+      "distrito_fiscal": "LIMA NORTE",
+      "ingresado": 43726,
+      "atendido": 37673,
+      "clearance": 86.2
+    },
+    {
+      "distrito_fiscal": "LIMA ESTE",
+      "ingresado": 41818,
+      "atendido": 33180,
+      "clearance": 79.3
+    },
+    {
+      "distrito_fiscal": "AREQUIPA",
+      "ingresado": 39347,
+      "atendido": 34173,
+      "clearance": 86.9
+    },
+    {
+      "distrito_fiscal": "LIMA SUR",
+      "ingresado": 29911,
+      "atendido": 25224,
+      "clearance": 84.3
+    },
+    {
+      "distrito_fiscal": "LA LIBERTAD",
+      "ingresado": 28341,
+      "atendido": 23663,
+      "clearance": 83.5
+    },
+    {
+      "distrito_fiscal": "CUSCO",
+      "ingresado": 24910,
+      "atendido": 22839,
+      "clearance": 91.7
+    },
+    {
+      "distrito_fiscal": "JUNIN",
+      "ingresado": 24237,
+      "atendido": 20920,
+      "clearance": 86.3
+    },
+    {
+      "distrito_fiscal": "ICA",
+      "ingresado": 21199,
+      "atendido": 15293,
+      "clearance": 72.1
+    },
+    {
+      "distrito_fiscal": "PIURA",
+      "ingresado": 19783,
+      "atendido": 16323,
+      "clearance": 82.5
+    },
+    {
+      "distrito_fiscal": "HUANUCO",
+      "ingresado": 19626,
+      "atendido": 18050,
+      "clearance": 92.0
+    },
+    {
+      "distrito_fiscal": "CALLAO",
+      "ingresado": 16018,
+      "atendido": 13810,
+      "clearance": 86.2
+    },
+    {
+      "distrito_fiscal": "AYACUCHO",
+      "ingresado": 15867,
+      "atendido": 14157,
+      "clearance": 89.2
+    },
+    {
+      "distrito_fiscal": "SANTA",
+      "ingresado": 14645,
+      "atendido": 12529,
+      "clearance": 85.6
+    },
+    {
+      "distrito_fiscal": "CAJAMARCA",
+      "ingresado": 13240,
+      "atendido": 12523,
+      "clearance": 94.6
+    },
+    {
+      "distrito_fiscal": "SAN MARTIN",
+      "ingresado": 13074,
+      "atendido": 11451,
+      "clearance": 87.6
+    },
+    {
+      "distrito_fiscal": "LIMA NOROESTE",
+      "ingresado": 12837,
+      "atendido": 11320,
+      "clearance": 88.2
+    },
+    {
+      "distrito_fiscal": "SELVA CENTRAL",
+      "ingresado": 12827,
+      "atendido": 10191,
+      "clearance": 79.4
+    },
+    {
+      "distrito_fiscal": "PUNO",
+      "ingresado": 12731,
+      "atendido": 10348,
+      "clearance": 81.3
+    },
+    {
+      "distrito_fiscal": "ANCASH",
+      "ingresado": 12552,
+      "atendido": 11858,
+      "clearance": 94.5
+    },
+    {
+      "distrito_fiscal": "UCAYALI",
+      "ingresado": 11187,
+      "atendido": 9247,
+      "clearance": 82.7
+    },
+    {
+      "distrito_fiscal": "HUAURA",
+      "ingresado": 10169,
+      "atendido": 9495,
+      "clearance": 93.4
+    },
+    {
+      "distrito_fiscal": "APURIMAC",
+      "ingresado": 9957,
+      "atendido": 8369,
+      "clearance": 84.1
+    },
+    {
+      "distrito_fiscal": "LORETO",
+      "ingresado": 9698,
+      "atendido": 9092,
+      "clearance": 93.8
+    },
+    {
+      "distrito_fiscal": "TACNA",
+      "ingresado": 9533,
+      "atendido": 8977,
+      "clearance": 94.2
+    },
+    {
+      "distrito_fiscal": "CAÑETE",
+      "ingresado": 7986,
+      "atendido": 6507,
+      "clearance": 81.5
+    },
+    {
+      "distrito_fiscal": "SULLANA",
+      "ingresado": 7587,
+      "atendido": 7008,
+      "clearance": 92.4
+    },
+    {
+      "distrito_fiscal": "AMAZONAS",
+      "ingresado": 6624,
+      "atendido": 5700,
+      "clearance": 86.1
+    },
+    {
+      "distrito_fiscal": "MADRE DE DIOS",
+      "ingresado": 6170,
+      "atendido": 5867,
+      "clearance": 95.1
+    },
+    {
+      "distrito_fiscal": "MOQUEGUA",
+      "ingresado": 5628,
+      "atendido": 5169,
+      "clearance": 91.8
+    },
+    {
+      "distrito_fiscal": "TUMBES",
+      "ingresado": 4926,
+      "atendido": 4771,
+      "clearance": 96.9
+    },
+    {
+      "distrito_fiscal": "PASCO",
+      "ingresado": 2767,
+      "atendido": 2474,
+      "clearance": 89.4
+    },
+    {
+      "distrito_fiscal": "HUANCAVELICA",
+      "ingresado": 2541,
+      "atendido": 2474,
+      "clearance": 97.4
+    }
+  ]
+}

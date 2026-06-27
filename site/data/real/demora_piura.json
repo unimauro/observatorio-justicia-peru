@@ -1,0 +1,202 @@
+{
+  "_meta": {
+    "fuente": "Poder Judicial - CSJ Piura (datosabiertos.gob.pe), microdata por expediente",
+    "fecha_corte": "2026-06-23",
+    "cobertura": "Corte Superior de Justicia de Piura",
+    "granularidad": "expediente",
+    "url": "https://www.datosabiertos.gob.pe/dataset/demandas-con-sentencias-de-la-nueva-ley-procesal-de-trabajo-nlpt-de-la-corte-superior-de"
+  },
+  "por_proceso": [
+    {
+      "proceso": "NLPT Laboral",
+      "n": 6302,
+      "mediana_dias": 112.0,
+      "p90_dias": 302.0,
+      "promedio_dias": 145.8,
+      "min_dias": 1,
+      "max_dias": 999
+    },
+    {
+      "proceso": "Alimentos",
+      "n": 2908,
+      "mediana_dias": 134.0,
+      "p90_dias": 338.0,
+      "promedio_dias": 172.5,
+      "min_dias": 14,
+      "max_dias": 883
+    },
+    {
+      "proceso": "Penal (pena efectiva)",
+      "n": 1667,
+      "mediana_dias": 112.0,
+      "p90_dias": 383.0,
+      "promedio_dias": 168.0,
+      "min_dias": 0,
+      "max_dias": 999
+    },
+    {
+      "proceso": "Civil",
+      "n": 860,
+      "mediana_dias": 74.5,
+      "p90_dias": 391.1,
+      "promedio_dias": 147.4,
+      "min_dias": 0,
+      "max_dias": 819
+    }
+  ],
+  "histograma": {
+    "NLPT Laboral": [
+      {
+        "bucket": "0-30",
+        "desde": 0,
+        "hasta": 30,
+        "n": 619
+      },
+      {
+        "bucket": "30-90",
+        "desde": 30,
+        "hasta": 90,
+        "n": 2095
+      },
+      {
+        "bucket": "90-180",
+        "desde": 90,
+        "hasta": 180,
+        "n": 1731
+      },
+      {
+        "bucket": "180-365",
+        "desde": 180,
+        "hasta": 365,
+        "n": 1456
+      },
+      {
+        "bucket": "365-730",
+        "desde": 365,
+        "hasta": 730,
+        "n": 376
+      },
+      {
+        "bucket": "730+",
+        "desde": 730,
+        "hasta": null,
+        "n": 25
+      }
+    ],
+    "Alimentos": [
+      {
+        "bucket": "0-30",
+        "desde": 0,
+        "hasta": 30,
+        "n": 41
+      },
+      {
+        "bucket": "30-90",
+        "desde": 30,
+        "hasta": 90,
+        "n": 727
+      },
+      {
+        "bucket": "90-180",
+        "desde": 90,
+        "hasta": 180,
+        "n": 1172
+      },
+      {
+        "bucket": "180-365",
+        "desde": 180,
+        "hasta": 365,
+        "n": 719
+      },
+      {
+        "bucket": "365-730",
+        "desde": 365,
+        "hasta": 730,
+        "n": 234
+      },
+      {
+        "bucket": "730+",
+        "desde": 730,
+        "hasta": null,
+        "n": 15
+      }
+    ],
+    "Penal (pena efectiva)": [
+      {
+        "bucket": "0-30",
+        "desde": 0,
+        "hasta": 30,
+        "n": 196
+      },
+      {
+        "bucket": "30-90",
+        "desde": 30,
+        "hasta": 90,
+        "n": 505
+      },
+      {
+        "bucket": "90-180",
+        "desde": 90,
+        "hasta": 180,
+        "n": 406
+      },
+      {
+        "bucket": "180-365",
+        "desde": 180,
+        "hasta": 365,
+        "n": 375
+      },
+      {
+        "bucket": "365-730",
+        "desde": 365,
+        "hasta": 730,
+        "n": 163
+      },
+      {
+        "bucket": "730+",
+        "desde": 730,
+        "hasta": null,
+        "n": 22
+      }
+    ],
+    "Civil": [
+      {
+        "bucket": "0-30",
+        "desde": 0,
+        "hasta": 30,
+        "n": 187
+      },
+      {
+        "bucket": "30-90",
+        "desde": 30,
+        "hasta": 90,
+        "n": 286
+      },
+      {
+        "bucket": "90-180",
+        "desde": 90,
+        "hasta": 180,
+        "n": 143
+      },
+      {
+        "bucket": "180-365",
+        "desde": 180,
+        "hasta": 365,
+        "n": 145
+      },
+      {
+        "bucket": "365-730",
+        "desde": 365,
+        "hasta": 730,
+        "n": 88
+      },
+      {
+        "bucket": "730+",
+        "desde": 730,
+        "hasta": null,
+        "n": 11
+      }
+    ]
+  },
+  "nota_privacidad": "Anonimizado: se eliminaron DNI y fecha de nacimiento"
+}
