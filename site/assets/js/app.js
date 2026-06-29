@@ -92,6 +92,7 @@ function renderResumenReal() {
   if (pj && pj.nacional) k.push(["Carga PJ resuelta (2024)", fmt(pj.nacional.resueltos), "de " + fmt(pj.nacional.ingresos) + " ingresos", "ok"]);
   if (tc && tc.demora && tc.demora.global) k.push(["Demora TC (mediana)", fmt(tc.demora.global.mediana_dias) + " d", "microdata real", "warn"]);
   if (seg && seg.violencia_mujer) k.push(["Violencia contra la mujer", fmt(seg.violencia_mujer.total), "casos fiscales MPFN", "alert"]);
+  if (REAL.inei_denuncias) k.push(["Denuncias policiales (INEI/PNP)", fmt(REAL.inei_denuncias.total_denuncias), "2016–2017", ""]);
   if (!k.length) { box.innerHTML = ""; return; }
   box.innerHTML = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Cifras reales (datos abiertos oficiales).</b> Detalle y fuentes en la pestaña <b>Datos Reales</b>.</div>
     <div class="kpi-grid">${k.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
@@ -487,6 +488,14 @@ function renderSeguridadReal() {
   if (delitos && delitos.por_departamento) { html += rcard("🟢 Delitos por departamento (MPFN)", "sr-deptodel", delitos._meta); reg.push(["sr-deptodel", () => barSimple("sr-deptodel", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#c0392b")]); }
   if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += rcard("🟢 Violencia contra la mujer por año (MPFN)", "sr-vcm", seg.violencia_mujer._meta); reg.push(["sr-vcm", () => lineIngAt("sr-vcm", seg.violencia_mujer.por_anio)]); }
   if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += rcard("🟢 Top tipos de ciberdelito (MPFN)", "sr-ciber", seg.ciberdelitos._meta); reg.push(["sr-ciber", () => barSimple("sr-ciber", seg.ciberdelitos.top_tipos.slice(0, 10), "tipo", "cantidad", "#00cec9")]); }
+  // INEI / PNP — denuncias policiales (complemento a la mirada fiscal del MPFN)
+  const inei = REAL.inei_denuncias;
+  if (inei && inei.top_delitos) {
+    html += `<div class="card"><h3>🟢 Denuncias policiales por tipo de delito (INEI / PNP, 2016–2017)</h3>
+      <p class="card-sub">Mirada <b>policial</b> de la criminalidad (${fmt(inei.total_denuncias)} denuncias), complementa la mirada fiscal del MPFN.</p>
+      <div class="chart" id="sr-inei"></div>${metaFoot(inei._meta)}</div>`;
+    reg.push(["sr-inei", () => barSimple("sr-inei", inei.top_delitos.slice(0, 12), "tipo", "cantidad", "#e67e22")]);
+  }
   box.innerHTML = html;
   reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
   function rcard(t, id, m) { return `<div class="card"><h3>${t}</h3><div class="chart" id="${id}"></div>${metaFoot(m)}</div>`; }
