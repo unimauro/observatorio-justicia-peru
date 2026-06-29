@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "fuente": "INEI - Registro Nacional de Denuncias de Delitos y Faltas (PNP)",
+    "fecha_corte": "2017-12-31",
+    "cobertura": "Nacional 2016-2017",
+    "granularidad": "agregado",
+    "url": "https://www.datosabiertos.gob.pe/dataset/registro-nacional-de-denuncias-de-delitos-y-faltas-2017-instituto-nacional-de-estadística-e"
+  },
+  "total_denuncias": 755747,
+  "por_anio": [
+    {
+      "anio": 2016,
+      "cantidad": 355878
+    },
+    {
+      "anio": 2017,
+      "cantidad": 399869
+    }
+  ],
+  "por_departamento": [],
+  "top_delitos": [
+    {
+      "tipo": "DELITOS CONTRA EL PATRIMONIO",
+      "cantidad": 507922
+    },
+    {
+      "tipo": "DELITOS CONTRA LA VIDA EL CUERPO Y LA SALUD",
+      "cantidad": 94884
+    },
+    {
+      "tipo": "DELITOS CONTRA LA SEGURIDAD PUBLICA",
+      "cantidad": 87504
+    },
+    {
+      "tipo": "DELITOS CONTRA LA LIBERTAD",
+      "cantidad": 43047
+    },
+    {
+      "tipo": "DELITOS CONTRA LA ADMINISTRACION PUBLICA",
+      "cantidad": 8409
+    },
+    {
+      "tipo": "DELITOS CONTRA LA FAMILIA",
+      "cantidad": 5013
+    },
+    {
+      "tipo": "DELITOS CONTRA LA FE PUBLICA",
+      "cantidad": 2630
+    },
+    {
+      "tipo": "DELITOS CONTRA LA HUMANIDAD",
+      "cantidad": 2049
+    },
+    {
+      "tipo": "DELITOS CONTRA EL ORDEN FINANCIERO Y MONETARIO",
+      "cantidad": 1348
+    },
+    {
+      "tipo": "DELITOS CONTRA LA TRANQUILIDAD PUBLICA",
+      "cantidad": 553
+    },
+    {
+      "tipo": "DELITOS AMBIENTALES",
+      "cantidad": 370
+    },
+    {
+      "tipo": "DELITOS CONTRA EL HONOR",
+      "cantidad": 341
+    },
+    {
+      "tipo": "DELITOS TRIBUTARIOS",
+      "cantidad": 317
+    },
+    {
+      "tipo": "DELITOS CONTRA LOS DERECHOS INTELECTUALES",
+      "cantidad": 247
+    },
+    {
+      "tipo": "DELITOS CONTRA LA VOLUNTAD POPULAR",
+      "cantidad": 158
+    },
+    {
+      "tipo": "DELITOS CONTRA EL ORDEN ECONOMICO",
+      "cantidad": 132
+    },
+    {
+      "tipo": "DELITOS CONTRA LA CONFIANZA Y LA BUENA FE EN LOS NEGOCIOS",
+      "cantidad": 47
+    },
+    {
+      "tipo": "DELITOS CONTRA EL ESTADO Y LA DEFENSA NACIONAL",
+      "cantidad": 37
+    },
+    {
+      "tipo": "DELITOS CONTRA LOS PODERES DEL ESTADO Y EL ORDEN CONSTITUCIONAL",
+      "cantidad": 6
+    },
+    {
+      "tipo": "DELITOS ADUANEROS",
+      "cantidad": 3
+    }
+  ],
+  "notas": {
+    "metodo": "Conteo de denuncias del capitulo 200 (delitos) por DELITO GENERICO, reconstruyendo el texto del Codigo Penal desde un export SPSS corrupto (bytes binarios + '|' espurios). No se parsea por columnas.",
+    "por_departamento": "No disponible: los campos de ubicacion (UBIGEO, NOMBREDD) llegan ilegibles en el ZIP de origen (volcado binario). No se inventa la desagregacion territorial.",
+    "cobertura_real": "El total es un piso: ~1-1.3% de registros por anio se pierden cuando un byte 0x0A binario parte la fila en origen. Faltas (capitulo 100) y victimas (capitulo 300) no se incluyen.",
+    "privacidad": "Salida 100% agregada; no se expone ningun dato personal. Los capitulos 200/300 (N de documento, datos de victima) no se publican a nivel registro."
+  },
+  "_n_registros": 755747
+}

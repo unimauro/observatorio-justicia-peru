@@ -70,3 +70,30 @@ Ejecutado (UTC): 2026-06-29T15:51:52.298670+00:00
   ciberdelitos: total=738,860
   trata: total=7,517
   -> escrito site/data/real/manifest.json
+
+
+## Iteracion 3 (INEI denuncias PNP)
+
+# REPORTE ETL REAL - Iteracion 3 - Observatorio Justicia Peru
+Ejecutado (UTC): 2026-06-29T17:29:07.764395+00:00
+
+## INEI/PNP - Registro Nacional de Denuncias de Delitos y Faltas
+  2016: lineas=360,713 con_generico=355,878 sin_clasificar=694 (0.20%) perdidas_por_corrupcion~1.3%
+      DELITOS CONTRA EL PATRIMONIO: 242,654
+      DELITOS CONTRA LA VIDA EL CUERPO Y LA SALUD: 44,289
+      DELITOS CONTRA LA SEGURIDAD PUBLICA: 38,121
+      DELITOS CONTRA LA LIBERTAD: 20,389
+      DELITOS CONTRA LA ADMINISTRACION PUBLICA: 3,867
+  2017: lineas=409,661 con_generico=399,869 sin_clasificar=36 (0.01%) perdidas_por_corrupcion~2.4%
+      DELITOS CONTRA EL PATRIMONIO: 265,268
+      DELITOS CONTRA LA VIDA EL CUERPO Y LA SALUD: 50,595
+      DELITOS CONTRA LA SEGURIDAD PUBLICA: 49,383
+      DELITOS CONTRA LA LIBERTAD: 22,658
+      DELITOS CONTRA LA ADMINISTRACION PUBLICA: 4,542
+  -> escrito site/data/real/inei_denuncias.json
+  -> escrito data/processed/inei_denuncias.parquet
+  TOTAL denuncias de delitos (cap.200): 755,747
+    top delito: DELITOS CONTRA EL PATRIMONIO = 507,922
+    top delito: DELITOS CONTRA LA VIDA EL CUERPO Y LA SALUD = 94,884
+    top delito: DELITOS CONTRA LA SEGURIDAD PUBLICA = 87,504
+  -> escrito site/data/real/manifest.json

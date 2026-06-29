@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-06-29T15:53:07.903072+00:00",
+  "generado_utc": "2026-06-29T17:29:12.261791+00:00",
   "datasets": [
     {
       "id": "pj_carga_nacional",
@@ -110,6 +110,17 @@
       "granularidad": "agregado",
       "url": "https://www.datosabiertos.gob.pe/dataset/casos-intervenidos-por-el-delito-de-trata-de-personas-según-distrito-fiscal",
       "n_registros": 34
+    },
+    {
+      "id": "inei_denuncias",
+      "titulo": "Denuncias de delitos y faltas (INEI/PNP)",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "INEI / PNP",
+      "fecha_corte": "2017-12-31",
+      "cobertura": "Nacional 2016-2017",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/registro-nacional-de-denuncias-de-delitos-y-faltas-2017-instituto-nacional-de-estadística-e",
+      "n_registros": 755747
     }
   ]
 }

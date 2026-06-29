@@ -728,7 +728,7 @@ function renderPrediccion() {
   html += `<div class="card"><h3>🔮 Demora real vs. predicha por proceso (mediana, días)</h3><div class="chart" id="ml-chart"></div>${metaFoot(ml._meta)}</div>`;
   html += `<div class="card"><h3>¿Cómo se usa?</h3><p class="card-sub" style="font-size:13.5px">El modelo estima cuánto tardará un expediente según su <b>proceso, materia, instancia, provincia y mes de ingreso</b>.
     Sirve para <b>anticipar carga</b>, <b>priorizar</b> expedientes en riesgo de estancarse y <b>simular</b> escenarios. En producción se expone como API en el VPS
-    (<code>POST ${"ml.tunky.net"}/v1/ml/predict-demora</code>) y el dashboard la consulta en vivo. Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/ML_PLAN.md" target="_blank" rel="noopener">plan ML</a>.</p></div>`;
+    (<code>POST ml.tunky.net/v1/justicia/predict-demora</code>) y el dashboard la consulta en vivo. Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/ML_PLAN.md" target="_blank" rel="noopener">plan ML</a>.</p></div>`;
   box.innerHTML = html;
   try {
     const rows = ml.por_proceso;

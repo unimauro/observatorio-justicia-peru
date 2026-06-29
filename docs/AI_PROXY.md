@@ -29,33 +29,24 @@ const AI_ENDPOINT = new URLSearchParams(location.search).get("ai")
 ```
 Timeout del cliente: 6 s. Cualquier error/abort → fallback local.
 
-## Implementación de referencia (Vercel Function + Claude API)
-> Reusar el patrón de `ai-interviewer` (`@ai-sdk/anthropic`). La API key vive en el servidor.
+## Implementación de referencia (FastAPI + OpenRouter)
+> Implementada en `api/main.py`. Usa **OpenRouter** (compatible con la API de OpenAI), no la API
+> de Anthropic directa. La key vive en el servidor (VPS). OpenRouter es multi-modelo: una sola key
+> enruta a Claude, GPT, Llama, etc. según `AI_MODEL`.
 
-```ts
-// api/justicia/chat.ts
-import { anthropic } from "@ai-sdk/anthropic";
-import { generateText } from "ai";
-
-export const config = { runtime: "edge" };
-
-export default async function handler(req: Request) {
-  const { question, context } = await req.json();
-  const system = `Eres el copiloto del Observatorio Nacional de Justicia del Perú.
-Responde SOLO con base en el JSON de contexto. Si el dato es sintético, acláralo.
-Sé breve, cita cifras del contexto. No inventes datos que no estén en el contexto.`;
-  const { text } = await generateText({
-    model: anthropic("claude-haiku-4-5-20251001"), // rápido; usar claude-opus-4-8 para análisis profundo
-    system,
-    prompt: `Pregunta: ${question}\n\nContexto (JSON):\n${JSON.stringify(context)}`,
-    maxTokens: 500,
-  });
-  return new Response(JSON.stringify({ answer: text }), {
-    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-  });
-}
+```python
+# api/main.py (extracto)
+from openai import OpenAI
+client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])
+resp = client.chat.completions.create(
+    model=os.environ.get("AI_MODEL", "anthropic/claude-3.5-haiku"),  # cualquier modelo de OpenRouter
+    max_tokens=500,
+    messages=[{"role": "system", "content": system}, {"role": "user", "content": prompt}],
+    extra_headers={"HTTP-Referer": "https://unimauro.github.io/...", "X-Title": "Observatorio Justicia Peru"},
+)
+answer = resp.choices[0].message.content
 ```
-Variables de entorno (server-side): `ANTHROPIC_API_KEY`. Habilitar **CORS** para el origen
+Variables de entorno (server-side): `OPENROUTER_API_KEY`, `AI_MODEL`. Habilitar **CORS** para el origen
 `https://unimauro.github.io`. Modelos: `claude-haiku-4-5-20251001` (rápido) / `claude-opus-4-8`
 (razonamiento). El `context` ya se enriquece con los JSON reales de `site/data/real/` (ver
 `aiContext()` en `app.js`), separando `DATOS_REALES_oficiales` de `PROTOTIPO_sintetico`.

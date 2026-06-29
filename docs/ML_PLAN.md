@@ -33,6 +33,11 @@ la pestaña 🔮 Predicción).
 
 ## 2. Arquitectura cerrada en el VPS (tunky.net)
 
+> **`ml.tunky.net` es un gateway de IA/ML MULTI-ESTUDIO**: un único contenedor FastAPI sirve a
+> varios proyectos, separados por ruta (`/v1/justicia/...`, y `/v1/<otro-estudio>/...` a futuro).
+> Así se reutiliza el chatbot y los modelos sin levantar un contenedor por proyecto (ahorra RAM
+> en el VPS). El chatbot usa **OpenRouter** (no la API de Anthropic directa).
+
 Todo el cómputo pesado (modelos, microdata, chatbot) vive en el **VPS Hostinger** ([redacted-host]),
 detrás de **Caddy** (que ya hace de reverse-proxy + TLS para los demás SaaS). El dashboard estático
 (GitHub Pages) solo **consulta** la API; si la API está caída, el tablero sigue funcionando (las
@@ -43,14 +48,14 @@ predicciones y el chat degradan con elegancia).
         │  fetch HTTPS (CORS: solo unimauro.github.io)
         ▼
 [ Caddy en el VPS ]  ──►  ai.tunky.net   → contenedor justicia-api (FastAPI)
-                          ml.tunky.net   → mismo contenedor (rutas /v1/ml/*)
+                          ml.tunky.net   → mismo contenedor (rutas /v1/justicia/*)
         │
         ▼
 [ contenedor Docker "justicia-api" ]   ← NUEVO, aislado, con límites de recursos
    - FastAPI (uvicorn)
-   - /v1/justicia/chat        → Claude API (key en env, server-side)   [Fase 5]
-   - /v1/ml/predict-demora    → carga demora.joblib y predice          [Fase 4]
-   - /v1/ml/forecast-carga    → pronóstico de carga                    [Fase 4]
+   - /v1/justicia/chat        → OpenRouter (key en env, server-side)   [Fase 5]
+   - /v1/justicia/predict-demora    → carga demora.joblib y predice          [Fase 4]
+   - /v1/justicia/forecast-carga    → pronóstico de carga                    [Fase 4]
    - /data, /models montados como volumen (microdata pesada se queda en el VPS)
 ```
 
@@ -76,7 +81,8 @@ services:
     restart: unless-stopped
     ports: ["127.0.0.1:8088:8088"]   # solo local; Caddy expone al exterior
     environment:
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - AI_MODEL=anthropic/claude-3.5-haiku
       - ALLOWED_ORIGIN=https://unimauro.github.io
     volumes:
       - ../ml/models:/app/models:ro
@@ -89,16 +95,15 @@ services:
 
 El frontend **ya está cableado** a `ai.tunky.net/v1/justicia/chat` (con fallback local si no
 responde). Para activarlo "de verdad" solo falta **levantar el endpoint** en el contenedor:
-recibe `{question, context}`, llama a la Claude API server-side (la key vive en el VPS, nunca en el
-navegador) y responde `{answer}`. Modelos: `claude-haiku-4-5-20251001` (rápido) o `claude-opus-4-8`
-(análisis). Implementación de referencia en `docs/AI_PROXY.md` y esqueleto en `api/`.
+recibe `{question, context}`, llama a OpenRouter server-side (la key vive en el VPS, nunca en el
+navegador; OpenRouter es multi-modelo) y responde `{answer}`. Modelo configurable vía `AI_MODEL` en OpenRouter (Claude, GPT, Llama, etc.). Implementación de referencia en `docs/AI_PROXY.md` y esqueleto en `api/`.
 
 **Factibilidad:** alta. Es un único contenedor FastAPI + una variable de entorno con la API key +
 dos líneas en el Caddyfile. No requiere apagar nada.
 
 ## 4. Pasos para desplegar (cuando se decida)
-1. `pip install -r api/requirements.txt` dentro del contenedor (fastapi, uvicorn, joblib, scikit-learn, anthropic).
+1. `pip install -r api/requirements.txt` dentro del contenedor (fastapi, uvicorn, joblib, scikit-learn, openai (cliente OpenRouter)).
 2. Copiar `ml/models/*.joblib` al VPS.
-3. `ANTHROPIC_API_KEY=… docker compose -p justicia -f deploy/docker-compose.vps.yml up -d --build`.
+3. `OPENROUTER_API_KEY=… docker compose -p justicia -f deploy/docker-compose.vps.yml up -d --build`.
 4. Añadir el bloque `ai.tunky.net, ml.tunky.net` al Caddyfile y `caddy reload`.
 5. Verificar CORS desde el dashboard. Listo: chat + predicciones en vivo.
