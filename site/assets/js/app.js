@@ -50,6 +50,7 @@ async function boot() {
   setupTheme();
   setupAI();
   setupModal();
+  setupDisclaimer();
   renderFooterSupport();
   renderPanel("resumen");
   window.addEventListener("resize", () => {
@@ -831,10 +832,17 @@ const FAQ = [
    "Depende de cada fuente: el MPFN cubre 2019–2026, el Tribunal Constitucional 1992–2026, el MIMP 2012–2025, y la carga del Poder Judicial actualmente solo 2024 en datos abiertos (los demás años requieren descarga manual del Portal Estadístico). Cada gráfico muestra su <b>fecha de corte</b>; el detalle de coberturas y huecos está en la pestaña <b>📋 Fuentes & Calidad</b>."],
   ["¿Puedo usar, auditar o reproducir esto?",
    "Sí. Es <b>código abierto</b> (licencia MIT). Todo el código (ETL, indicadores, tablero, modelo) y los datos procesados están en el <a href='" + REPO + "' target='_blank' rel='noopener'>repositorio de GitHub</a>. Puedes verificar cada cifra contra su fuente, correr los scripts o construir sobre el proyecto."],
-  ["¿Quién hizo este dashboard y cómo lo apoyo?",
-   "Lo desarrolló <b>" + SUPPORT.autor + "</b> (<a href='" + SUPPORT.github + "' target='_blank' rel='noopener'>@unimauro</a>), de forma independiente y abierta. Contacto: <a href='mailto:" + SUPPORT.email + "'>" + SUPPORT.email + "</a>. " +
-   "Es un proyecto sin fines de lucro para fortalecer la transparencia del sistema de justicia; si te resulta útil, puedes <b>apoyarlo</b> con una estrella ⭐ al repositorio o una donación (ver opciones abajo). Cada aporte ayuda a mantener el servidor y a integrar más fuentes de datos."],
 ];
+// Banner "Cómo leer": se auto-colapsa a los 10s (no se elimina). Clic para expandir, × para colapsar.
+function setupDisclaimer() {
+  const d = $("#main-disclaimer"); if (!d) return;
+  const x = $("#disc-x");
+  const collapse = () => d.classList.add("collapsed");
+  const expand = () => d.classList.remove("collapsed");
+  if (x) x.addEventListener("click", (e) => { e.stopPropagation(); collapse(); });
+  d.addEventListener("click", () => { if (d.classList.contains("collapsed")) expand(); });
+  setTimeout(collapse, 10000);
+}
 function renderFooterSupport() {
   const box = $("#footer-support"); if (!box) return;
   const chip = (href, label) => `<a href="${href}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:9px;font-size:12.5px;font-weight:700;text-decoration:none;margin:3px 4px 3px 0">${label}</a>`;
