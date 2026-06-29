@@ -789,7 +789,7 @@ const REPO = "https://github.com/unimauro/observatorio-justicia-peru";
 const SUPPORT = {
   autor: "Carlos Mauro Cárdenas",
   github: "https://github.com/unimauro",
-  email: "unimauro@gmail.com",
+  email: "carlos@cardenas.pe",
   coffee: "https://buymeacoffee.com/unimauro",
   paypal: "https://paypal.me/unimauro",
   yape: "940584307",
