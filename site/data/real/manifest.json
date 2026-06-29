@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-06-29T17:29:12.261791+00:00",
+  "generado_utc": "2026-06-29T21:35:57.753614+00:00",
   "datasets": [
     {
       "id": "pj_carga_nacional",
@@ -121,6 +121,17 @@
       "granularidad": "agregado",
       "url": "https://www.datosabiertos.gob.pe/dataset/registro-nacional-de-denuncias-de-delitos-y-faltas-2017-instituto-nacional-de-estadística-e",
       "n_registros": 755747
+    },
+    {
+      "id": "mimp_violencia",
+      "titulo": "Violencia contra la mujer y feminicidios (MIMP/CEM)",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "MIMP / Programa AURORA",
+      "fecha_corte": "2026-01-15",
+      "cobertura": "Nacional, 2012-2025",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mimp-número-de-casos-atendidos-por-violencia-contra-la-mujer-integrantes-del-grupo-familiar",
+      "n_registros": 1623974
     }
   ]
 }

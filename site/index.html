@@ -114,13 +114,13 @@
 
 <nav class="tabs">
   <div class="tabs-inner" id="tabs">
-    <button class="tab active" data-panel="resumen">📊 Resumen 🧪</button>
-    <button class="tab" data-panel="reales">🟢 Datos Reales</button>
+    <button class="tab active" data-panel="resumen">📊 Resumen 🟢</button>
+    <button class="tab" data-panel="reales">📋 Fuentes & Calidad</button>
     <button class="tab" data-panel="mapa">🗺️ Mapa 🟢</button>
     <button class="tab" data-panel="cortes">🏛️ Distritos Judiciales 🟢</button>
     <button class="tab" data-panel="procesos">📁 Tipos de Proceso 🟢</button>
     <button class="tab" data-panel="series">📈 Series 🟢</button>
-    <button class="tab" data-panel="seguridad">🚨 Seguridad 🧪</button>
+    <button class="tab" data-panel="seguridad">🚨 Seguridad 🟢</button>
     <button class="tab" data-panel="embudo">🔻 Flujo & Backlog 🟢</button>
     <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🟢</button>
     <button class="tab" data-panel="prediccion">🔮 Predicción (ML) 🟢</button>
@@ -137,39 +137,24 @@
   <!-- ============ RESUMEN ============ -->
   <section class="panel active" id="resumen">
     <h2 class="section-title">Resumen Nacional</h2>
-    <p class="section-sub">Cifras reales destacadas arriba; abajo, el prototipo sintético (🧪) para vistas aún sin fuente oficial conectada.</p>
+    <p class="section-sub">Cifras clave del sistema de justicia peruano, construidas con datos abiertos oficiales.</p>
     <div id="resumen-real"></div>
-    <h3 style="font-size:14px;color:var(--muted);margin:22px 0 4px">🧪 Prototipo sintético (calibrado, no oficial)</h3>
-    <div class="kpi-grid" id="kpis"></div>
-    <div class="grid-2">
-      <div class="card"><h3>Evolución nacional 2010–2026</h3><p class="card-sub">Expedientes ingresados vs. resueltos vs. pendientes.</p><div class="chart" id="chart-evol"></div></div>
-      <div class="card"><h3>Tasa de resolución (Clearance Rate)</h3><p class="card-sub">Resueltos / ingresados por año. Línea de 100% = equilibrio.</p><div class="chart" id="chart-clearance"></div></div>
-    </div>
+    <div id="resumen-charts"></div>
   </section>
 
-  <!-- ============ DATOS REALES ============ -->
+  <!-- ============ FUENTES & CALIDAD ============ -->
   <section class="panel" id="reales">
-    <h2 class="section-title">🟢 Datos Reales — fuentes oficiales</h2>
-    <p class="section-sub">Indicadores construidos con <b>datos abiertos oficiales</b> (Poder Judicial, Ministerio Público, INEI) descargados de <a href="https://www.datosabiertos.gob.pe" target="_blank" rel="noopener">datosabiertos.gob.pe</a>. Cada cifra cita su <b>fuente</b> y <b>fecha de corte</b>. Lo demás del tablero es un <b>prototipo con datos sintéticos</b> (claramente marcado).</p>
-    <div id="reales-content"><div class="loading"><span class="spin"></span> Cargando datos reales…</div></div>
+    <h2 class="section-title">📋 Fuentes & Calidad del dato</h2>
+    <p class="section-sub">Catálogo de las fuentes oficiales integradas, su cobertura, fecha de corte y las advertencias metodológicas. Cada gráfico del tablero vive en su pestaña temática; aquí está la trazabilidad.</p>
+    <div id="reales-content"><div class="loading"><span class="spin"></span> Cargando fuentes…</div></div>
   </section>
 
   <!-- ============ MAPA ============ -->
   <section class="panel" id="mapa">
-    <h2 class="section-title">Mapa del Perú</h2>
-    <p class="section-sub">Por defecto muestra <b>🟢 delitos denunciados reales (MPFN)</b> por departamento. Los demás indicadores (🧪) son del prototipo sintético. Clic en un departamento para el detalle.</p>
-    <div class="controls">
-      <label>Indicador:
-        <select id="map-metric">
-          <option value="delitos_reales">🟢 Delitos denunciados (real · MPFN)</option>
-          <option value="congestion">🧪 Congestión procesal</option>
-          <option value="demora_dias">Demora promedio (días)</option>
-          <option value="carga_por_juez">Carga por juez</option>
-          <option value="pendientes">Expedientes pendientes</option>
-          <option value="procesos_por_1000hab">Procesos por 1000 hab.</option>
-          <option value="riesgo_seguridad">Riesgo de seguridad</option>
-        </select>
-      </label>
+    <h2 class="section-title">Mapa del Perú — delitos denunciados</h2>
+    <p class="section-sub"><b>🟢 Delitos denunciados reales (Ministerio Público)</b> por departamento, 2019–2026. Pasa el cursor o haz clic en un departamento para ver el detalle.</p>
+    <div class="controls" style="display:none">
+      <label>Indicador: <select id="map-metric"><option value="delitos_reales">Delitos denunciados (MPFN)</option></select></label>
     </div>
     <div id="map"></div>
   </section>
@@ -195,45 +180,22 @@
   <!-- ============ EMBUDO ============ -->
   <section class="panel" id="embudo">
     <h2 class="section-title">Flujo Procesal & Backlog</h2>
-    <p class="section-sub">Flujo real (Poder Judicial 2024) arriba; abajo, un explorador ilustrativo del backlog por juzgado.</p>
+    <p class="section-sub">Flujo real del sistema (Poder Judicial y Ministerio Público) y el backlog real por distrito judicial.</p>
     <div id="embudo-real"></div>
-    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el ranking de "top 100 juzgados" con nombres y acumulación no usa datos reales por juzgado individual (el dato abierto del PJ es agregado por distrito/especialidad).</div>
-    <div class="grid-2">
-      <div class="card"><h3>Embudo procesal</h3><div class="chart tall" id="chart-funnel"></div></div>
-      <div class="card"><h3>Top 15 juzgados con mayor backlog</h3><div class="chart tall" id="chart-backlog"></div></div>
-    </div>
-    <div class="card"><h3>Top 100 juzgados — mayor acumulación</h3><div class="table-wrap" style="max-height:480px"><table id="tbl-backlog"></table></div></div>
   </section>
 
   <!-- ============ MAGISTRADOS ============ -->
   <section class="panel" id="magistrados">
     <h2 class="section-title">Jueces & Fiscales</h2>
-    <p class="section-sub">Dotación real de fiscales (MPFN) arriba; abajo, un explorador ilustrativo de magistrados individuales.</p>
+    <p class="section-sub">Dotación real de fiscales del Ministerio Público: evolución, cargo, condición, sexo y distribución por distrito fiscal.</p>
     <div id="mag-real"></div>
-    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el explorador de magistrados individuales con nombres y <b>rotaciones</b> no usa datos reales —no existe un registro abierto oficial de rotaciones nominales de jueces/fiscales— y sirve solo para mostrar el tipo de seguimiento posible.</div>
-    <div class="controls">
-      <button class="chip active" data-rol="Juez">👨‍⚖️ Jueces</button>
-      <button class="chip" data-rol="Fiscal">🧑‍💼 Fiscales</button>
-      <input type="search" id="mag-search" placeholder="🔎 Buscar por nombre o corte..." style="min-width:240px"/>
-      <select id="mag-esp"><option value="">Todas las especialidades</option></select>
-      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="mag-seg"/> Solo con casos de seguridad</label>
-    </div>
-    <div class="table-wrap" style="max-height:560px"><table id="tbl-mag"></table></div>
   </section>
 
   <!-- ============ SEGURIDAD ============ -->
   <section class="panel" id="seguridad">
     <h2 class="section-title">🚨 Seguridad</h2>
-    <p class="section-sub">Datos reales del Ministerio Público sobre criminalidad y violencia, más un explorador de casos de alto perfil (ilustrativo).</p>
+    <p class="section-sub">Datos reales del Ministerio Público, INEI/PNP y MIMP sobre criminalidad, violencia contra la mujer y delitos de alto impacto.</p>
     <div id="seg-real"></div>
-    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el explorador de casos individuales de alto perfil con juez/fiscal no usa datos reales —no existe un registro abierto de casos nominales—; sirve para mostrar el tipo de seguimiento posible.</div>
-    <div class="kpi-grid" id="seg-kpis"></div>
-    <div class="grid-2">
-      <div class="card"><h3>🧪 Casos por tema</h3><div class="chart" id="chart-seg-tema"></div></div>
-      <div class="card"><h3>🧪 Casos por estado procesal</h3><div class="chart" id="chart-seg-estado"></div></div>
-    </div>
-    <div class="controls" id="seg-chips"><b style="color:var(--muted);font-size:12px;align-self:center">Filtrar tema:</b></div>
-    <div class="table-wrap" style="max-height:520px"><table id="tbl-seg"></table></div>
   </section>
 
   <!-- ============ SERIES ============ -->

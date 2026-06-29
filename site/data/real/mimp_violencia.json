@@ -1,0 +1,365 @@
+{
+  "_meta": {
+    "fuente": "MIMP - Programa AURORA / Centros Emergencia Mujer (CEM)",
+    "fecha_corte": "2026-01-15",
+    "cobertura": "Nacional, 2012-2025",
+    "granularidad": "agregado",
+    "url": "https://www.datosabiertos.gob.pe/dataset/mimp-número-de-casos-atendidos-por-violencia-contra-la-mujer-integrantes-del-grupo-familiar"
+  },
+  "casos_violencia": {
+    "total": 1618833,
+    "por_anio": [
+      {
+        "anio": 2012,
+        "cantidad": 42537
+      },
+      {
+        "anio": 2013,
+        "cantidad": 49138
+      },
+      {
+        "anio": 2014,
+        "cantidad": 50485
+      },
+      {
+        "anio": 2015,
+        "cantidad": 58429
+      },
+      {
+        "anio": 2016,
+        "cantidad": 70510
+      },
+      {
+        "anio": 2017,
+        "cantidad": 95317
+      },
+      {
+        "anio": 2018,
+        "cantidad": 133697
+      },
+      {
+        "anio": 2019,
+        "cantidad": 181885
+      },
+      {
+        "anio": 2020,
+        "cantidad": 114495
+      },
+      {
+        "anio": 2021,
+        "cantidad": 163797
+      },
+      {
+        "anio": 2022,
+        "cantidad": 154202
+      },
+      {
+        "anio": 2023,
+        "cantidad": 166313
+      },
+      {
+        "anio": 2024,
+        "cantidad": 168492
+      },
+      {
+        "anio": 2025,
+        "cantidad": 169536
+      }
+    ],
+    "por_departamento": [
+      {
+        "departamento": "LIMA",
+        "cantidad": 220561
+      },
+      {
+        "departamento": "LIMA METROPOLITANA",
+        "cantidad": 188312
+      },
+      {
+        "departamento": "AREQUIPA",
+        "cantidad": 141354
+      },
+      {
+        "departamento": "CUSCO",
+        "cantidad": 114264
+      },
+      {
+        "departamento": "LA LIBERTAD",
+        "cantidad": 76159
+      },
+      {
+        "departamento": "PIURA",
+        "cantidad": 68879
+      },
+      {
+        "departamento": "JUNÍN",
+        "cantidad": 65995
+      },
+      {
+        "departamento": "ÁNCASH",
+        "cantidad": 59078
+      },
+      {
+        "departamento": "ICA",
+        "cantidad": 58606
+      },
+      {
+        "departamento": "PUNO",
+        "cantidad": 55594
+      },
+      {
+        "departamento": "AYACUCHO",
+        "cantidad": 52115
+      },
+      {
+        "departamento": "SAN MARTÍN",
+        "cantidad": 43328
+      },
+      {
+        "departamento": "CAJAMARCA",
+        "cantidad": 41204
+      },
+      {
+        "departamento": "CALLAO",
+        "cantidad": 39126
+      },
+      {
+        "departamento": "HUÁNUCO",
+        "cantidad": 36235
+      },
+      {
+        "departamento": "LAMBAYEQUE",
+        "cantidad": 34572
+      },
+      {
+        "departamento": "LORETO",
+        "cantidad": 33514
+      },
+      {
+        "departamento": "TACNA",
+        "cantidad": 26894
+      },
+      {
+        "departamento": "APURÍMAC",
+        "cantidad": 26227
+      },
+      {
+        "departamento": "HUANCAVELICA",
+        "cantidad": 24708
+      },
+      {
+        "departamento": "LIMA PROVINCIAS",
+        "cantidad": 21417
+      },
+      {
+        "departamento": "UCAYALI",
+        "cantidad": 20512
+      },
+      {
+        "departamento": "AMAZONAS",
+        "cantidad": 19665
+      },
+      {
+        "departamento": "ANCASH",
+        "cantidad": 19452
+      },
+      {
+        "departamento": "TUMBES",
+        "cantidad": 19352
+      }
+    ],
+    "por_tipo": [
+      {
+        "tipo": "Psicologica",
+        "cantidad": 754843
+      },
+      {
+        "tipo": "Fisica",
+        "cantidad": 628672
+      },
+      {
+        "tipo": "Sexual",
+        "cantidad": 229263
+      },
+      {
+        "tipo": "Economica o patrimonial",
+        "cantidad": 6055
+      }
+    ],
+    "nota": "Un mismo caso puede presentar mas de un tipo de violencia; por ello la suma de por_tipo no coincide con el total de casos."
+  },
+  "feminicidios": {
+    "total": 1822,
+    "por_anio": [
+      {
+        "anio": 2012,
+        "cantidad": 81
+      },
+      {
+        "anio": 2013,
+        "cantidad": 128
+      },
+      {
+        "anio": 2014,
+        "cantidad": 96
+      },
+      {
+        "anio": 2015,
+        "cantidad": 95
+      },
+      {
+        "anio": 2016,
+        "cantidad": 124
+      },
+      {
+        "anio": 2017,
+        "cantidad": 120
+      },
+      {
+        "anio": 2018,
+        "cantidad": 149
+      },
+      {
+        "anio": 2019,
+        "cantidad": 166
+      },
+      {
+        "anio": 2020,
+        "cantidad": 131
+      },
+      {
+        "anio": 2021,
+        "cantidad": 136
+      },
+      {
+        "anio": 2022,
+        "cantidad": 130
+      },
+      {
+        "anio": 2023,
+        "cantidad": 170
+      },
+      {
+        "anio": 2024,
+        "cantidad": 162
+      },
+      {
+        "anio": 2025,
+        "cantidad": 134
+      }
+    ],
+    "por_vinculo": [
+      {
+        "vinculo": "Pareja",
+        "cantidad": 769
+      },
+      {
+        "vinculo": "Ex pareja",
+        "cantidad": 277
+      },
+      {
+        "vinculo": "Desconocido",
+        "cantidad": 183
+      },
+      {
+        "vinculo": "Conocido",
+        "cantidad": 84
+      },
+      {
+        "vinculo": "Familiar",
+        "cantidad": 74
+      },
+      {
+        "vinculo": "Otros",
+        "cantidad": 35
+      }
+    ],
+    "por_grupo_edad": [
+      {
+        "grupo": "0-5",
+        "cantidad": 12
+      },
+      {
+        "grupo": "6-11",
+        "cantidad": 10
+      },
+      {
+        "grupo": "12-17",
+        "cantidad": 95
+      },
+      {
+        "grupo": "18-29",
+        "cantidad": 479
+      },
+      {
+        "grupo": "30-59",
+        "cantidad": 535
+      },
+      {
+        "grupo": "60 a mas",
+        "cantidad": 47
+      }
+    ]
+  },
+  "tentativas_feminicidio": {
+    "total": 3319,
+    "por_anio": [
+      {
+        "anio": 2012,
+        "cantidad": 91
+      },
+      {
+        "anio": 2013,
+        "cantidad": 151
+      },
+      {
+        "anio": 2014,
+        "cantidad": 186
+      },
+      {
+        "anio": 2015,
+        "cantidad": 198
+      },
+      {
+        "anio": 2016,
+        "cantidad": 258
+      },
+      {
+        "anio": 2017,
+        "cantidad": 120
+      },
+      {
+        "anio": 2018,
+        "cantidad": 304
+      },
+      {
+        "anio": 2019,
+        "cantidad": 404
+      },
+      {
+        "anio": 2020,
+        "cantidad": 330
+      },
+      {
+        "anio": 2021,
+        "cantidad": 293
+      },
+      {
+        "anio": 2022,
+        "cantidad": 223
+      },
+      {
+        "anio": 2023,
+        "cantidad": 258
+      },
+      {
+        "anio": 2024,
+        "cantidad": 233
+      },
+      {
+        "anio": 2025,
+        "cantidad": 270
+      }
+    ]
+  }
+}

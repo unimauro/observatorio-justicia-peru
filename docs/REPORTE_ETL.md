@@ -97,3 +97,23 @@ Ejecutado (UTC): 2026-06-29T17:29:07.764395+00:00
     top delito: DELITOS CONTRA LA VIDA EL CUERPO Y LA SALUD = 94,884
     top delito: DELITOS CONTRA LA SEGURIDAD PUBLICA = 87,504
   -> escrito site/data/real/manifest.json
+
+
+## Iteración 4 (MIMP/CEM)
+
+# REPORTE ETL REAL - Iteracion 4 (MIMP/CEM) - Observatorio Justicia Peru
+Ejecutado (UTC): 2026-06-29T21:35:54.985109+00:00
+
+## Casos de violencia contra la mujer (CEM)
+  casos: filas=4699 validas=4698 anios=2012-2025
+  casos: total=1,618,833 departamentos=25
+
+## Feminicidios atendidos por los CEM
+  feminicidios: filas=1084 validas=1084 anios=2012-2025
+  feminicidios: total=1,822 vinculos=6 edades=6
+
+## Tentativas de feminicidio atendidas por los CEM
+  tentativas: filas=1539 validas=1539 anios=2012-2025
+  tentativas: total=3,319
+  -> escrito site/data/real/mimp_violencia.json
+  -> escrito site/data/real/manifest.json

@@ -9,7 +9,7 @@ const FILES = ["nacional", "departamentos", "cortes", "series", "tipos_proceso",
   "embudo", "backlog", "jueces", "fiscales", "casos_seguridad", "indicadores", "manifest"];
 const REAL = {};
 const REAL_FILES = ["manifest", "mpfn_fiscales", "mpfn_casos", "mpfn_delitos",
-  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad", "ml_demora", "inei_denuncias"];
+  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad", "ml_demora", "inei_denuncias", "mimp_violencia"];
 
 const fmt = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE"));
 const fmt1 = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE", { maximumFractionDigits: 1 }));
@@ -97,51 +97,18 @@ function renderResumenReal() {
   if (seg && seg.violencia_mujer) k.push(["Violencia contra la mujer", fmt(seg.violencia_mujer.total), "casos fiscales MPFN", "alert"]);
   if (REAL.inei_denuncias) k.push(["Denuncias policiales (INEI/PNP)", fmt(REAL.inei_denuncias.total_denuncias), "2016–2017", ""]);
   if (!k.length) { box.innerHTML = ""; return; }
-  box.innerHTML = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Cifras reales (datos abiertos oficiales).</b> Detalle y fuentes en la pestaña <b>Datos Reales</b>.</div>
-    <div class="kpi-grid">${k.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
+  box.innerHTML = `<div class="kpi-grid">${k.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
 }
 function renderResumen() {
   renderResumenReal();
-  const n = DATA.nacional;
-  const cards = [
-    ["Expedientes ingresados", fmt(n.expedientes_ingresados), "este año", ""],
-    ["Resueltos", fmt(n.expedientes_resueltos), "este año", "ok"],
-    ["Pendientes (backlog)", fmt(n.expedientes_pendientes), "acumulados", "alert"],
-    ["Tiempo promedio", fmt(n.tiempo_promedio_dias) + " días", "hasta resolución", n.tiempo_promedio_dias > 600 ? "warn" : ""],
-    ["Tasa de resolución", pct(n.clearance_rate), n.clearance_rate < 1 ? "acumula carga" : "reduce carga", n.clearance_rate < 1 ? "warn" : "ok"],
-    ["Congestión procesal", fmt1(n.congestion), "(pend+ing)/resueltos", n.congestion > 2.5 ? "alert" : "warn"],
-    ["Jueces", fmt(n.jueces), `${fmt1(n.carga_por_juez)} expedientes/juez`, ""],
-    ["Índice de mora", pct(n.indice_mora), "carga sin resolver", n.indice_mora > 0.5 ? "alert" : "warn"],
-  ];
-  $("#kpis").innerHTML = cards.map(([l, v, h, cls]) =>
-    `<div class="kpi ${cls}"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("");
-
-  const s = DATA.series, yrs = s.map((x) => x.anio);
-  mkChart("chart-evol").setOption({
-    ...echartsTheme(), color: PALETTE,
-    tooltip: { trigger: "axis" }, legend: { top: 0, textStyle: echartsTheme().textStyle },
-    grid: { left: 60, right: 20, top: 40, bottom: 30 },
-    xAxis: { type: "category", data: yrs },
-    yAxis: { type: "value", axisLabel: { formatter: (v) => (v / 1e6).toFixed(1) + "M" } },
-    series: [
-      { name: "Ingresados", type: "line", smooth: true, data: s.map((x) => x.ingresados), areaStyle: { opacity: .08 } },
-      { name: "Resueltos", type: "line", smooth: true, data: s.map((x) => x.resueltos) },
-      { name: "Pendientes", type: "line", smooth: true, data: s.map((x) => x.pendientes), areaStyle: { opacity: .08 } },
-    ],
-  });
-  mkChart("chart-clearance").setOption({
-    ...echartsTheme(),
-    tooltip: { trigger: "axis", valueFormatter: (v) => (v * 100).toFixed(1) + "%" },
-    grid: { left: 55, right: 20, top: 30, bottom: 30 },
-    xAxis: { type: "category", data: yrs },
-    yAxis: { type: "value", axisLabel: { formatter: (v) => (v * 100).toFixed(0) + "%" }, min: 0.5, max: 1.1 },
-    series: [{
-      type: "line", smooth: true, data: s.map((x) => x.clearance_rate),
-      lineStyle: { color: "#2ecc71", width: 3 }, itemStyle: { color: "#2ecc71" },
-      markLine: { silent: true, symbol: "none", data: [{ yAxis: 1, lineStyle: { color: "#e74c3c", type: "dashed" }, label: { formatter: "Equilibrio 100%" } }] },
-      areaStyle: { color: "rgba(46,204,113,.10)" },
-    }],
-  });
+  // dos gráficos reales (no sintéticos): criminalidad y serie larga del TC
+  const box = $("#resumen-charts"); if (!box) return;
+  const delitos = REAL.mpfn_delitos, tc = REAL.tc;
+  let html = "", reg = [];
+  if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN)</h3><div class="chart" id="rs-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["rs-del", () => lineSimple("rs-del", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
+  if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Expedientes del Tribunal Constitucional por año (1992–2026)</h3><div class="chart" id="rs-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["rs-tc", () => lineSimple("rs-tc", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
+  box.innerHTML = html;
+  reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
 }
 
 /* ============================================================ MAPA */
@@ -376,35 +343,20 @@ function renderEmbudoReal() {
     html += `<div class="card"><h3>🟢 Casos fiscales: ingresado vs atendido por materia (MPFN)</h3><div class="chart" id="er-casflow"></div>${metaFoot(casos._meta)}</div>`;
     reg.push(["er-casflow", () => barIngRes2("er-casflow", casos.por_materia, "materia", "ingresado", "atendido")]);
   }
+  // Backlog REAL: pendientes por distrito judicial (PJ 2024) — reemplaza el "top juzgados" sintético
+  if (pj && pj.por_distrito_judicial) {
+    const rows = [...pj.por_distrito_judicial].sort((a, b) => b.pendientes - a.pendientes);
+    html += `<div class="card"><h3>🟢 Backlog real — expedientes pendientes por distrito judicial (PJ 2024)</h3>
+      <div class="chart tall" id="er-backlog"></div>${metaFoot(pj._meta)}</div>`;
+    reg.push(["er-backlog", () => barSimple("er-backlog", rows.slice(0, 20), "distrito_judicial", "pendientes", "#e74c3c")]);
+    html += `<div class="card"><h3>🟢 Carga por distrito judicial (PJ 2024)</h3>
+      <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito judicial</th><th class="num">Ingresos</th><th class="num">Resueltos</th><th class="num">Pendientes</th><th class="num">Congestión</th></tr></thead>
+      <tbody>${[...pj.por_distrito_judicial].sort((a, b) => b.congestion - a.congestion).map((r) => `<tr><td>${r.distrito_judicial}</td><td class="num">${fmt(r.ingresos)}</td><td class="num">${fmt(r.resueltos)}</td><td class="num">${fmt(r.pendientes)}</td><td class="num">${fmt1(r.congestion)}</td></tr>`).join("")}</tbody></table></div>${metaFoot(pj._meta)}</div>`;
+  }
   box.innerHTML = html;
   reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
 }
-function renderEmbudo() {
-  renderEmbudoReal();
-  const e = DATA.embudo;
-  mkChart("chart-funnel").setOption({
-    ...echartsTheme(), color: PALETTE,
-    tooltip: { trigger: "item", formatter: (p) => `${p.name}<br/>${fmt(p.value)}` },
-    series: [{
-      type: "funnel", left: 10, right: 10, top: 10, bottom: 10, minSize: "26%",
-      label: { color: echartsTheme().textStyle.color, formatter: (p) => `${p.name}: ${fmt(p.value)}` },
-      data: e.map((x) => ({ name: x.etapa, value: x.expedientes })),
-    }],
-  });
-  const top = DATA.backlog.slice(0, 15).reverse();
-  mkChart("chart-backlog").setOption({
-    ...echartsTheme(), color: ["#e74c3c"],
-    tooltip: { trigger: "axis", formatter: (p) => `${p[0].name}<br/>Pendientes: ${fmt(p[0].value)}` },
-    grid: { left: 220, right: 30, top: 10, bottom: 24 },
-    xAxis: { type: "value" },
-    yAxis: { type: "category", data: top.map((j) => `${j.juzgado} (${j.departamento})`), axisLabel: { fontSize: 10, width: 200, overflow: "truncate" } },
-    series: [{ type: "bar", data: top.map((j) => j.pendientes) }],
-  });
-  const cols = [["juzgado", "Juzgado"], ["corte", "Corte"], ["departamento", "Depto."], ["especialidad", "Especialidad"], ["pendientes", "Pendientes"], ["demora_dias", "Demora (d)"], ["carga", "Carga"]];
-  $("#tbl-backlog").innerHTML =
-    `<thead><tr>${cols.map(([k, l]) => `<th class="${["pendientes", "demora_dias", "carga"].includes(k) ? "num" : ""}">${l}</th>`).join("")}</tr></thead>
-     <tbody>${DATA.backlog.map((j) => `<tr>${cols.map(([k]) => `<td class="${typeof j[k] === "number" ? "num" : ""}">${typeof j[k] === "number" ? fmt(j[k]) : j[k]}</td>`).join("")}</tr>`).join("")}</tbody>`;
-}
+function renderEmbudo() { renderEmbudoReal(); }
 
 /* ============================================================ MAGISTRADOS */
 let magState = { rol: "Juez", q: "", esp: "", seg: false };
@@ -426,23 +378,18 @@ function renderMagistradosReal() {
     reg.push(["mr-cond", () => donut("mr-cond", fis.por_condicion, "condicion", "total")]);
     reg.push(["mr-sexo", () => donut("mr-sexo", fis.por_sexo, "sexo", "total")]);
   }
+  // tabla real: fiscales por distrito fiscal
+  if (fis.por_distrito_fiscal) {
+    const rows = [...fis.por_distrito_fiscal].sort((a, b) => b.total - a.total);
+    html += `<div class="card"><h3>🟢 Fiscales por distrito fiscal (Ministerio Público)</h3>
+      <div class="table-wrap" style="max-height:440px"><table><thead><tr><th>Distrito fiscal</th><th class="num">Fiscales</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><td>${r.distrito_fiscal}</td><td class="num">${fmt(r.total)}</td></tr>`).join("")}</tbody></table></div>${metaFoot(fis._meta)}</div>`;
+  }
   box.innerHTML = html;
   reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
   function rc(t, id, m) { return `<div class="card"><h3>${t}</h3><div class="chart" id="${id}"></div>${metaFoot(m)}</div>`; }
 }
-function renderMagistrados() {
-  renderMagistradosReal();
-  const esps = [...new Set([...DATA.jueces, ...DATA.fiscales].map((m) => m.especialidad))].sort();
-  $("#mag-esp").innerHTML = `<option value="">Todas las especialidades</option>` + esps.map((e) => `<option>${e}</option>`).join("");
-  $$("#magistrados .chip[data-rol]").forEach((c) => c.addEventListener("click", () => {
-    $$("#magistrados .chip[data-rol]").forEach((x) => x.classList.remove("active"));
-    c.classList.add("active"); magState.rol = c.dataset.rol; drawMag();
-  }));
-  $("#mag-search").addEventListener("input", (e) => { magState.q = e.target.value; drawMag(); });
-  $("#mag-esp").addEventListener("change", (e) => { magState.esp = e.target.value; drawMag(); });
-  $("#mag-seg").addEventListener("change", (e) => { magState.seg = e.target.checked; drawMag(); });
-  drawMag();
-}
+function renderMagistrados() { renderMagistradosReal(); }
 function drawMag() {
   const src = magState.rol === "Juez" ? DATA.jueces : DATA.fiscales;
   let rows = src.filter((m) =>
@@ -495,52 +442,7 @@ function openRotacion(m) {
 
 /* ============================================================ SEGURIDAD */
 let segFilter = "";
-function renderSeguridad() {
-  renderSeguridadReal();
-  const c = DATA.casos_seguridad;
-  const crit = c.filter((x) => x.nivel_alerta === "Critico").length;
-  const kpis = [
-    ["Casos de alto perfil", fmt(c.length), "monitoreados", ""],
-    ["Nivel crítico", fmt(crit), ">1000 días sin resolver", "alert"],
-    ["Imputados (total)", fmt(c.reduce((a, x) => a + x.imputados, 0)), "en estos casos", ""],
-    ["Días prom. transcurridos", fmt(Math.round(c.reduce((a, x) => a + x.dias_transcurridos, 0) / c.length)), "desde el ingreso", "warn"],
-  ];
-  $("#seg-kpis").innerHTML = kpis.map(([l, v, h, cls]) => `<div class="kpi ${cls}"><div class="label">${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("");
-
-  const byTema = groupCount(c, "tema");
-  mkChart("chart-seg-tema").setOption({
-    ...echartsTheme(), color: PALETTE,
-    tooltip: { trigger: "item" }, grid: { left: 150, right: 24, top: 10, bottom: 20 },
-    xAxis: { type: "value" }, yAxis: { type: "category", data: byTema.map((x) => x[0]) },
-    series: [{ type: "bar", data: byTema.map((x) => x[1]), itemStyle: { color: "#e74c3c" } }],
-  });
-  const byEstado = groupCount(c, "estado");
-  mkChart("chart-seg-estado").setOption({
-    ...echartsTheme(), color: PALETTE,
-    tooltip: { trigger: "item", formatter: (p) => `${p.name}: ${p.value} (${p.percent}%)` },
-    legend: { type: "scroll", bottom: 0, textStyle: echartsTheme().textStyle },
-    series: [{ type: "pie", radius: "62%", center: ["50%", "44%"], data: byEstado.map((x) => ({ name: x[0], value: x[1] })) }],
-  });
-
-  const temas = byTema.map((x) => x[0]);
-  $("#seg-chips").innerHTML = `<b style="color:var(--muted);font-size:12px;align-self:center">Filtrar tema:</b>` +
-    `<span class="chip ${segFilter === "" ? "active" : ""}" data-t="">Todos</span>` +
-    temas.map((t) => `<span class="chip ${segFilter === t ? "active" : ""}" data-t="${t}">${t}</span>`).join("");
-  $$("#seg-chips .chip").forEach((ch) => ch.addEventListener("click", () => { segFilter = ch.dataset.t; renderSegTable(); $$("#seg-chips .chip").forEach((x) => x.classList.toggle("active", x.dataset.t === segFilter)); }));
-  renderSegTable();
-}
-function renderSegTable() {
-  const c = DATA.casos_seguridad.filter((x) => !segFilter || x.tema === segFilter);
-  const cols = [["caso", "Caso"], ["tema", "Tema"], ["departamento", "Depto."], ["estado", "Estado"],
-    ["juez", "Juez"], ["fiscal", "Fiscal"], ["imputados", "Imput."], ["dias_transcurridos", "Días"], ["nivel_alerta", "Alerta"]];
-  $("#tbl-seg").innerHTML =
-    `<thead><tr>${cols.map(([k, l]) => `<th class="${["imputados", "dias_transcurridos"].includes(k) ? "num" : ""}">${l}</th>`).join("")}</tr></thead>
-     <tbody>${c.map((x) => `<tr>
-       <td><b>${x.caso}</b></td><td>${x.tema}</td><td>${x.departamento}</td><td>${x.estado}</td>
-       <td>${x.juez}</td><td>${x.fiscal}</td><td class="num">${x.imputados}</td>
-       <td class="num">${fmt(x.dias_transcurridos)}</td>
-       <td><span class="pill ${x.nivel_alerta === "Critico" ? "red" : x.nivel_alerta === "Riesgo" ? "amber" : "green"}"><span class="dot" style="background:currentColor"></span>${x.nivel_alerta}</span></td></tr>`).join("")}</tbody>`;
-}
+function renderSeguridad() { renderSeguridadReal(); }
 
 function renderSeguridadReal() {
   const box = $("#seg-real"); if (!box) return;
@@ -623,120 +525,56 @@ function metaFoot(m) {
   return `<p class="card-sub" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">📑 ${parts.join(" · ")}${m.url ? ` · <a href="${m.url}" target="_blank" rel="noopener">recurso</a>` : ""}</p>${nota}`;
 }
 function renderReales() {
+  // Pestaña "Fuentes & Calidad del dato": trazabilidad de fuentes + advertencias metodológicas.
+  // (Los gráficos viven en sus pestañas temáticas; aquí NO se duplican.)
   const box = $("#reales-content");
   const manifest = REAL.manifest;
   const fis = REAL.mpfn_fiscales, casos = REAL.mpfn_casos, delitos = REAL.mpfn_delitos,
     pj = REAL.pj_carga_nacional, demora = REAL.demora_piura, tc = REAL.tc, seg = REAL.mpfn_seguridad;
-
-  if (!manifest && !fis && !casos && !delitos && !pj && !demora && !tc && !seg) {
-    box.innerHTML = `<div class="card" style="text-align:center">
-      <h3>🛠️ Datos reales en preparación</h3>
-      <p class="card-sub" style="max-width:640px;margin:8px auto">El pipeline ETL (Track A) está descargando y normalizando las fuentes oficiales
-      inventariadas en la <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md" target="_blank" rel="noopener">Fase 0</a>
-      (Poder Judicial, Ministerio Público, INEI). Cuando termine, esta pestaña mostrará indicadores
-      construidos con datos reales, cada uno con su fuente y fecha de corte. El resto del tablero es un
-      prototipo con datos sintéticos, claramente señalizado.</p></div>`;
+  if (!manifest) {
+    box.innerHTML = `<div class="card" style="text-align:center"><h3>🛠️ Fuentes en preparación</h3>
+      <p class="card-sub">El pipeline ETL está integrando las fuentes oficiales. Vuelve en un momento.</p></div>`;
     return;
   }
+  const sum = (arr, k) => (arr || []).reduce((a, x) => a + (x[k] || 0), 0);
+  const MAG = {
+    pj_carga_nacional: () => pj && pj.nacional ? [pj.nacional.ingresos, "ingresos"] : null,
+    mpfn_fiscales: () => fis ? [fis.total_fiscales, "fiscales"] : null,
+    mpfn_casos: () => casos ? [sum(casos.por_anio, "ingresado"), "casos"] : null,
+    mpfn_delitos: () => delitos ? [delitos.total_denuncias, "denuncias"] : null,
+    demora_piura: () => demora ? [sum(demora.por_proceso, "n"), "expedientes"] : null,
+    tc: () => tc ? [sum(tc.por_anio, "ingresados"), "expedientes"] : null,
+    flagrancia: () => seg && seg.flagrancia ? [seg.flagrancia.total, "casos"] : null,
+    violencia_mujer: () => seg && seg.violencia_mujer ? [seg.violencia_mujer.total, "casos"] : null,
+    ciberdelitos: () => seg && seg.ciberdelitos ? [seg.ciberdelitos.total, "denuncias"] : null,
+    trata: () => seg && seg.trata ? [seg.trata.total, "casos"] : null,
+    inei_denuncias: () => REAL.inei_denuncias ? [REAL.inei_denuncias.total_denuncias, "denuncias"] : null,
+    mimp_violencia: () => REAL.mimp_violencia && REAL.mimp_violencia.casos_violencia ? [REAL.mimp_violencia.casos_violencia.total, "casos"] : null,
+  };
+  let html = `<div class="card"><h3>📚 Fuentes integradas</h3>
+    <p class="card-sub">La columna <b>magnitud</b> es el volumen real (casos, denuncias o expedientes); los datos agregados resumen ese volumen en pocas filas. <span class="pill blue">expediente</span> = microdata por caso (permite demora real); <span class="pill amber">agregado</span> = totales por periodo/territorio.</p>
+    <div class="table-wrap"><table>
+    <thead><tr><th>Dataset</th><th>Institución</th><th>Cobertura</th><th>Granularidad</th><th>Fecha corte</th><th class="num">Magnitud</th></tr></thead>
+    <tbody>${manifest.datasets.map((d) => {
+      const mg = (MAG[d.id] && MAG[d.id]()) || null;
+      const magCell = mg ? `${fmt(mg[0])} <span style="color:var(--muted);font-size:11px">${mg[1]}</span>` : (d.n_registros == null ? (d.error ? "❌" : "—") : `${fmt(d.n_registros)} <span style="color:var(--muted);font-size:11px">filas</span>`);
+      return `<tr>
+      <td><b>${d.titulo || d.id}</b></td><td>${d.institucion || d.fuente || "—"}</td><td>${d.cobertura || "—"}</td>
+      <td><span class="pill ${d.granularidad === "expediente" ? "blue" : "amber"}">${d.granularidad || "—"}</span></td>
+      <td>${d.fecha_corte || "—"}</td><td class="num">${magCell}</td></tr>`;
+    }).join("")}</tbody></table></div></div>`;
 
-  let html = "";
-  // --- Fuentes (manifest) ---
-  if (manifest && manifest.datasets) {
-    // magnitud real (casos/denuncias/expedientes/fiscales) por dataset — lo relevante, no el nº de filas
-    const sum = (arr, k) => (arr || []).reduce((a, x) => a + (x[k] || 0), 0);
-    const MAG = {
-      pj_carga_nacional: () => pj && pj.nacional ? [pj.nacional.ingresos, "ingresos"] : null,
-      mpfn_fiscales: () => fis ? [fis.total_fiscales, "fiscales"] : null,
-      mpfn_casos: () => casos ? [sum(casos.por_anio, "ingresado"), "casos"] : null,
-      mpfn_delitos: () => delitos ? [delitos.total_denuncias, "denuncias"] : null,
-      demora_piura: () => demora ? [sum(demora.por_proceso, "n"), "expedientes"] : null,
-      tc: () => tc ? [sum(tc.por_anio, "ingresados"), "expedientes"] : null,
-      flagrancia: () => seg && seg.flagrancia ? [seg.flagrancia.total, "casos"] : null,
-      violencia_mujer: () => seg && seg.violencia_mujer ? [seg.violencia_mujer.total, "casos"] : null,
-      ciberdelitos: () => seg && seg.ciberdelitos ? [seg.ciberdelitos.total, "denuncias"] : null,
-      trata: () => seg && seg.trata ? [seg.trata.total, "casos"] : null,
-      inei_denuncias: () => REAL.inei_denuncias ? [REAL.inei_denuncias.total_denuncias, "denuncias"] : null,
-    };
-    html += `<div class="card"><h3>📚 Fuentes integradas</h3>
-      <p class="card-sub">La columna <b>magnitud</b> es el volumen real (casos, denuncias o expedientes); los datos agregados resumen ese volumen en pocas filas.</p>
-      <div class="table-wrap"><table>
-      <thead><tr><th>Dataset</th><th>Institución</th><th>Cobertura</th><th>Granularidad</th><th>Fecha corte</th><th class="num">Magnitud</th></tr></thead>
-      <tbody>${manifest.datasets.map((d) => {
-        const mg = (MAG[d.id] && MAG[d.id]()) || null;
-        const magCell = mg ? `${fmt(mg[0])} <span style="color:var(--muted);font-size:11px">${mg[1]}</span>` : (d.n_registros == null ? (d.error ? "❌" : "—") : `${fmt(d.n_registros)} <span style="color:var(--muted);font-size:11px">filas</span>`);
-        return `<tr>
-        <td><b>${d.titulo || d.id}</b></td><td>${d.institucion || d.fuente || "—"}</td><td>${d.cobertura || "—"}</td>
-        <td><span class="pill ${d.granularidad === "expediente" ? "blue" : "amber"}">${d.granularidad || "—"}</span></td>
-        <td>${d.fecha_corte || "—"}</td><td class="num">${magCell}</td></tr>`;
-      }).join("")}</tbody></table></div></div>`;
-  }
-
-  // --- KPIs reales ---
-  const kpis = [];
-  if (pj && pj.nacional) kpis.push(["Tasa de resolución (PJ nacional)", pj.nacional.clearance != null ? pj.nacional.clearance + "% ⚠️" : "—", "provisional · ver nota metodológica", "warn"]);
-  if (pj && pj.nacional) kpis.push(["Ingresos PJ (2024)", fmt(pj.nacional.ingresos), "expedientes · dato real", ""]);
-  if (pj && pj.nacional) kpis.push(["Resueltos PJ (2024)", fmt(pj.nacional.resueltos), "expedientes · dato real", "ok"]);
-  if (fis) kpis.push(["Fiscales (MPFN)", fmt(fis.total_fiscales), "dotación · dato real", ""]);
-  if (delitos) kpis.push(["Delitos denunciados (MPFN)", fmt(delitos.total_denuncias), "acumulado · dato real", "alert"]);
-  if (demora && demora.por_proceso && demora.por_proceso.length) {
-    const nlpt = demora.por_proceso.find((p) => /nlpt|laboral/i.test(p.proceso)) || demora.por_proceso[0];
-    kpis.push([`Demora mediana (${nlpt.proceso})`, fmt(nlpt.mediana_dias) + " días", "microdata real (Piura)", nlpt.mediana_dias > 365 ? "warn" : "ok"]);
-  }
-  if (tc && tc.demora && tc.demora.global) kpis.push(["Demora TC (mediana)", fmt(tc.demora.global.mediana_dias) + " días", "Tribunal Constitucional · microdata", tc.demora.global.mediana_dias > 365 ? "warn" : "ok"]);
-  if (seg && seg.violencia_mujer && seg.violencia_mujer.total != null) kpis.push(["Casos violencia contra la mujer", fmt(seg.violencia_mujer.total), "MPFN · ingresados", "alert"]);
-  if (seg && seg.ciberdelitos && seg.ciberdelitos.total != null) kpis.push(["Ciberdelitos denunciados", fmt(seg.ciberdelitos.total), "MPFN", "alert"]);
-  if (kpis.length) html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
-
-  // --- aviso de cobertura temporal (honestidad: distintos años por fuente) ---
-  html += `<div class="disclaimer">📅 <b>Cobertura temporal por fuente:</b> MPFN —delitos, casos fiscales y fiscales— cubre <b>2019–2026</b> (2026 parcial). La <b>carga del Poder Judicial solo está disponible para 2024</b> en datos abiertos (es el único año publicado); los años <b>2021–2023 y 2025–2026 no existen en el portal abierto</b> y requieren el <a href="https://portalestadistico.pj.gob.pe/" target="_blank" rel="noopener">Portal Estadístico del PJ</a> (descarga manual, sin API). La demora real (microdata Piura) varía por proceso (NLPT desde ~2021). No completamos años faltantes con estimaciones: si no hay dato, se indica.</div>`;
-
-  // contenedores de charts
-  const charts2 = [];
-  if (pj && pj.por_especialidad) { html += card("Carga procesal por especialidad (PJ nacional)", "rc-pj", pj._meta); charts2.push(["rc-pj", () => barIngRes("rc-pj", pj.por_especialidad, "especialidad")]); }
-  if (delitos && delitos.por_departamento) { html += card("Delitos denunciados por departamento (MPFN)", "rc-del", delitos._meta); charts2.push(["rc-del", () => barSimple("rc-del", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#e74c3c")]); }
-  if (delitos && delitos.top_delitos) { html += card("Top delitos denunciados (MPFN)", "rc-deltop", delitos._meta); charts2.push(["rc-deltop", () => barSimple("rc-deltop", delitos.top_delitos.slice(0, 12), "generico", "cantidad", "#9b59b6")]); }
-  if (fis && fis.por_cargo) { html += card("Fiscales por cargo (MPFN)", "rc-fis", fis._meta); charts2.push(["rc-fis", () => barSimple("rc-fis", fis.por_cargo, "cargo", "total", "#4f8cff")]); }
-  if (demora && demora.por_proceso) { html += card("Demora real por proceso — mediana vs P90 (microdata Piura)", "rc-dem", demora._meta); charts2.push(["rc-dem", () => demoraChart("rc-dem", demora.por_proceso)]); }
-  if (casos && casos.por_materia) { html += card("Casos fiscales por materia — ingresado vs atendido (MPFN)", "rc-cas", casos._meta); charts2.push(["rc-cas", () => barIngRes2("rc-cas", casos.por_materia, "materia", "ingresado", "atendido")]); }
-  // --- tendencias por año + demografía + histograma ---
-  if (delitos && delitos.por_anio) { html += card("Delitos denunciados por año (MPFN) — 2026 parcial", "rc-delanio", delitos._meta); charts2.push(["rc-delanio", () => lineSimple("rc-delanio", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
-  if (casos && casos.por_anio) { html += card("Casos fiscales por año — ingresado vs atendido (MPFN)", "rc-casanio", casos._meta); charts2.push(["rc-casanio", () => lineIngAt("rc-casanio", casos.por_anio)]); }
-  if (fis && fis.por_condicion) { html += card("Fiscales por condición (MPFN)", "rc-fiscond", fis._meta); charts2.push(["rc-fiscond", () => donut("rc-fiscond", fis.por_condicion, "condicion", "total")]); }
-  if (fis && fis.por_sexo) { html += card("Fiscales por sexo (MPFN)", "rc-fissexo", fis._meta); charts2.push(["rc-fissexo", () => donut("rc-fissexo", fis.por_sexo, "sexo", "total")]); }
-  if (demora && demora.histograma) { html += card("Distribución de demora (días) por proceso — microdata Piura", "rc-demhist", demora._meta); charts2.push(["rc-demhist", () => histChart("rc-demhist", demora.histograma)]); }
-
-  // --- Tribunal Constitucional (serie larga real + demora) ---
-  if (tc && tc.por_anio) { html += card("Tribunal Constitucional — expedientes ingresados por año (1992–2026)", "rc-tcanio", tc._meta); charts2.push(["rc-tcanio", () => lineSimple("rc-tcanio", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
-  if (tc && tc.demora && tc.demora.por_tipo) { html += card("TC — demora real por tipo de proceso (mediana vs P90)", "rc-tcdem", tc._meta); charts2.push(["rc-tcdem", () => demoraChart("rc-tcdem", tc.demora.por_tipo.map((r) => ({ proceso: r.tipo, mediana_dias: r.mediana_dias, p90_dias: r.p90_dias })))]); }
-
-  // --- Seguridad (datos reales MPFN) ---
-  if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += card("🚨 Violencia contra la mujer — casos fiscales por año (MPFN)", "rc-vcm", seg.violencia_mujer._meta); charts2.push(["rc-vcm", () => lineIngAt("rc-vcm", seg.violencia_mujer.por_anio)]); }
-  if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += card("🚨 Top tipos de ciberdelito denunciados (MPFN)", "rc-cibertipo", seg.ciberdelitos._meta); charts2.push(["rc-cibertipo", () => barSimple("rc-cibertipo", seg.ciberdelitos.top_tipos.slice(0, 12), "tipo", "cantidad", "#00cec9")]); }
-  if (seg && seg.flagrancia && seg.flagrancia.por_distrito_fiscal) { html += card("🚨 Flagrancia delictiva por distrito fiscal (MPFN, 2025–2026)", "rc-flag", seg.flagrancia._meta); charts2.push(["rc-flag", () => barSimple("rc-flag", seg.flagrancia.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#f39c12")]); }
-  if (seg && seg.trata && seg.trata.por_distrito_fiscal) { html += card("🚨 Trata de personas por distrito fiscal (MPFN)", "rc-trata", seg.trata._meta); charts2.push(["rc-trata", () => barSimple("rc-trata", seg.trata.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#e84393")]); }
-
-  // --- tablas reales ---
-  if (pj && pj.por_distrito_judicial) {
-    const rows = [...pj.por_distrito_judicial].sort((a, b) => b.congestion - a.congestion);
-    html += `<div class="card"><h3>🟢 PJ — carga por distrito judicial (2024)</h3>
-      <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito judicial</th><th class="num">Ingresos</th><th class="num">Resueltos</th><th class="num">Pendientes</th><th class="num">Congestión</th></tr></thead>
-      <tbody>${rows.map((r) => `<tr><td>${r.distrito_judicial}</td><td class="num">${fmt(r.ingresos)}</td><td class="num">${fmt(r.resueltos)}</td><td class="num">${fmt(r.pendientes)}</td><td class="num">${fmt1(r.congestion)}</td></tr>`).join("")}</tbody></table></div>
-      ${metaFoot(pj._meta)}</div>`;
-  }
-  if (casos && casos.por_distrito_fiscal) {
-    const rows = [...casos.por_distrito_fiscal].sort((a, b) => a.clearance - b.clearance);
-    html += `<div class="card"><h3>🟢 MPFN — casos fiscales por distrito (menor clearance primero)</h3>
-      <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito fiscal</th><th class="num">Ingresado</th><th class="num">Atendido</th><th class="num">Clearance %</th></tr></thead>
-      <tbody>${rows.map((r) => `<tr><td>${r.distrito_fiscal}</td><td class="num">${fmt(r.ingresado)}</td><td class="num">${fmt(r.atendido)}</td><td class="num">${fmt1(r.clearance)}</td></tr>`).join("")}</tbody></table></div>
-      ${metaFoot(casos._meta)}</div>`;
-  }
-
+  // --- Calidad / advertencias metodológicas ---
+  html += `<div class="card"><h3>🔎 Calidad del dato y advertencias</h3>
+    <ul style="margin:0;padding-left:20px;line-height:1.9;font-size:13.5px">
+      <li>📅 <b>Cobertura temporal por fuente:</b> MPFN (delitos, casos, fiscales) cubre <b>2019–2026</b> (2026 parcial). La <b>carga del Poder Judicial solo está en 2024</b> en datos abiertos; 2021–2023 y 2025–2026 requieren el <a href="https://portalestadistico.pj.gob.pe/" target="_blank" rel="noopener">Portal Estadístico del PJ</a> (descarga manual). El Tribunal Constitucional cubre <b>1992–2026</b>.</li>
+      <li>⚠️ <b>Clearance/congestión del PJ = provisionales:</b> el dataset del PJ no publica diccionario y la semántica de columnas es ambigua; la tasa derivada está en validación (los conteos de ingresos/resueltos/pendientes sí son sumas reales).</li>
+      <li>🔒 <b>Privacidad:</b> la microdata por expediente (CSJ Piura) se <b>anonimiza</b> —se eliminan DNI y fecha de nacimiento— antes de procesar. No se exponen datos personales.</li>
+      <li>📐 <b>Demora real en días</b> solo se calcula donde hay microdata por expediente (TC y CSJ Piura). En el resto se usan índices agregados; <b>no se derivan días desde agregados</b>.</li>
+      <li>🚫 <b>Nunca se inventan datos:</b> donde no hay fuente abierta (rotaciones nominales de magistrados, casos por juzgado individual) la vista se omite o se sustituye por el agregado real disponible.</li>
+    </ul>
+    <p class="card-sub" style="margin-top:12px">Más detalle en el <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md" target="_blank" rel="noopener">inventario de datos</a>, el <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/DATA_CATALOG.md" target="_blank" rel="noopener">catálogo de fuentes</a> y el <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/SPEC.md" target="_blank" rel="noopener">SPEC</a>.</p></div>`;
   box.innerHTML = html;
-  charts2.forEach(([id, fn]) => { try { fn(); } catch (e) { console.warn("chart", id, e); } });
-
-  function card(title, id, meta) {
-    return `<div class="card"><h3>🟢 ${title}</h3><div class="chart" id="${id}"></div>${metaFoot(meta)}</div>`;
-  }
 }
 function barSimple(id, rows, kx, ky, color) {
   rows = [...rows].sort((a, b) => b[ky] - a[ky]);
