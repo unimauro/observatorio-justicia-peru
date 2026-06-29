@@ -1,0 +1,20 @@
+{
+ "target": "dias_hasta_sentencia",
+ "features": [
+  "proceso",
+  "materia_f",
+  "provincia_f",
+  "tipo_ingreso_f",
+  "instancia_tipo",
+  "mes_anio"
+ ],
+ "n_train": 9378,
+ "n_test": 2345,
+ "mae_dias": 76.3,
+ "error_mediano_dias": 51.7,
+ "r2": 0.262,
+ "baseline_mae_dias": 92.2,
+ "cobertura": "CSJ Piura (NLPT, alimentos, penal, civil)",
+ "modelo": "HistGradientBoostingRegressor",
+ "nota": "Solo válido para jurisdicciones con microdata real."
+}

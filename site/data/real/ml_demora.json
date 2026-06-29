@@ -1,0 +1,43 @@
+{
+ "_meta": {
+  "fuente": "Modelo ML sobre microdata CSJ Piura (datosabiertos.gob.pe)",
+  "fecha_corte": "2026-06",
+  "cobertura": "CSJ Piura",
+  "granularidad": "expediente",
+  "modelo": "HistGradientBoostingRegressor"
+ },
+ "metricas": {
+  "mae_dias": 76.3,
+  "error_mediano_dias": 51.7,
+  "r2": 0.262,
+  "baseline_mae_dias": 92.2,
+  "n_test": 2345
+ },
+ "por_proceso": [
+  {
+   "proceso": "Alimentos",
+   "n": 2908,
+   "demora_real_mediana": 134,
+   "demora_predicha_mediana": 184
+  },
+  {
+   "proceso": "NLPT Laboral",
+   "n": 6301,
+   "demora_real_mediana": 112,
+   "demora_predicha_mediana": 151
+  },
+  {
+   "proceso": "Penal (pena efectiva)",
+   "n": 1660,
+   "demora_real_mediana": 112,
+   "demora_predicha_mediana": 126
+  },
+  {
+   "proceso": "Civil",
+   "n": 854,
+   "demora_real_mediana": 75,
+   "demora_predicha_mediana": 85
+  }
+ ],
+ "nota": "Predicción de días hasta sentencia. Solo válido para CSJ Piura (única microdata real disponible). No extrapolar al resto del país."
+}

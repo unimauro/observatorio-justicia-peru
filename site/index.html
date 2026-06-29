@@ -123,6 +123,7 @@
     <button class="tab" data-panel="seguridad">🚨 Seguridad 🧪</button>
     <button class="tab" data-panel="embudo">🔻 Embudo & Backlog 🧪</button>
     <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🧪</button>
+    <button class="tab" data-panel="prediccion">🔮 Predicción (ML) 🟢</button>
     <button class="tab" data-panel="indicadores">📐 Indicadores</button>
     <button class="tab" data-panel="faq">❓ FAQ</button>
   </div>
@@ -236,6 +237,13 @@
     <h2 class="section-title">Series de Tiempo</h2>
     <p class="section-sub" id="series-sub">Evolución temporal.</p>
     <div id="series-content"></div>
+  </section>
+
+  <!-- ============ PREDICCIÓN (ML) ============ -->
+  <section class="panel" id="prediccion">
+    <h2 class="section-title">🔮 Predicción de demora judicial (Machine Learning)</h2>
+    <p class="section-sub">Modelo de aprendizaje automático entrenado con <b>microdata real por expediente</b> (CSJ Piura) para estimar los <b>días hasta sentencia</b>. Honestidad: el modelo solo es válido donde hay microdata real; no se extrapola al resto del país.</p>
+    <div id="ml-content"><div class="loading"><span class="spin"></span> Cargando modelo…</div></div>
   </section>
 
   <!-- ============ INDICADORES ============ -->

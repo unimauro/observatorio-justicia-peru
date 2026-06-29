@@ -9,7 +9,7 @@ const FILES = ["nacional", "departamentos", "cortes", "series", "tipos_proceso",
   "embudo", "backlog", "jueces", "fiscales", "casos_seguridad", "indicadores", "manifest"];
 const REAL = {};
 const REAL_FILES = ["manifest", "mpfn_fiscales", "mpfn_casos", "mpfn_delitos",
-  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad"];
+  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad", "ml_demora", "inei_denuncias"];
 
 const fmt = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE"));
 const fmt1 = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE", { maximumFractionDigits: 1 }));
@@ -72,7 +72,7 @@ function renderPanel(id) {
   ({ resumen: renderResumen, reales: renderReales, mapa: renderMapa, cortes: renderCortes,
      procesos: renderProcesos, embudo: renderEmbudo, magistrados: renderMagistrados,
      seguridad: renderSeguridad, series: renderSeries, indicadores: renderIndicadores,
-     faq: renderFaq }[id] || (() => {}))();
+     prediccion: renderPrediccion, faq: renderFaq }[id] || (() => {}))();
 }
 function mkChart(elId) {
   const c = echarts.init($("#" + elId), null, { renderer: "canvas" });
@@ -707,6 +707,39 @@ function histChart(id, hist) {
     yAxis: { type: "value", name: "expedientes" }, series });
 }
 
+/* ============================================================ PREDICCIÓN (ML) */
+function renderPrediccion() {
+  const box = $("#ml-content"); const ml = REAL.ml_demora;
+  if (!ml) {
+    box.innerHTML = `<div class="card" style="text-align:center"><h3>🔮 Modelo en preparación</h3>
+      <p class="card-sub" style="max-width:620px;margin:8px auto">El modelo de predicción de demora se entrena con la microdata real por expediente (CSJ Piura).
+      Ejecuta <code>python ml/train_demora.py</code> para generarlo. En producción se sirve desde la API del VPS (FastAPI).</p></div>`;
+    return;
+  }
+  const m = ml.metricas;
+  const mejora = Math.round((1 - m.mae_dias / m.baseline_mae_dias) * 100);
+  let html = `<div class="disclaimer" style="border-color:rgba(155,89,182,.35);background:rgba(155,89,182,.08);color:#c39bd3">🔮 <b>Modelo:</b> ${ml._meta.modelo} · entrenado con microdata real por expediente (${ml._meta.cobertura}). Predice <b>días hasta sentencia</b>. ${ml.nota}</div>`;
+  html += `<div class="kpi-grid">
+    <div class="kpi ok"><div class="label">Error medio (MAE)</div><div class="value">${m.mae_dias} d</div><div class="hint">en ${fmt(m.n_test)} casos de prueba</div></div>
+    <div class="kpi ok"><div class="label">Error mediano</div><div class="value">${m.error_mediano_dias} d</div><div class="hint">la mitad de los casos, menos de esto</div></div>
+    <div class="kpi"><div class="label">Mejora vs. baseline</div><div class="value">${mejora}%</div><div class="hint">vs. predecir siempre la mediana (${m.baseline_mae_dias} d)</div></div>
+    <div class="kpi ${m.r2 < 0.4 ? "warn" : ""}"><div class="label">R²</div><div class="value">${m.r2}</div><div class="hint">poder explicativo (honesto: modesto)</div></div>
+  </div>`;
+  html += `<div class="card"><h3>🔮 Demora real vs. predicha por proceso (mediana, días)</h3><div class="chart" id="ml-chart"></div>${metaFoot(ml._meta)}</div>`;
+  html += `<div class="card"><h3>¿Cómo se usa?</h3><p class="card-sub" style="font-size:13.5px">El modelo estima cuánto tardará un expediente según su <b>proceso, materia, instancia, provincia y mes de ingreso</b>.
+    Sirve para <b>anticipar carga</b>, <b>priorizar</b> expedientes en riesgo de estancarse y <b>simular</b> escenarios. En producción se expone como API en el VPS
+    (<code>POST ${"ml.tunky.net"}/v1/ml/predict-demora</code>) y el dashboard la consulta en vivo. Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/ML_PLAN.md" target="_blank" rel="noopener">plan ML</a>.</p></div>`;
+  box.innerHTML = html;
+  try {
+    const rows = ml.por_proceso;
+    mkChart("ml-chart").setOption({ ...echartsTheme(), color: ["#4f8cff", "#9b59b6"], tooltip: { trigger: "axis" },
+      legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 150, right: 30, top: 36, bottom: 24 },
+      xAxis: { type: "value", name: "días" }, yAxis: { type: "category", data: rows.map((r) => r.proceso) },
+      series: [{ name: "Demora real (mediana)", type: "bar", data: rows.map((r) => r.demora_real_mediana) },
+               { name: "Demora predicha (mediana)", type: "bar", data: rows.map((r) => r.demora_predicha_mediana) }] });
+  } catch (e) {}
+}
+
 /* ============================================================ FAQ */
 const FAQ = [
   ["¿Los datos de este tablero son reales?",
@@ -775,8 +808,33 @@ function setupAI() {
   $("#ai-input").addEventListener("keydown", (e) => { if (e.key === "Enter") aiAsk($("#ai-input").value); });
   aiBot("¡Hola! Soy el copiloto de justicia. Puedo responder sobre los datos del observatorio. Prueba una sugerencia 👇");
 }
-function aiBot(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg bot">${t}</div>`); $("#ai-msgs").scrollTop = 1e9; }
-function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg user">${t}</div>`); $("#ai-msgs").scrollTop = 1e9; }
+/* Markdown mínimo y seguro: escapa HTML y luego aplica formato (negrita, itálica, código,
+   listas, encabezados, enlaces). Usado para las respuestas del modelo (texto markdown). */
+function escapeHtml(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function mdToHtml(src) {
+  let s = escapeHtml(String(src || ""));
+  const lines = s.split(/\r?\n/), out = []; let inList = false, inOl = false;
+  const inline = (t) => t
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  for (let ln of lines) {
+    if (/^\s*[-*]\s+/.test(ln)) { if (!inList) { out.push("<ul>"); inList = true; } out.push("<li>" + inline(ln.replace(/^\s*[-*]\s+/, "")) + "</li>"); continue; }
+    if (/^\s*\d+\.\s+/.test(ln)) { if (!inOl) { out.push("<ol>"); inOl = true; } out.push("<li>" + inline(ln.replace(/^\s*\d+\.\s+/, "")) + "</li>"); continue; }
+    if (inList) { out.push("</ul>"); inList = false; }
+    if (inOl) { out.push("</ol>"); inOl = false; }
+    const h = ln.match(/^(#{1,4})\s+(.*)$/);
+    if (h) { out.push(`<b>${inline(h[2])}</b>`); continue; }
+    if (ln.trim() === "") { out.push("<br/>"); continue; }
+    out.push(inline(ln) + "<br/>");
+  }
+  if (inList) out.push("</ul>"); if (inOl) out.push("</ol>");
+  return out.join("");
+}
+function aiBot(html) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg bot">${html}</div>`); $("#ai-msgs").scrollTop = 1e9; }
+function aiBotMd(md) { aiBot(mdToHtml(md)); }
+function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="msg user">${escapeHtml(t)}</div>`); $("#ai-msgs").scrollTop = 1e9; }
 
 /* Endpoint del copiloto (ecosistema tunky.net). Debe ser un proxy serverless que reciba
    {question, context} y use la Claude API server-side (la API key NUNCA va en el cliente).
@@ -784,16 +842,30 @@ function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="
 const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/v1/justicia/chat";
 function aiContext() {
   const n = DATA.nacional;
+  const real = {};
+  if (REAL.mpfn_delitos) real.delitos_denunciados_total = REAL.mpfn_delitos.total_denuncias;
+  if (REAL.mpfn_fiscales) real.fiscales_total = REAL.mpfn_fiscales.total_fiscales;
+  if (REAL.pj_carga_nacional) real.pj_2024 = REAL.pj_carga_nacional.nacional;
+  if (REAL.tc && REAL.tc.demora) real.tc_demora_mediana_dias = REAL.tc.demora.global.mediana_dias;
+  if (REAL.mpfn_seguridad) real.seguridad = {
+    violencia_mujer: REAL.mpfn_seguridad.violencia_mujer?.total,
+    ciberdelitos: REAL.mpfn_seguridad.ciberdelitos?.total,
+    trata: REAL.mpfn_seguridad.trata?.total,
+  };
+  if (REAL.ml_demora) real.modelo_demora = REAL.ml_demora.metricas;
   return {
-    nacional: n,
-    top_cortes_congestion: DATA.cortes.slice(0, 5).map((c) => ({ corte: c.corte, congestion: c.congestion, pendientes: c.pendientes })),
-    casos_seguridad_criticos: DATA.casos_seguridad.filter((x) => x.nivel_alerta === "Critico").length,
-    nota: "Datos sintéticos del prototipo salvo la pestaña Datos Reales.",
+    DATOS_REALES_oficiales: real,
+    PROTOTIPO_sintetico: {
+      nacional: n,
+      top_cortes_congestion: DATA.cortes.slice(0, 5).map((c) => ({ corte: c.corte, congestion: c.congestion })),
+    },
+    aviso: "Usa DATOS_REALES_oficiales para cifras citables (con fuente). PROTOTIPO_sintetico es ilustrativo: acláralo si lo usas.",
   };
 }
 async function aiAsk(q) {
   q = (q || "").trim(); if (!q) return;
   aiUser(q); $("#ai-input").value = "";
+  if (aiOffTopic(q)) { aiBot(aiAnswer(q)); return; }  // guardrail: no sale del tema, no llama al modelo
   const thinking = `<div class="msg bot" id="ai-think"><span class="spin"></span> pensando…</div>`;
   $("#ai-msgs").insertAdjacentHTML("beforeend", thinking); $("#ai-msgs").scrollTop = 1e9;
   let answer = null;
@@ -807,12 +879,27 @@ async function aiAsk(q) {
     if (r.ok) { const j = await r.json(); answer = j.answer || j.text || j.message || null; }
   } catch (e) { /* sin conexión al endpoint: fallback local */ }
   $("#ai-think") && $("#ai-think").remove();
-  aiBot(answer || aiAnswer(q));
+  if (answer) aiBotMd(answer);   // respuesta del modelo: render markdown
+  else aiBot(aiAnswer(q));        // fallback local: HTML estático de confianza
+}
+
+/* Guardrail de tema: el copiloto SOLO trata sobre el observatorio / sistema de justicia.
+   Si la pregunta es claramente de otro tema, no responde fuera de alcance. */
+const AI_TOPICS = /justic|corte|juzgad|juez|jueces|fiscal|expedient|proces|demora|congesti|carga|delito|denuncia|segurid|crimen|penal|civil|laboral|familia|alimento|tribunal|tc|mpfn|backlog|resoluci|sentenc|observatori|dato|departament|distrito|magistrad|peru|perú|inei|poder judicial|rotaci|indicador|predicc|modelo|ml/i;
+function aiOffTopic(q) {
+  const s = (q || "").toLowerCase();
+  if (AI_TOPICS.test(s)) return false;
+  // saludos y meta-preguntas se permiten
+  if (/hola|gracias|ayuda|qué puedes|que puedes|quien eres|quién eres|cómo funciona|como funciona/.test(s)) return false;
+  return s.length > 0;
 }
 /* Motor local de respuestas (sin backend). En producción: conectar a un endpoint
    tipo ai.tunky.net que reciba la pregunta + el contexto JSON y use Claude API. */
 function aiAnswer(q) {
   const s = q.toLowerCase(), n = DATA.nacional;
+  if (aiOffTopic(q)) {
+    return `Soy el copiloto del <b>Observatorio Nacional de Justicia del Perú</b>. Solo puedo ayudarte con temas de este tablero: carga procesal, demora, congestión, cortes y distritos judiciales, jueces y fiscales, delitos y seguridad, o las predicciones del modelo. ¿Qué te gustaría saber sobre el sistema de justicia? 🤔`;
+  }
   if (/congesti|saturad/.test(s)) {
     const top = DATA.cortes[0];
     return `La corte con mayor congestión es <b>${top.corte}</b> (${fmt1(top.congestion)}), con ${fmt(top.pendientes)} expedientes pendientes y ${fmt(top.jueces)} jueces. Le siguen ${DATA.cortes[1].corte} y ${DATA.cortes[2].corte}.`;

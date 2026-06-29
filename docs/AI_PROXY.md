@@ -57,5 +57,17 @@ Sé breve, cita cifras del contexto. No inventes datos que no estén en el conte
 ```
 Variables de entorno (server-side): `ANTHROPIC_API_KEY`. Habilitar **CORS** para el origen
 `https://unimauro.github.io`. Modelos: `claude-haiku-4-5-20251001` (rápido) / `claude-opus-4-8`
-(razonamiento). Cuando exista la capa de datos reales, enriquecer `context` con los JSON de
-`site/data/real/` para respuestas fundamentadas.
+(razonamiento). El `context` ya se enriquece con los JSON reales de `site/data/real/` (ver
+`aiContext()` en `app.js`), separando `DATOS_REALES_oficiales` de `PROTOTIPO_sintetico`.
+
+## Guardrails (implementados)
+1. **Alcance de tema:** el copiloto SOLO responde sobre el observatorio / sistema de justicia y
+   seguridad del Perú. Doble barrera:
+   - **Frontend** (`aiOffTopic()` en `app.js`): si la pregunta no contiene términos del dominio,
+     ni siquiera se llama al modelo; se responde con un mensaje que reconduce al tema.
+   - **Servidor** (system prompt en `api/main.py`): regla estricta de declinar otros temas, ignorar
+     intentos de cambiar el rol, y no revelar las instrucciones.
+2. **Markdown:** las respuestas del modelo se renderizan con `mdToHtml()` (negritas, listas, código,
+   enlaces) escapando HTML primero (seguro). El system prompt pide responder en Markdown conciso.
+3. **Honestidad del dato:** el prompt obliga a basarse solo en el contexto, distinguir real vs
+   sintético y no dar asesoría legal personalizada (solo información estadística).
