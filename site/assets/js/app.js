@@ -81,7 +81,23 @@ function mkChart(elId) {
 }
 
 /* ============================================================ RESUMEN */
+function renderResumenReal() {
+  const box = $("#resumen-real"); if (!box) return;
+  const delitos = REAL.mpfn_delitos, fis = REAL.mpfn_fiscales, pj = REAL.pj_carga_nacional,
+    casos = REAL.mpfn_casos, tc = REAL.tc, seg = REAL.mpfn_seguridad;
+  const k = [];
+  if (delitos) k.push(["Delitos denunciados", fmt(delitos.total_denuncias), "MPFN · 2019–2026", "alert"]);
+  if (casos && casos.por_anio) { const a = casos.por_anio.filter((x) => x.anio < 2026).slice(-1)[0]; if (a) k.push(["Casos fiscales (" + a.anio + ")", fmt(a.ingresado), `clearance ${fmt1(a.clearance)}%`, "warn"]); }
+  if (fis) k.push(["Fiscales", fmt(fis.total_fiscales), "dotación 2026", ""]);
+  if (pj && pj.nacional) k.push(["Carga PJ resuelta (2024)", fmt(pj.nacional.resueltos), "de " + fmt(pj.nacional.ingresos) + " ingresos", "ok"]);
+  if (tc && tc.demora && tc.demora.global) k.push(["Demora TC (mediana)", fmt(tc.demora.global.mediana_dias) + " d", "microdata real", "warn"]);
+  if (seg && seg.violencia_mujer) k.push(["Violencia contra la mujer", fmt(seg.violencia_mujer.total), "casos fiscales MPFN", "alert"]);
+  if (!k.length) { box.innerHTML = ""; return; }
+  box.innerHTML = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Cifras reales (datos abiertos oficiales).</b> Detalle y fuentes en la pestaña <b>Datos Reales</b>.</div>
+    <div class="kpi-grid">${k.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
+}
 function renderResumen() {
+  renderResumenReal();
   const n = DATA.nacional;
   const cards = [
     ["Expedientes ingresados", fmt(n.expedientes_ingresados), "este año", ""],
@@ -408,6 +424,7 @@ function openRotacion(m) {
 /* ============================================================ SEGURIDAD */
 let segFilter = "";
 function renderSeguridad() {
+  renderSeguridadReal();
   const c = DATA.casos_seguridad;
   const crit = c.filter((x) => x.nivel_alerta === "Critico").length;
   const kpis = [
@@ -451,6 +468,28 @@ function renderSegTable() {
        <td>${x.juez}</td><td>${x.fiscal}</td><td class="num">${x.imputados}</td>
        <td class="num">${fmt(x.dias_transcurridos)}</td>
        <td><span class="pill ${x.nivel_alerta === "Critico" ? "red" : x.nivel_alerta === "Riesgo" ? "amber" : "green"}"><span class="dot" style="background:currentColor"></span>${x.nivel_alerta}</span></td></tr>`).join("")}</tbody>`;
+}
+
+function renderSeguridadReal() {
+  const box = $("#seg-real"); if (!box) return;
+  const delitos = REAL.mpfn_delitos, seg = REAL.mpfn_seguridad;
+  if (!delitos && !seg) { box.innerHTML = ""; return; }
+  const kpis = [];
+  if (delitos) kpis.push(["Delitos denunciados (MPFN)", fmt(delitos.total_denuncias), "2019–2026", "alert"]);
+  if (seg && seg.violencia_mujer) kpis.push(["Violencia contra la mujer", fmt(seg.violencia_mujer.total), "casos fiscales", "alert"]);
+  if (seg && seg.ciberdelitos) kpis.push(["Ciberdelitos", fmt(seg.ciberdelitos.total), "denunciados", "alert"]);
+  if (seg && seg.flagrancia) kpis.push(["Flagrancia delictiva", fmt(seg.flagrancia.total), "casos 2025–26", "warn"]);
+  if (seg && seg.trata) kpis.push(["Trata de personas", fmt(seg.trata.total), "casos intervenidos", "warn"]);
+  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Cada gráfico cita su fuente y fecha de corte.</div>`;
+  html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
+  const reg = [];
+  if (delitos && delitos.top_delitos) { html += rcard("🟢 Top delitos denunciados (MPFN)", "sr-topdel", delitos._meta); reg.push(["sr-topdel", () => barSimple("sr-topdel", delitos.top_delitos.slice(0, 12), "generico", "cantidad", "#e74c3c")]); }
+  if (delitos && delitos.por_departamento) { html += rcard("🟢 Delitos por departamento (MPFN)", "sr-deptodel", delitos._meta); reg.push(["sr-deptodel", () => barSimple("sr-deptodel", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#c0392b")]); }
+  if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += rcard("🟢 Violencia contra la mujer por año (MPFN)", "sr-vcm", seg.violencia_mujer._meta); reg.push(["sr-vcm", () => lineIngAt("sr-vcm", seg.violencia_mujer.por_anio)]); }
+  if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += rcard("🟢 Top tipos de ciberdelito (MPFN)", "sr-ciber", seg.ciberdelitos._meta); reg.push(["sr-ciber", () => barSimple("sr-ciber", seg.ciberdelitos.top_tipos.slice(0, 10), "tipo", "cantidad", "#00cec9")]); }
+  box.innerHTML = html;
+  reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
+  function rcard(t, id, m) { return `<div class="card"><h3>${t}</h3><div class="chart" id="${id}"></div>${metaFoot(m)}</div>`; }
 }
 
 /* ============================================================ SERIES (real) */

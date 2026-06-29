@@ -136,7 +136,9 @@
   <!-- ============ RESUMEN ============ -->
   <section class="panel active" id="resumen">
     <h2 class="section-title">Resumen Nacional</h2>
-    <p class="section-sub">Indicadores clave del sistema de justicia para el año en curso.</p>
+    <p class="section-sub">Cifras reales destacadas arriba; abajo, el prototipo sintético (🧪) para vistas aún sin fuente oficial conectada.</p>
+    <div id="resumen-real"></div>
+    <h3 style="font-size:14px;color:var(--muted);margin:22px 0 4px">🧪 Prototipo sintético (calibrado, no oficial)</h3>
     <div class="kpi-grid" id="kpis"></div>
     <div class="grid-2">
       <div class="card"><h3>Evolución nacional 2010–2026</h3><p class="card-sub">Expedientes ingresados vs. resueltos vs. pendientes.</p><div class="chart" id="chart-evol"></div></div>
@@ -216,12 +218,14 @@
 
   <!-- ============ SEGURIDAD ============ -->
   <section class="panel" id="seguridad">
-    <h2 class="section-title">🚨 Casos Álgidos de Seguridad</h2>
-    <p class="section-sub">Casos de alto perfil (crimen organizado, extorsión, narcotráfico, corrupción) con su juez, fiscal, estado y nivel de alerta por tiempo transcurrido.</p>
+    <h2 class="section-title">🚨 Seguridad</h2>
+    <p class="section-sub">Datos reales del Ministerio Público sobre criminalidad y violencia, más un explorador de casos de alto perfil (ilustrativo).</p>
+    <div id="seg-real"></div>
+    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el explorador de casos individuales de alto perfil con juez/fiscal no usa datos reales —no existe un registro abierto de casos nominales—; sirve para mostrar el tipo de seguimiento posible.</div>
     <div class="kpi-grid" id="seg-kpis"></div>
     <div class="grid-2">
-      <div class="card"><h3>Casos por tema</h3><div class="chart" id="chart-seg-tema"></div></div>
-      <div class="card"><h3>Casos por estado procesal</h3><div class="chart" id="chart-seg-estado"></div></div>
+      <div class="card"><h3>🧪 Casos por tema</h3><div class="chart" id="chart-seg-tema"></div></div>
+      <div class="card"><h3>🧪 Casos por estado procesal</h3><div class="chart" id="chart-seg-estado"></div></div>
     </div>
     <div class="controls" id="seg-chips"><b style="color:var(--muted);font-size:12px;align-self:center">Filtrar tema:</b></div>
     <div class="table-wrap" style="max-height:520px"><table id="tbl-seg"></table></div>
