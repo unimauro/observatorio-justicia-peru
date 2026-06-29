@@ -449,8 +449,10 @@ function renderSeguridadReal() {
   const delitos = REAL.mpfn_delitos, seg = REAL.mpfn_seguridad;
   if (!delitos && !seg) { box.innerHTML = ""; return; }
   const kpis = [];
+  const mimp = REAL.mimp_violencia;
   if (delitos) kpis.push(["Delitos denunciados (MPFN)", fmt(delitos.total_denuncias), "2019–2026", "alert"]);
-  if (seg && seg.violencia_mujer) kpis.push(["Violencia contra la mujer", fmt(seg.violencia_mujer.total), "casos fiscales", "alert"]);
+  if (mimp && mimp.feminicidios) kpis.push(["Feminicidios (MIMP/CEM)", fmt(mimp.feminicidios.total), "2012–2025", "alert"]);
+  if (mimp && mimp.casos_violencia) kpis.push(["Violencia contra la mujer (CEM)", fmt(mimp.casos_violencia.total), "casos atendidos 2012–2025", "alert"]);
   if (seg && seg.ciberdelitos) kpis.push(["Ciberdelitos", fmt(seg.ciberdelitos.total), "denunciados", "alert"]);
   if (seg && seg.flagrancia) kpis.push(["Flagrancia delictiva", fmt(seg.flagrancia.total), "casos 2025–26", "warn"]);
   if (seg && seg.trata) kpis.push(["Trata de personas", fmt(seg.trata.total), "casos intervenidos", "warn"]);
@@ -461,6 +463,13 @@ function renderSeguridadReal() {
   if (delitos && delitos.por_departamento) { html += rcard("🟢 Delitos por departamento (MPFN)", "sr-deptodel", delitos._meta); reg.push(["sr-deptodel", () => barSimple("sr-deptodel", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#c0392b")]); }
   if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += rcard("🟢 Violencia contra la mujer por año (MPFN)", "sr-vcm", seg.violencia_mujer._meta); reg.push(["sr-vcm", () => lineIngAt("sr-vcm", seg.violencia_mujer.por_anio)]); }
   if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += rcard("🟢 Top tipos de ciberdelito (MPFN)", "sr-ciber", seg.ciberdelitos._meta); reg.push(["sr-ciber", () => barSimple("sr-ciber", seg.ciberdelitos.top_tipos.slice(0, 10), "tipo", "cantidad", "#00cec9")]); }
+  // MIMP / Programa AURORA (CEM) — feminicidios y violencia contra la mujer (serie larga 2012-2025)
+  if (mimp) {
+    if (mimp.feminicidios && mimp.feminicidios.por_anio) { html += rcard("🟢 Feminicidios por año (MIMP/CEM, 2012–2025)", "sr-femi", mimp._meta); reg.push(["sr-femi", () => lineSimple("sr-femi", mimp.feminicidios.por_anio, "anio", "cantidad", "#c0392b")]); }
+    if (mimp.feminicidios && mimp.feminicidios.por_vinculo) { html += rcard("🟢 Feminicidios por vínculo con el agresor (MIMP)", "sr-vinc", mimp._meta); reg.push(["sr-vinc", () => barSimple("sr-vinc", mimp.feminicidios.por_vinculo, "vinculo", "cantidad", "#e74c3c")]); }
+    if (mimp.casos_violencia && mimp.casos_violencia.por_anio) { html += rcard("🟢 Violencia contra la mujer — casos atendidos por año (CEM)", "sr-vcmanio", mimp._meta); reg.push(["sr-vcmanio", () => lineSimple("sr-vcmanio", mimp.casos_violencia.por_anio, "anio", "cantidad", "#e84393")]); }
+    if (mimp.casos_violencia && mimp.casos_violencia.por_departamento) { html += rcard("🟢 Violencia contra la mujer por departamento (CEM)", "sr-vcmdep", mimp._meta); reg.push(["sr-vcmdep", () => barSimple("sr-vcmdep", mimp.casos_violencia.por_departamento.slice(0, 15), "departamento", "cantidad", "#9b59b6")]); }
+  }
   // INEI / PNP — denuncias policiales (complemento a la mirada fiscal del MPFN)
   const inei = REAL.inei_denuncias;
   if (inei && inei.top_delitos) {

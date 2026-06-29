@@ -281,6 +281,10 @@ def build_feminicidios() -> dict:
         "por_anio": por_anio(df, "total_n"),
         "por_vinculo": por_vinculo,
         "por_grupo_edad": por_edad,
+        "nota": "MIMP solo desagrega por vinculo y grupo de edad a partir de los "
+                "anios en que incorporo esas columnas; las sumas de por_vinculo y "
+                "por_grupo_edad son menores que el total porque los anios mas "
+                "antiguos reportan el total sin desagregacion. No se imputa.",
         "_fecha_corte": fecha_corte_dmy(df),
         "_anios": anios,
     }

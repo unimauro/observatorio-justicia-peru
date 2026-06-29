@@ -102,7 +102,7 @@ Ejecutado (UTC): 2026-06-29T17:29:07.764395+00:00
 ## Iteración 4 (MIMP/CEM)
 
 # REPORTE ETL REAL - Iteracion 4 (MIMP/CEM) - Observatorio Justicia Peru
-Ejecutado (UTC): 2026-06-29T21:35:54.985109+00:00
+Ejecutado (UTC): 2026-06-29T21:37:03.231372+00:00
 
 ## Casos de violencia contra la mujer (CEM)
   casos: filas=4699 validas=4698 anios=2012-2025
