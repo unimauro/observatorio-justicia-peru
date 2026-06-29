@@ -112,22 +112,24 @@
   </div>
 </header>
 
-<nav class="tabs">
-  <div class="tabs-inner" id="tabs">
-    <button class="tab active" data-panel="resumen">📊 Resumen 🟢</button>
-    <button class="tab" data-panel="reales">📋 Fuentes & Calidad</button>
-    <button class="tab" data-panel="mapa">🗺️ Mapa 🟢</button>
-    <button class="tab" data-panel="cortes">🏛️ Distritos Judiciales 🟢</button>
-    <button class="tab" data-panel="procesos">📁 Tipos de Proceso 🟢</button>
-    <button class="tab" data-panel="series">📈 Series 🟢</button>
-    <button class="tab" data-panel="seguridad">🚨 Seguridad 🟢</button>
-    <button class="tab" data-panel="embudo">🔻 Flujo & Backlog 🟢</button>
-    <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🟢</button>
-    <button class="tab" data-panel="prediccion">🔮 Predicción (ML) 🟢</button>
-    <button class="tab" data-panel="indicadores">📐 Indicadores</button>
-    <button class="tab" data-panel="faq">❓ FAQ</button>
-  </div>
-</nav>
+<button class="sidebar-toggle" id="sidebar-toggle" title="Menú">☰ Menú</button>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="snav" id="tabs">
+      <button class="tab active" data-panel="resumen">📊 Resumen 🟢</button><div class="subitems" data-for="resumen"></div>
+      <button class="tab" data-panel="reales">📋 Fuentes & Calidad</button><div class="subitems" data-for="reales"></div>
+      <button class="tab" data-panel="mapa">🗺️ Mapa 🟢</button><div class="subitems" data-for="mapa"></div>
+      <button class="tab" data-panel="cortes">🏛️ Distritos Judiciales 🟢</button><div class="subitems" data-for="cortes"></div>
+      <button class="tab" data-panel="procesos">📁 Tipos de Proceso 🟢</button><div class="subitems" data-for="procesos"></div>
+      <button class="tab" data-panel="series">📈 Series 🟢</button><div class="subitems" data-for="series"></div>
+      <button class="tab" data-panel="seguridad">🚨 Seguridad 🟢</button><div class="subitems" data-for="seguridad"></div>
+      <button class="tab" data-panel="embudo">🔻 Flujo & Backlog 🟢</button><div class="subitems" data-for="embudo"></div>
+      <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🟢</button><div class="subitems" data-for="magistrados"></div>
+      <button class="tab" data-panel="prediccion">🔮 Predicción (ML) 🟢</button><div class="subitems" data-for="prediccion"></div>
+      <button class="tab" data-panel="indicadores">📐 Indicadores</button><div class="subitems" data-for="indicadores"></div>
+      <button class="tab" data-panel="faq">❓ FAQ</button><div class="subitems" data-for="faq"></div>
+    </div>
+  </aside>
 
 <main>
   <div class="disclaimer">
@@ -231,6 +233,7 @@
     <div id="faq-content"></div>
   </section>
 </main>
+</div><!-- /.layout -->
 
 <!-- ============ Modal rotaciones ============ -->
 <div class="modal-bg" id="modal-bg">

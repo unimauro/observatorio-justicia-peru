@@ -58,14 +58,18 @@ async function boot() {
   });
 }
 
-/* ---------- Tabs ---------- */
+/* ---------- Tabs (sidebar) ---------- */
 function setupTabs() {
+  const tog = $("#sidebar-toggle"), sb = $("#sidebar");
+  if (tog && sb) tog.addEventListener("click", () => sb.classList.toggle("open"));
   $$("#tabs .tab").forEach((t) => t.addEventListener("click", () => {
     $$("#tabs .tab").forEach((x) => x.classList.remove("active"));
     $$("main .panel").forEach((x) => x.classList.remove("active"));
     t.classList.add("active");
     const id = t.dataset.panel;
     $("#" + id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "auto" });
+    if (sb && window.innerWidth <= 860) sb.classList.remove("open");
     renderPanel(id);
     setTimeout(() => Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); }), 60);
   }));
@@ -79,28 +83,25 @@ function renderPanel(id) {
      prediccion: renderPrediccion, faq: renderFaq }[id] || (() => {}))();
   setTimeout(() => buildSubnav(id), 80);
 }
-// Submenú automático: genera chips desde los títulos (h3) de las tarjetas del panel,
-// para saltar a cada gráfico sin scroll manual. Se reconstruye tras renderizar el panel.
+// Sub-menú en el sidebar: bajo la sección activa lista sus gráficos (títulos h3) como
+// sub-ítems; al hacer clic salta al gráfico. Se reconstruye tras renderizar el panel.
 function buildSubnav(panelId) {
+  $$(".subitems").forEach((s) => { s.classList.remove("open"); s.innerHTML = ""; });
   const panel = $("#" + panelId); if (!panel) return;
-  const old = panel.querySelector(":scope > .subnav"); if (old) old.remove();
+  const box = $(`.subitems[data-for="${panelId}"]`); if (!box) return;
   const seen = new Set(), targets = [];
   $$(".card", panel).forEach((c) => { const h = c.querySelector("h3"); if (h && !seen.has(c)) { seen.add(c); targets.push([c, h.textContent.trim()]); } });
-  if (targets.length < 3) return;
-  const nav = document.createElement("div");
-  nav.className = "subnav";
-  nav.innerHTML = `<span style="color:var(--muted);font-size:11px;align-self:center;font-weight:700;text-transform:uppercase;letter-spacing:.3px">En esta sección:</span>` +
-    targets.map(([c, t], i) => {
-      c.id = c.id || `${panelId}-sec-${i}`;
-      const short = t.replace(/^🟢\s*|^🚨\s*|^🔮\s*|^📚\s*|^🔎\s*/u, "").slice(0, 38);
-      return `<span class="schip" data-go="${c.id}">${short}${t.length > 38 ? "…" : ""}</span>`;
-    }).join("");
-  // insertar tras el subtítulo (o al inicio del panel)
-  const anchor = panel.querySelector(":scope > .section-sub") || panel.querySelector(":scope > .section-title");
-  if (anchor && anchor.nextSibling) anchor.parentNode.insertBefore(nav, anchor.nextSibling);
-  else panel.insertBefore(nav, panel.firstChild);
-  nav.querySelectorAll(".schip").forEach((ch) => ch.addEventListener("click", () => {
-    const el = document.getElementById(ch.dataset.go); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (targets.length < 2) return;
+  box.innerHTML = targets.map(([c, t], i) => {
+    c.id = c.id || `${panelId}-sec-${i}`;
+    const short = t.replace(/^🟢\s*|^🚨\s*|^🔮\s*|^📚\s*|^🔎\s*|^📅\s*/u, "");
+    return `<a data-go="${c.id}">${short}</a>`;
+  }).join("");
+  box.classList.add("open");
+  box.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => {
+    const el = document.getElementById(a.dataset.go);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    $("#sidebar") && $("#sidebar").classList.remove("open");  // cerrar en móvil
   }));
 }
 function mkChart(elId) {
