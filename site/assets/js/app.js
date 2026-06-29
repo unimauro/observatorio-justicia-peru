@@ -912,7 +912,7 @@ function setupAI() {
 }
 /* Markdown mínimo y seguro: escapa HTML y luego aplica formato (negrita, itálica, código,
    listas, encabezados, enlaces). Usado para las respuestas del modelo (texto markdown). */
-function escapeHtml(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function escapeHtml(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
 function mdToHtml(src) {
   let s = escapeHtml(String(src || ""));
   const lines = s.split(/\r?\n/), out = []; let inList = false, inOl = false;
@@ -920,7 +920,8 @@ function mdToHtml(src) {
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>")
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    // enlaces: href estricto (sin comillas/espacios/<>; ya escapado por escapeHtml) -> evita romper el atributo
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s"'<>)&]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   for (let ln of lines) {
     if (/^\s*[-*]\s+/.test(ln)) { if (!inList) { out.push("<ul>"); inList = true; } out.push("<li>" + inline(ln.replace(/^\s*[-*]\s+/, "")) + "</li>"); continue; }
     if (/^\s*\d+\.\s+/.test(ln)) { if (!inOl) { out.push("<ol>"); inOl = true; } out.push("<li>" + inline(ln.replace(/^\s*\d+\.\s+/, "")) + "</li>"); continue; }
@@ -941,7 +942,22 @@ function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="
 /* Endpoint del copiloto (ecosistema tunky.net). Debe ser un proxy serverless que reciba
    {question, context} y use la Claude API server-side (la API key NUNCA va en el cliente).
    Si el endpoint no responde, se usa el motor local de respuestas. Configurable por ?ai= o window.AI_ENDPOINT. */
-const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/justicia-api/v1/justicia/chat";
+// Endpoint del copiloto. El override (?ai= / window.AI_ENDPOINT) se restringe a hosts de confianza
+// para evitar apuntar el chatbot a un servidor atacante (SSRF cliente / encadenado a XSS).
+const AI_DEFAULT = "https://ai.tunky.net/justicia-api/v1/justicia/chat";
+const AI_HOSTS_OK = ["ai.tunky.net", "ml.tunky.net", "localhost", "127.0.0.1"];
+function pickAiEndpoint() {
+  const q = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT;
+  if (q) {
+    try {
+      const u = new URL(q, location.href);
+      const okProto = u.protocol === "https:" || u.hostname === "localhost" || u.hostname === "127.0.0.1";
+      if (okProto && AI_HOSTS_OK.includes(u.hostname)) return u.href;
+    } catch (e) { /* URL inválida -> default */ }
+  }
+  return AI_DEFAULT;
+}
+const AI_ENDPOINT = pickAiEndpoint();
 const ML_PREDICT_ENDPOINT = AI_ENDPOINT.replace(/\/chat$/, "/predict-demora");
 function aiContext() {
   const n = DATA.nacional;

@@ -127,7 +127,8 @@ def chat(inp: ChatIn, request: Request):
         )
         return {"answer": resp.choices[0].message.content}
     except Exception as e:
-        return {"answer": None, "error": str(e)[:200]}
+        print(f"[chat] error: {e}", flush=True)  # log server-side, NO al cliente
+        return {"answer": None, "error": "No se pudo procesar la consulta en este momento."}
 
 
 # ----------------------------------------------------------------- ML: predicción de demora (Fase 4)
@@ -151,7 +152,8 @@ def predict_demora(inp: DemoraIn, request: Request):
         return {"dias_estimados": round(dias), "cobertura": "CSJ Piura",
                 "nota": "Modelo válido solo para jurisdicciones con microdata real."}
     except Exception as e:
-        return {"dias_estimados": None, "error": str(e)[:200]}
+        print(f"[predict] error: {e}", flush=True)  # log server-side, NO al cliente
+        return {"dias_estimados": None, "error": "No se pudo estimar en este momento."}
 
 
 @app.get("/v1/justicia/forecast-carga")
