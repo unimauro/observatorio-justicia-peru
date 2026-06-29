@@ -120,7 +120,8 @@ const MAP_META = {
   pendientes: { label: "Pendientes", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt },
   procesos_por_1000hab: { label: "Procesos/1000 hab", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt1 },
   riesgo_seguridad: { label: "Riesgo seguridad", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: (v) => (v * 100).toFixed(0) + "%" },
-  delitos_reales: { label: "Delitos denunciados (MPFN)", colors: ["#16324f", "#f39c12", "#e74c3c"], fmt: fmt },
+  delitos_reales: { label: "Delitos denunciados (MPFN)", colors: ["#16324f", "#f39c12", "#e74c3c"], fmt: fmt, real: true, fuente: "MPFN · 2019–2026" },
+  violencia_mimp: { label: "Violencia contra la mujer (MIMP/CEM)", colors: ["#2c1a3a", "#9b59b6", "#e84393"], fmt: fmt, real: true, fuente: "MIMP/CEM · 2012–2025" },
 };
 const normName = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 async function renderMapa() {
@@ -156,22 +157,26 @@ async function renderMapa() {
       return t < .33 ? cols[0] : t < .66 ? cols[1] : cols[2];
     };
   }
-  // enriquecer con dato REAL: delitos denunciados por departamento (MPFN)
+  // enriquecer con datos REALES por departamento
   let hasRealDelitos = false;
   if (REAL.mpfn_delitos && REAL.mpfn_delitos.por_departamento) {
     const dl = {}; REAL.mpfn_delitos.por_departamento.forEach((r) => (dl[normName(r.departamento)] = r.cantidad));
     deps.forEach((d) => (d.delitos_reales = dl[normName(d.departamento)] || 0));
     hasRealDelitos = deps.some((d) => d.delitos_reales > 0);
   }
+  let hasMimp = false;
+  if (REAL.mimp_violencia && REAL.mimp_violencia.casos_violencia && REAL.mimp_violencia.casos_violencia.por_departamento) {
+    const vl = {};
+    REAL.mimp_violencia.casos_violencia.por_departamento.forEach((r) => {
+      // fusionar variantes de Lima (Lima, Lima Metropolitana, Lima Provincias) -> LIMA
+      const k = normName(r.departamento).replace(/^LIMA .*/, "LIMA");
+      vl[k] = (vl[k] || 0) + r.cantidad;
+    });
+    deps.forEach((d) => (d.violencia_mimp = vl[normName(d.departamento)] || 0));
+    hasMimp = deps.some((d) => d.violencia_mimp > 0);
+  }
   function popupHtml(d, m) {
-    if (m.key === "delitos_reales") {
-      return `<div class="map-pop"><b>${d.departamento}</b><br/>🟢 ${m.label}: <b>${m.fmt(d.delitos_reales)}</b><br/><span style="color:var(--muted);font-size:11px">Dato real · MPFN (2019–2026)</span></div>`;
-    }
-    return `<div class="map-pop"><b>${d.departamento}</b> <span style="color:var(--amber);font-size:11px">🧪 sintético</span><br/>
-      ${m.label}: <b>${m.fmt(d[m.key])}</b><br/>
-      Ingresados: ${fmt(d.ingresados)}<br/>Pendientes: ${fmt(d.pendientes)}<br/>
-      Jueces: ${fmt(d.jueces)} · Demora: ${fmt(d.demora_dias)} d<br/>
-      Congestión: ${fmt1(d.congestion)}</div>`;
+    return `<div class="map-pop"><b>${d.departamento}</b><br/>🟢 ${m.label}: <b>${m.fmt(d[m.key] || 0)}</b><br/><span style="color:var(--muted);font-size:11px">Dato real · ${m.fuente || ""}</span></div>`;
   }
 
   let geoLayer = null, markerLayer = L.layerGroup();
@@ -208,17 +213,24 @@ async function renderMapa() {
       charts.mapLayer = markerLayer;
     }
   }
-  const initMetric = hasRealDelitos ? "delitos_reales" : "congestion";
+  // leyenda dinámica según la capa
+  let legendDiv = null;
+  function updateLegend(metric) {
+    if (!legendDiv) return;
+    const c = MAP_META[metric].colors;
+    legendDiv.innerHTML = `<b>${MAP_META[metric].label}</b><br/><i style="background:${c[0]}"></i> Menor<br/><i style="background:${c[1]}"></i> Medio<br/><i style="background:${c[2]}"></i> Mayor`;
+  }
+  const initMetric = hasRealDelitos ? "delitos_reales" : (hasMimp ? "violencia_mimp" : "congestion");
   if (hasRealDelitos) $("#map-metric").value = "delitos_reales";
   draw(initMetric);
   fitPeru();
-  $("#map-metric").addEventListener("change", (e) => draw(e.target.value));
+  $("#map-metric").addEventListener("change", (e) => { draw(e.target.value); updateLegend(e.target.value); });
 
   const lg = L.control({ position: "bottomright" });
   lg.onAdd = function () {
-    const div = L.DomUtil.create("div", "legend");
-    div.innerHTML = `<b>Escala</b><br/><i style="background:#1a5c3a"></i> Bajo<br/><i style="background:#f1c40f"></i> Medio<br/><i style="background:#e74c3c"></i> Alto`;
-    return div;
+    legendDiv = L.DomUtil.create("div", "legend");
+    updateLegend(initMetric);
+    return legendDiv;
   };
   lg.addTo(map);
   setTimeout(fitPeru, 120);

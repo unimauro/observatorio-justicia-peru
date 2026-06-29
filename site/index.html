@@ -151,10 +151,15 @@
 
   <!-- ============ MAPA ============ -->
   <section class="panel" id="mapa">
-    <h2 class="section-title">Mapa del Perú — delitos denunciados</h2>
-    <p class="section-sub"><b>🟢 Delitos denunciados reales (Ministerio Público)</b> por departamento, 2019–2026. Pasa el cursor o haz clic en un departamento para ver el detalle.</p>
-    <div class="controls" style="display:none">
-      <label>Indicador: <select id="map-metric"><option value="delitos_reales">Delitos denunciados (MPFN)</option></select></label>
+    <h2 class="section-title">Mapa del Perú</h2>
+    <p class="section-sub">Indicadores <b>reales</b> por departamento. Elige la capa; pasa el cursor o haz clic en un departamento para ver el detalle.</p>
+    <div class="controls">
+      <label>Indicador:
+        <select id="map-metric">
+          <option value="delitos_reales">🟢 Delitos denunciados (MPFN, 2019–2026)</option>
+          <option value="violencia_mimp">🟢 Violencia contra la mujer (MIMP/CEM, 2012–2025)</option>
+        </select>
+      </label>
     </div>
     <div id="map"></div>
   </section>
