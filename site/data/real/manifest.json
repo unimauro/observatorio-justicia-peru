@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-06-27T04:37:35.418869+00:00",
+  "generado_utc": "2026-06-29T15:53:07.903072+00:00",
   "datasets": [
     {
       "id": "pj_carga_nacional",
@@ -55,6 +55,61 @@
       "granularidad": "expediente",
       "url": "https://www.datosabiertos.gob.pe/dataset/demandas-con-sentencias-de-la-nueva-ley-procesal-de-trabajo-nlpt-de-la-corte-superior-de",
       "n_registros": 11737
+    },
+    {
+      "id": "tc",
+      "titulo": "Expedientes del Tribunal Constitucional (demora real)",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Tribunal Constitucional",
+      "fecha_corte": "2026-05-04",
+      "cobertura": "Nacional, 1992-2026",
+      "granularidad": "expediente",
+      "url": "https://www.datosabiertos.gob.pe/dataset/expedientes-ingresados-al-tribunal-constitucional-desde-1992-2026-tribunal-constitucional-tc",
+      "n_registros": 309213
+    },
+    {
+      "id": "flagrancia",
+      "titulo": "Casos fiscales de flagrancia delictiva",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2026-06-08",
+      "cobertura": "Nacional, 2025-2026",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-casos-fiscales-de-flagrancia-delictiva",
+      "n_registros": 66
+    },
+    {
+      "id": "violencia_mujer",
+      "titulo": "Casos fiscales de violencia contra la mujer",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2022-01-11",
+      "cobertura": "Nacional, 2019-2022",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-casos-fiscales-en-violencia-contra-la-mujer",
+      "n_registros": 139
+    },
+    {
+      "id": "ciberdelitos",
+      "titulo": "Delitos de ciberdelincuencia denunciados",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2022-01-10",
+      "cobertura": "Nacional, 2019-2022",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/mpfn-delitos-de-ciberdelincuencia-denunciados-en-el-ministerio-público",
+      "n_registros": 9515
+    },
+    {
+      "id": "trata",
+      "titulo": "Casos intervenidos por trata de personas",
+      "fuente": "datosabiertos.gob.pe",
+      "institucion": "Ministerio Publico",
+      "fecha_corte": "2018-12-31",
+      "cobertura": "Nacional, 2008-2018",
+      "granularidad": "agregado",
+      "url": "https://www.datosabiertos.gob.pe/dataset/casos-intervenidos-por-el-delito-de-trata-de-personas-según-distrito-fiscal",
+      "n_registros": 34
     }
   ]
 }

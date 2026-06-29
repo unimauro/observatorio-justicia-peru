@@ -433,10 +433,10 @@ function metaFoot(m) {
 async function renderReales() {
   const box = $("#reales-content");
   const manifest = await fetchReal("manifest");
-  const [fis, casos, delitos, pj, demora] = await Promise.all(
-    ["mpfn_fiscales", "mpfn_casos", "mpfn_delitos", "pj_carga_nacional", "demora_piura"].map(fetchReal));
+  const [fis, casos, delitos, pj, demora, tc, seg] = await Promise.all(
+    ["mpfn_fiscales", "mpfn_casos", "mpfn_delitos", "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad"].map(fetchReal));
 
-  if (!manifest && !fis && !casos && !delitos && !pj && !demora) {
+  if (!manifest && !fis && !casos && !delitos && !pj && !demora && !tc && !seg) {
     box.innerHTML = `<div class="card" style="text-align:center">
       <h3>🛠️ Datos reales en preparación</h3>
       <p class="card-sub" style="max-width:640px;margin:8px auto">El pipeline ETL (Track A) está descargando y normalizando las fuentes oficiales
@@ -469,6 +469,9 @@ async function renderReales() {
     const nlpt = demora.por_proceso.find((p) => /nlpt|laboral/i.test(p.proceso)) || demora.por_proceso[0];
     kpis.push([`Demora mediana (${nlpt.proceso})`, fmt(nlpt.mediana_dias) + " días", "microdata real (Piura)", nlpt.mediana_dias > 365 ? "warn" : "ok"]);
   }
+  if (tc && tc.demora && tc.demora.global) kpis.push(["Demora TC (mediana)", fmt(tc.demora.global.mediana_dias) + " días", "Tribunal Constitucional · microdata", tc.demora.global.mediana_dias > 365 ? "warn" : "ok"]);
+  if (seg && seg.violencia_mujer && seg.violencia_mujer.total != null) kpis.push(["Casos violencia contra la mujer", fmt(seg.violencia_mujer.total), "MPFN · ingresados", "alert"]);
+  if (seg && seg.ciberdelitos && seg.ciberdelitos.total != null) kpis.push(["Ciberdelitos denunciados", fmt(seg.ciberdelitos.total), "MPFN", "alert"]);
   if (kpis.length) html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
 
   // --- aviso de cobertura temporal (honestidad: distintos años por fuente) ---
@@ -488,6 +491,16 @@ async function renderReales() {
   if (fis && fis.por_condicion) { html += card("Fiscales por condición (MPFN)", "rc-fiscond", fis._meta); charts2.push(["rc-fiscond", () => donut("rc-fiscond", fis.por_condicion, "condicion", "total")]); }
   if (fis && fis.por_sexo) { html += card("Fiscales por sexo (MPFN)", "rc-fissexo", fis._meta); charts2.push(["rc-fissexo", () => donut("rc-fissexo", fis.por_sexo, "sexo", "total")]); }
   if (demora && demora.histograma) { html += card("Distribución de demora (días) por proceso — microdata Piura", "rc-demhist", demora._meta); charts2.push(["rc-demhist", () => histChart("rc-demhist", demora.histograma)]); }
+
+  // --- Tribunal Constitucional (serie larga real + demora) ---
+  if (tc && tc.por_anio) { html += card("Tribunal Constitucional — expedientes ingresados por año (1992–2026)", "rc-tcanio", tc._meta); charts2.push(["rc-tcanio", () => lineSimple("rc-tcanio", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
+  if (tc && tc.demora && tc.demora.por_tipo) { html += card("TC — demora real por tipo de proceso (mediana vs P90)", "rc-tcdem", tc._meta); charts2.push(["rc-tcdem", () => demoraChart("rc-tcdem", tc.demora.por_tipo.map((r) => ({ proceso: r.tipo, mediana_dias: r.mediana_dias, p90_dias: r.p90_dias })))]); }
+
+  // --- Seguridad (datos reales MPFN) ---
+  if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += card("🚨 Violencia contra la mujer — casos fiscales por año (MPFN)", "rc-vcm", seg.violencia_mujer._meta); charts2.push(["rc-vcm", () => lineIngAt("rc-vcm", seg.violencia_mujer.por_anio)]); }
+  if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += card("🚨 Top tipos de ciberdelito denunciados (MPFN)", "rc-cibertipo", seg.ciberdelitos._meta); charts2.push(["rc-cibertipo", () => barSimple("rc-cibertipo", seg.ciberdelitos.top_tipos.slice(0, 12), "tipo", "cantidad", "#00cec9")]); }
+  if (seg && seg.flagrancia && seg.flagrancia.por_distrito_fiscal) { html += card("🚨 Flagrancia delictiva por distrito fiscal (MPFN, 2025–2026)", "rc-flag", seg.flagrancia._meta); charts2.push(["rc-flag", () => barSimple("rc-flag", seg.flagrancia.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#f39c12")]); }
+  if (seg && seg.trata && seg.trata.por_distrito_fiscal) { html += card("🚨 Trata de personas por distrito fiscal (MPFN)", "rc-trata", seg.trata._meta); charts2.push(["rc-trata", () => barSimple("rc-trata", seg.trata.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#e84393")]); }
 
   // --- tablas reales ---
   if (pj && pj.por_distrito_judicial) {

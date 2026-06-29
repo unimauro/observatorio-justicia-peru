@@ -1,0 +1,278 @@
+{
+  "_meta": {
+    "fuente": "Tribunal Constitucional (datosabiertos.gob.pe)",
+    "fecha_corte": "2026-05-04",
+    "cobertura": "Nacional, 1992-2026",
+    "granularidad": "expediente",
+    "url": "https://www.datosabiertos.gob.pe/dataset/expedientes-ingresados-al-tribunal-constitucional-desde-1992-2026-tribunal-constitucional-tc"
+  },
+  "por_anio": [
+    {
+      "anio": 1992,
+      "ingresados": 41,
+      "publicados": 0
+    },
+    {
+      "anio": 1993,
+      "ingresados": 102,
+      "publicados": 0
+    },
+    {
+      "anio": 1994,
+      "ingresados": 3,
+      "publicados": 0
+    },
+    {
+      "anio": 1995,
+      "ingresados": 189,
+      "publicados": 0
+    },
+    {
+      "anio": 1996,
+      "ingresados": 1084,
+      "publicados": 99
+    },
+    {
+      "anio": 1997,
+      "ingresados": 1318,
+      "publicados": 592
+    },
+    {
+      "anio": 1998,
+      "ingresados": 1235,
+      "publicados": 1383
+    },
+    {
+      "anio": 1999,
+      "ingresados": 1370,
+      "publicados": 1586
+    },
+    {
+      "anio": 2000,
+      "ingresados": 1436,
+      "publicados": 1921
+    },
+    {
+      "anio": 2001,
+      "ingresados": 1522,
+      "publicados": 816
+    },
+    {
+      "anio": 2002,
+      "ingresados": 3098,
+      "publicados": 1379
+    },
+    {
+      "anio": 2003,
+      "ingresados": 3812,
+      "publicados": 4619
+    },
+    {
+      "anio": 2004,
+      "ingresados": 5102,
+      "publicados": 4174
+    },
+    {
+      "anio": 2005,
+      "ingresados": 10819,
+      "publicados": 7055
+    },
+    {
+      "anio": 2006,
+      "ingresados": 11269,
+      "publicados": 10161
+    },
+    {
+      "anio": 2007,
+      "ingresados": 6835,
+      "publicados": 9455
+    },
+    {
+      "anio": 2008,
+      "ingresados": 7271,
+      "publicados": 7087
+    },
+    {
+      "anio": 2009,
+      "ingresados": 6629,
+      "publicados": 8993
+    },
+    {
+      "anio": 2010,
+      "ingresados": 4669,
+      "publicados": 7137
+    },
+    {
+      "anio": 2011,
+      "ingresados": 5935,
+      "publicados": 4862
+    },
+    {
+      "anio": 2012,
+      "ingresados": 5398,
+      "publicados": 4277
+    },
+    {
+      "anio": 2013,
+      "ingresados": 9258,
+      "publicados": 5712
+    },
+    {
+      "anio": 2014,
+      "ingresados": 6617,
+      "publicados": 5682
+    },
+    {
+      "anio": 2015,
+      "ingresados": 7487,
+      "publicados": 5327
+    },
+    {
+      "anio": 2016,
+      "ingresados": 5973,
+      "publicados": 5432
+    },
+    {
+      "anio": 2017,
+      "ingresados": 5314,
+      "publicados": 5471
+    },
+    {
+      "anio": 2018,
+      "ingresados": 5106,
+      "publicados": 7096
+    },
+    {
+      "anio": 2019,
+      "ingresados": 5211,
+      "publicados": 6190
+    },
+    {
+      "anio": 2020,
+      "ingresados": 2522,
+      "publicados": 5942
+    },
+    {
+      "anio": 2021,
+      "ingresados": 4418,
+      "publicados": 6009
+    },
+    {
+      "anio": 2022,
+      "ingresados": 6388,
+      "publicados": 2837
+    },
+    {
+      "anio": 2023,
+      "ingresados": 6109,
+      "publicados": 4315
+    },
+    {
+      "anio": 2024,
+      "ingresados": 7259,
+      "publicados": 4533
+    },
+    {
+      "anio": 2025,
+      "ingresados": 7955,
+      "publicados": 7353
+    },
+    {
+      "anio": 2026,
+      "ingresados": 508,
+      "publicados": 2456
+    }
+  ],
+  "por_tipo": [
+    {
+      "tipo": "ACCION DE AMPARO",
+      "n": 108060
+    },
+    {
+      "tipo": "HÁBEAS CORPUS",
+      "n": 28857
+    },
+    {
+      "tipo": "ACCION DE CUMPLIMIENTO",
+      "n": 12678
+    },
+    {
+      "tipo": "QUEJA",
+      "n": 5476
+    },
+    {
+      "tipo": "HÁBEAS DATA",
+      "n": 3062
+    },
+    {
+      "tipo": "ACCION DE INCONSTITUCIONALIDAD",
+      "n": 941
+    },
+    {
+      "tipo": "CONFLICTO DE COMPETENCIA",
+      "n": 188
+    }
+  ],
+  "demora": {
+    "global": {
+      "n": 149939,
+      "mediana_dias": 291.0,
+      "p90_dias": 798.0,
+      "promedio_dias": 382.6
+    },
+    "por_tipo": [
+      {
+        "tipo": "ACCION DE AMPARO",
+        "n": 101610,
+        "mediana_dias": 304.0,
+        "p90_dias": 810.0,
+        "promedio_dias": 392.0
+      },
+      {
+        "tipo": "HÁBEAS CORPUS",
+        "n": 26714,
+        "mediana_dias": 300.0,
+        "p90_dias": 793.0,
+        "promedio_dias": 386.7
+      },
+      {
+        "tipo": "ACCION DE CUMPLIMIENTO",
+        "n": 12337,
+        "mediana_dias": 217.0,
+        "p90_dias": 639.4,
+        "promedio_dias": 299.0
+      },
+      {
+        "tipo": "QUEJA",
+        "n": 5319,
+        "mediana_dias": 181.0,
+        "p90_dias": 535.0,
+        "promedio_dias": 248.5
+      },
+      {
+        "tipo": "HÁBEAS DATA",
+        "n": 2887,
+        "mediana_dias": 466.0,
+        "p90_dias": 1125.8,
+        "promedio_dias": 558.1
+      },
+      {
+        "tipo": "ACCION DE INCONSTITUCIONALIDAD",
+        "n": 890,
+        "mediana_dias": 467.0,
+        "p90_dias": 1335.0,
+        "promedio_dias": 560.7
+      },
+      {
+        "tipo": "CONFLICTO DE COMPETENCIA",
+        "n": 182,
+        "mediana_dias": 231.5,
+        "p90_dias": 1217.0,
+        "promedio_dias": 447.8
+      }
+    ],
+    "nota": "Demora literal en dias = fecha de publicacion en pagina web (PUB_PAGWEB) - fecha de ingreso (FEC_INGRESO), por expediente publicado. Solo tipos con n>=30. dias<0 descartados."
+  },
+  "nota": "por_anio.ingresados se cuenta por FEC_INGRESO; publicados por PUB_PAGWEB. por_tipo es ingresados por tipo de proceso. 2026 es parcial (corte 2026-05-04).",
+  "nota_privacidad": "El dataset del TC no contiene DNI ni nombres; aun asi se aplico el filtro de anonimizacion por seguridad."
+}

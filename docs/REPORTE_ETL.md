@@ -41,3 +41,32 @@ Ejecutado (UTC): 2026-06-27T04:37:28.724827+00:00
 - Demora Piura: SOLO microdata por expediente (unica via a dias reales). Cobertura = CSJ Piura. Anonimizado (DNI y FECHA_NACIMIENTO eliminados al cargar). Una fila por evento de sentencia (dedup por EXPEDIENTE+instancia+fechas+DIAS para colapsar duplicacion por parte). DIAS<0 o nulo descartado. Aparecen valores tope (max=999 en NLPT/Penal) que parecen sentinela en origen.
 - NO se derivan dias de demora desde agregados (regla no negociable del spec).
 - Pendiente/no incluido en esta corrida: TC 1992-2026 (XLSX), modulos VCM, INEI, y descargas manuales (PJ Portal Estadistico, CNPJ). Quedan como siguiente iteracion.
+
+
+## Iteracion 2 (TC + MPFN seguridad)
+
+# REPORTE ETL REAL - Iteracion 2 - Observatorio Justicia Peru
+Ejecutado (UTC): 2026-06-29T15:51:52.298670+00:00
+
+## Tribunal Constitucional - ingresos, publicados y demora real
+  ingresados: 159,262 filas | publicados: 149,951 filas
+  demora: 149,939 expedientes con dias>=0 (descartados 12 con dias<0)
+  -> escrito site/data/real/tc.json
+  demora global: n=149,939 mediana=291.0d p90=798.0d
+    ACCION DE AMPARO: n=101,610 mediana=304.0d p90=810.0d
+    HÁBEAS CORPUS: n=26,714 mediana=300.0d p90=793.0d
+    ACCION DE CUMPLIMIENTO: n=12,337 mediana=217.0d p90=639.4d
+    QUEJA: n=5,319 mediana=181.0d p90=535.0d
+    HÁBEAS DATA: n=2,887 mediana=466.0d p90=1125.8d
+
+## MPFN seguridad adicional (flagrancia, VCM, ciberdelitos, trata)
+  flagrancia: filas=66 validas=66 anios=[np.int64(2025), np.int64(2026)]
+  violencia_mujer: filas=139 validas=139 anios=[np.int64(2019), np.int64(2020), np.int64(2021), np.int64(2022)]
+  ciberdelitos: filas=9515 validas=9515 anios=[np.int64(2019), np.int64(2020), np.int64(2021), np.int64(2022)]
+  trata: total=7,517 distritos=34 anios=[2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018]
+  -> escrito site/data/real/mpfn_seguridad.json
+  flagrancia: total=30,154
+  violencia_mujer: total=807,962
+  ciberdelitos: total=738,860
+  trata: total=7,517
+  -> escrito site/data/real/manifest.json
