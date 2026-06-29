@@ -77,6 +77,31 @@ function renderPanel(id) {
      procesos: renderProcesos, embudo: renderEmbudo, magistrados: renderMagistrados,
      seguridad: renderSeguridad, series: renderSeries, indicadores: renderIndicadores,
      prediccion: renderPrediccion, faq: renderFaq }[id] || (() => {}))();
+  setTimeout(() => buildSubnav(id), 80);
+}
+// Submenú automático: genera chips desde los títulos (h3) de las tarjetas del panel,
+// para saltar a cada gráfico sin scroll manual. Se reconstruye tras renderizar el panel.
+function buildSubnav(panelId) {
+  const panel = $("#" + panelId); if (!panel) return;
+  const old = panel.querySelector(":scope > .subnav"); if (old) old.remove();
+  const seen = new Set(), targets = [];
+  $$(".card", panel).forEach((c) => { const h = c.querySelector("h3"); if (h && !seen.has(c)) { seen.add(c); targets.push([c, h.textContent.trim()]); } });
+  if (targets.length < 3) return;
+  const nav = document.createElement("div");
+  nav.className = "subnav";
+  nav.innerHTML = `<span style="color:var(--muted);font-size:11px;align-self:center;font-weight:700;text-transform:uppercase;letter-spacing:.3px">En esta sección:</span>` +
+    targets.map(([c, t], i) => {
+      c.id = c.id || `${panelId}-sec-${i}`;
+      const short = t.replace(/^🟢\s*|^🚨\s*|^🔮\s*|^📚\s*|^🔎\s*/u, "").slice(0, 38);
+      return `<span class="schip" data-go="${c.id}">${short}${t.length > 38 ? "…" : ""}</span>`;
+    }).join("");
+  // insertar tras el subtítulo (o al inicio del panel)
+  const anchor = panel.querySelector(":scope > .section-sub") || panel.querySelector(":scope > .section-title");
+  if (anchor && anchor.nextSibling) anchor.parentNode.insertBefore(nav, anchor.nextSibling);
+  else panel.insertBefore(nav, panel.firstChild);
+  nav.querySelectorAll(".schip").forEach((ch) => ch.addEventListener("click", () => {
+    const el = document.getElementById(ch.dataset.go); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
 }
 function mkChart(elId) {
   const c = echarts.init($("#" + elId), null, { renderer: "canvas" });
@@ -601,8 +626,8 @@ function renderReales() {
 function barSimple(id, rows, kx, ky, color) {
   rows = [...rows].sort((a, b) => b[ky] - a[ky]);
   mkChart(id).setOption({ ...echartsTheme(), color: [color], tooltip: { trigger: "axis" },
-    grid: { left: 150, right: 30, top: 10, bottom: 24 }, xAxis: { type: "value" },
-    yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
+    grid: { left: 190, right: 30, top: 10, bottom: 24 }, xAxis: { type: "value" },
+    yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10, width: 175, overflow: "truncate" } },
     series: [{ type: "bar", data: rows.map((r) => r[ky]).reverse() }] });
 }
 function barIngRes(id, rows, kx) {
@@ -624,8 +649,9 @@ function barIngRes2(id, rows, kx, k1, k2) {
 function demoraChart(id, rows) {
   rows = [...rows].sort((a, b) => b.p90_dias - a.p90_dias);
   mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#e74c3c"], tooltip: { trigger: "axis" },
-    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 160, right: 30, top: 36, bottom: 24 },
-    xAxis: { type: "value", name: "días" }, yAxis: { type: "category", data: rows.map((r) => r.proceso) },
+    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 210, right: 30, top: 36, bottom: 30 },
+    xAxis: { type: "value", name: "días" },
+    yAxis: { type: "category", data: rows.map((r) => r.proceso), axisLabel: { fontSize: 11, width: 195, overflow: "truncate" } },
     series: [{ name: "Mediana", type: "bar", data: rows.map((r) => r.mediana_dias) },
              { name: "P90", type: "bar", data: rows.map((r) => r.p90_dias) }] });
 }

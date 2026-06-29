@@ -83,6 +83,19 @@ nav.tabs {
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
+/* ---------- Sub-nav (índice dentro de cada pestaña) ---------- */
+.subnav {
+  position: sticky; top: 121px; z-index: 30;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  display: flex; gap: 7px; flex-wrap: wrap; padding: 10px 0 12px; margin-bottom: 6px;
+}
+.subnav .schip {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--muted);
+  border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.subnav .schip:hover { color: var(--text); border-color: var(--accent); }
+.card, .chart, .table-wrap { scroll-margin-top: 175px; }
+
 /* ---------- Layout ---------- */
 main { max-width: 1320px; margin: 0 auto; padding: 24px 18px 80px; }
 .panel { display: none; animation: fade .25s ease; }
