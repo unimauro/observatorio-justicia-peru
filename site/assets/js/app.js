@@ -839,7 +839,7 @@ function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="
 /* Endpoint del copiloto (ecosistema tunky.net). Debe ser un proxy serverless que reciba
    {question, context} y use la Claude API server-side (la API key NUNCA va en el cliente).
    Si el endpoint no responde, se usa el motor local de respuestas. Configurable por ?ai= o window.AI_ENDPOINT. */
-const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/v1/justicia/chat";
+const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/justicia-api/v1/justicia/chat";
 function aiContext() {
   const n = DATA.nacional;
   const real = {};
