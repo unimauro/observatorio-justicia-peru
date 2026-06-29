@@ -856,7 +856,7 @@ function attachPredictForm(ml) {
 /* ============================================================ FAQ */
 const FAQ = [
   ["¿Los datos de este tablero son reales?",
-   "Depende de la pestaña. La pestaña <b>🟢 Datos Reales</b> usa datos abiertos oficiales (Poder Judicial, Ministerio Público, INEI) con su fuente y fecha de corte. El resto del tablero (Resumen, Mapa, Cortes, Jueces & Fiscales, etc.) es un <b>prototipo con datos SINTÉTICOS</b> —simulados pero calibrados con órdenes de magnitud reales— para validar la interfaz mientras se integran todas las fuentes. Siempre verás la insignia 🧪 cuando el dato es sintético."],
+   "En su mayoría, <b>sí son reales</b>. Las secciones marcadas <b>🟢</b> (Resumen, Mapa, Distritos Judiciales, Tipos de Proceso, Series, Seguridad, Flujo, Jueces & Fiscales y la Predicción ML) usan <b>datos abiertos oficiales</b> (Poder Judicial, Ministerio Público, Tribunal Constitucional, INEI) con su fuente y fecha de corte. Solo algunas partes para las que <b>no existe fuente abierta</b> —casos individuales nominales, rotaciones de magistrados, ranking por juzgado— se muestran como <b>ilustración (insignia 🧪)</b>, nunca como dato real."],
   ["¿Por qué usan datos sintéticos al inicio?",
    "Porque no existe una API nacional única con 'expedientes estancados por juzgado y días de demora'. Las fuentes reales son heterogéneas (CSV, PDF, tableros que bloquean scraping). El prototipo sintético permitió diseñar y probar el tablero; ahora el ETL va reemplazando esos datos por oficiales, pestaña por pestaña."],
   ["¿Por qué no muestran la 'demora en días' en todo el país?",
