@@ -749,10 +749,10 @@ const SUPPORT = {
   autor: "Carlos Mauro Cárdenas",
   github: "https://github.com/unimauro",
   email: "carlos@cardenas.pe",
-  coffee: "",   // ej. https://buymeacoffee.com/unimauro
-  paypal: "",   // ej. https://paypal.me/unimauro
-  yape: "",     // ej. 999888777
-  yapeNombre: "",
+  coffee: "https://buymeacoffee.com/unimauro",
+  paypal: "https://paypal.me/unimauro",
+  yape: "940584307",
+  yapeNombre: "Carlos Mauro Cárdenas",
 };
 const FAQ = [
   ["¿Qué es el Observatorio Nacional de Justicia del Perú?",
