@@ -479,6 +479,28 @@ async function renderReales() {
   if (fis && fis.por_cargo) { html += card("Fiscales por cargo (MPFN)", "rc-fis", fis._meta); charts2.push(["rc-fis", () => barSimple("rc-fis", fis.por_cargo, "cargo", "total", "#4f8cff")]); }
   if (demora && demora.por_proceso) { html += card("Demora real por proceso — mediana vs P90 (microdata Piura)", "rc-dem", demora._meta); charts2.push(["rc-dem", () => demoraChart("rc-dem", demora.por_proceso)]); }
   if (casos && casos.por_materia) { html += card("Casos fiscales por materia — ingresado vs atendido (MPFN)", "rc-cas", casos._meta); charts2.push(["rc-cas", () => barIngRes2("rc-cas", casos.por_materia, "materia", "ingresado", "atendido")]); }
+  // --- tendencias por año + demografía + histograma ---
+  if (delitos && delitos.por_anio) { html += card("Delitos denunciados por año (MPFN) — 2026 parcial", "rc-delanio", delitos._meta); charts2.push(["rc-delanio", () => lineSimple("rc-delanio", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
+  if (casos && casos.por_anio) { html += card("Casos fiscales por año — ingresado vs atendido (MPFN)", "rc-casanio", casos._meta); charts2.push(["rc-casanio", () => lineIngAt("rc-casanio", casos.por_anio)]); }
+  if (fis && fis.por_condicion) { html += card("Fiscales por condición (MPFN)", "rc-fiscond", fis._meta); charts2.push(["rc-fiscond", () => donut("rc-fiscond", fis.por_condicion, "condicion", "total")]); }
+  if (fis && fis.por_sexo) { html += card("Fiscales por sexo (MPFN)", "rc-fissexo", fis._meta); charts2.push(["rc-fissexo", () => donut("rc-fissexo", fis.por_sexo, "sexo", "total")]); }
+  if (demora && demora.histograma) { html += card("Distribución de demora (días) por proceso — microdata Piura", "rc-demhist", demora._meta); charts2.push(["rc-demhist", () => histChart("rc-demhist", demora.histograma)]); }
+
+  // --- tablas reales ---
+  if (pj && pj.por_distrito_judicial) {
+    const rows = [...pj.por_distrito_judicial].sort((a, b) => b.congestion - a.congestion);
+    html += `<div class="card"><h3>🟢 PJ — carga por distrito judicial (2024)</h3>
+      <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito judicial</th><th class="num">Ingresos</th><th class="num">Resueltos</th><th class="num">Pendientes</th><th class="num">Congestión</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><td>${r.distrito_judicial}</td><td class="num">${fmt(r.ingresos)}</td><td class="num">${fmt(r.resueltos)}</td><td class="num">${fmt(r.pendientes)}</td><td class="num">${fmt1(r.congestion)}</td></tr>`).join("")}</tbody></table></div>
+      ${metaFoot(pj._meta)}</div>`;
+  }
+  if (casos && casos.por_distrito_fiscal) {
+    const rows = [...casos.por_distrito_fiscal].sort((a, b) => a.clearance - b.clearance);
+    html += `<div class="card"><h3>🟢 MPFN — casos fiscales por distrito (menor clearance primero)</h3>
+      <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito fiscal</th><th class="num">Ingresado</th><th class="num">Atendido</th><th class="num">Clearance %</th></tr></thead>
+      <tbody>${rows.map((r) => `<tr><td>${r.distrito_fiscal}</td><td class="num">${fmt(r.ingresado)}</td><td class="num">${fmt(r.atendido)}</td><td class="num">${fmt1(r.clearance)}</td></tr>`).join("")}</tbody></table></div>
+      ${metaFoot(casos._meta)}</div>`;
+  }
 
   box.innerHTML = html;
   charts2.forEach(([id, fn]) => { try { fn(); } catch (e) { console.warn("chart", id, e); } });
@@ -517,6 +539,44 @@ function demoraChart(id, rows) {
     xAxis: { type: "value", name: "días" }, yAxis: { type: "category", data: rows.map((r) => r.proceso) },
     series: [{ name: "Mediana", type: "bar", data: rows.map((r) => r.mediana_dias) },
              { name: "P90", type: "bar", data: rows.map((r) => r.p90_dias) }] });
+}
+function lineSimple(id, rows, kx, ky, color) {
+  rows = [...rows].sort((a, b) => a[kx] - b[kx]);
+  mkChart(id).setOption({ ...echartsTheme(), color: [color], tooltip: { trigger: "axis" },
+    grid: { left: 60, right: 24, top: 20, bottom: 30 }, xAxis: { type: "category", data: rows.map((r) => r[kx]) },
+    yAxis: { type: "value", axisLabel: { formatter: (v) => v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : v >= 1e3 ? (v / 1e3).toFixed(0) + "k" : v } },
+    series: [{ type: "line", smooth: true, data: rows.map((r) => r[ky]), areaStyle: { opacity: .12 }, lineStyle: { width: 3 } }] });
+}
+function lineIngAt(id, rows) {
+  rows = [...rows].sort((a, b) => a.anio - b.anio);
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#4f8cff"], tooltip: { trigger: "axis" },
+    legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 60, right: 24, top: 36, bottom: 30 },
+    xAxis: { type: "category", data: rows.map((r) => r.anio) },
+    yAxis: { type: "value", axisLabel: { formatter: (v) => v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : (v / 1e3).toFixed(0) + "k" } },
+    series: [{ name: "Ingresado", type: "line", smooth: true, data: rows.map((r) => r.ingresado) },
+             { name: "Atendido", type: "line", smooth: true, data: rows.map((r) => r.atendido) }] });
+}
+function donut(id, rows, kx, ky) {
+  mkChart(id).setOption({ ...echartsTheme(), color: PALETTE,
+    tooltip: { trigger: "item", formatter: (p) => `${p.name}: ${fmt(p.value)} (${p.percent}%)` },
+    legend: { bottom: 0, textStyle: echartsTheme().textStyle },
+    series: [{ type: "pie", radius: ["45%", "70%"], center: ["50%", "44%"], data: rows.map((r) => ({ name: r[kx], value: r[ky] })),
+      label: { color: echartsTheme().textStyle.color }, itemStyle: { borderColor: "var(--surface)", borderWidth: 2 } }] });
+}
+function histChart(id, hist) {
+  const procesos = Object.keys(hist);
+  // union de buckets ordenada por 'desde'
+  const seen = {}; const buckets = [];
+  procesos.forEach((p) => hist[p].forEach((b) => { if (!(b.bucket in seen)) { seen[b.bucket] = b.desde; buckets.push(b.bucket); } }));
+  buckets.sort((a, b) => seen[a] - seen[b]);
+  const series = procesos.map((p) => {
+    const m = {}; hist[p].forEach((b) => (m[b.bucket] = b.n));
+    return { name: p, type: "bar", data: buckets.map((bk) => m[bk] || 0) };
+  });
+  mkChart(id).setOption({ ...echartsTheme(), color: PALETTE, tooltip: { trigger: "axis" },
+    legend: { top: 0, type: "scroll", textStyle: echartsTheme().textStyle }, grid: { left: 55, right: 24, top: 36, bottom: 40 },
+    xAxis: { type: "category", data: buckets, axisLabel: { rotate: 30, fontSize: 10 }, name: "días" },
+    yAxis: { type: "value", name: "expedientes" }, series });
 }
 
 /* ============================================================ FAQ */
