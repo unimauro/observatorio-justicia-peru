@@ -642,12 +642,33 @@ function renderReales() {
   let html = "";
   // --- Fuentes (manifest) ---
   if (manifest && manifest.datasets) {
-    html += `<div class="card"><h3>📚 Fuentes integradas</h3><div class="table-wrap"><table>
-      <thead><tr><th>Dataset</th><th>Institución</th><th>Cobertura</th><th>Granularidad</th><th>Fecha corte</th><th class="num">Registros</th></tr></thead>
-      <tbody>${manifest.datasets.map((d) => `<tr>
+    // magnitud real (casos/denuncias/expedientes/fiscales) por dataset — lo relevante, no el nº de filas
+    const sum = (arr, k) => (arr || []).reduce((a, x) => a + (x[k] || 0), 0);
+    const MAG = {
+      pj_carga_nacional: () => pj && pj.nacional ? [pj.nacional.ingresos, "ingresos"] : null,
+      mpfn_fiscales: () => fis ? [fis.total_fiscales, "fiscales"] : null,
+      mpfn_casos: () => casos ? [sum(casos.por_anio, "ingresado"), "casos"] : null,
+      mpfn_delitos: () => delitos ? [delitos.total_denuncias, "denuncias"] : null,
+      demora_piura: () => demora ? [sum(demora.por_proceso, "n"), "expedientes"] : null,
+      tc: () => tc ? [sum(tc.por_anio, "ingresados"), "expedientes"] : null,
+      flagrancia: () => seg && seg.flagrancia ? [seg.flagrancia.total, "casos"] : null,
+      violencia_mujer: () => seg && seg.violencia_mujer ? [seg.violencia_mujer.total, "casos"] : null,
+      ciberdelitos: () => seg && seg.ciberdelitos ? [seg.ciberdelitos.total, "denuncias"] : null,
+      trata: () => seg && seg.trata ? [seg.trata.total, "casos"] : null,
+      inei_denuncias: () => REAL.inei_denuncias ? [REAL.inei_denuncias.total_denuncias, "denuncias"] : null,
+    };
+    html += `<div class="card"><h3>📚 Fuentes integradas</h3>
+      <p class="card-sub">La columna <b>magnitud</b> es el volumen real (casos, denuncias o expedientes); los datos agregados resumen ese volumen en pocas filas.</p>
+      <div class="table-wrap"><table>
+      <thead><tr><th>Dataset</th><th>Institución</th><th>Cobertura</th><th>Granularidad</th><th>Fecha corte</th><th class="num">Magnitud</th></tr></thead>
+      <tbody>${manifest.datasets.map((d) => {
+        const mg = (MAG[d.id] && MAG[d.id]()) || null;
+        const magCell = mg ? `${fmt(mg[0])} <span style="color:var(--muted);font-size:11px">${mg[1]}</span>` : (d.n_registros == null ? (d.error ? "❌" : "—") : `${fmt(d.n_registros)} <span style="color:var(--muted);font-size:11px">filas</span>`);
+        return `<tr>
         <td><b>${d.titulo || d.id}</b></td><td>${d.institucion || d.fuente || "—"}</td><td>${d.cobertura || "—"}</td>
         <td><span class="pill ${d.granularidad === "expediente" ? "blue" : "amber"}">${d.granularidad || "—"}</span></td>
-        <td>${d.fecha_corte || "—"}</td><td class="num">${d.n_registros == null ? (d.error ? "❌" : "—") : fmt(d.n_registros)}</td></tr>`).join("")}</tbody></table></div></div>`;
+        <td>${d.fecha_corte || "—"}</td><td class="num">${magCell}</td></tr>`;
+      }).join("")}</tbody></table></div></div>`;
   }
 
   // --- KPIs reales ---
