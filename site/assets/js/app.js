@@ -51,7 +51,10 @@ async function boot() {
   setupAI();
   setupModal();
   renderPanel("resumen");
-  window.addEventListener("resize", () => Object.values(charts).forEach((c) => c && c.resize()));
+  window.addEventListener("resize", () => {
+    Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); });
+    if (charts.map && charts.map._fitPeru) charts.map._fitPeru();
+  });
 }
 
 /* ---------- Tabs ---------- */
@@ -63,11 +66,11 @@ function setupTabs() {
     const id = t.dataset.panel;
     $("#" + id).classList.add("active");
     renderPanel(id);
-    setTimeout(() => Object.values(charts).forEach((c) => c && c.resize()), 60);
+    setTimeout(() => Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); }), 60);
   }));
 }
 function renderPanel(id) {
-  if (rendered[id]) { if (id === "mapa" && charts.map) charts.map.invalidateSize(); return; }
+  if (rendered[id]) { if (id === "mapa" && charts.map) { charts.map._fitPeru ? charts.map._fitPeru() : charts.map.invalidateSize(); } return; }
   rendered[id] = true;
   ({ resumen: renderResumen, reales: renderReales, mapa: renderMapa, cortes: renderCortes,
      procesos: renderProcesos, embudo: renderEmbudo, magistrados: renderMagistrados,
@@ -153,8 +156,23 @@ const MAP_META = {
 };
 const normName = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 async function renderMapa() {
-  const map = L.map("map", { scrollWheelZoom: true }).setView([-9.4, -74.5], 5);
+  // Mapa FIJO: sin zoom de scroll, sin arrastre ni doble-clic; se ajusta al Perú y se queda quieto.
+  const map = L.map("map", {
+    scrollWheelZoom: false, dragging: false, doubleClickZoom: false,
+    boxZoom: false, touchZoom: false, keyboard: false, zoomControl: false,
+    attributionControl: true,
+  });
   charts.map = map;
+  // límites aprox. del Perú; se afina con fitBounds al geojson
+  const PERU_BOUNDS = L.latLngBounds([[-18.6, -81.6], [-0.0, -68.6]]);
+  map.fitBounds(PERU_BOUNDS);
+  function fitPeru() {
+    const b = (charts.mapLayer && charts.mapLayer.getBounds && charts.mapLayer.getBounds().isValid())
+      ? charts.mapLayer.getBounds() : PERU_BOUNDS;
+    map.invalidateSize();
+    map.fitBounds(b, { padding: [8, 8] });
+  }
+  map._fitPeru = fitPeru;
   L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
     attribution: '© OpenStreetMap, © CARTO', subdomains: "abcd", maxZoom: 12,
   }).addTo(map);
@@ -211,6 +229,7 @@ async function renderMapa() {
           }
         },
       }).addTo(map);
+      charts.mapLayer = geoLayer;
     } else {
       // fallback: circulos en centroides
       markerLayer.clearLayers().addTo(map);
@@ -218,11 +237,13 @@ async function renderMapa() {
       deps.forEach((d) => L.circleMarker([d.lat, d.lng], {
         radius: 8 + (d[metric] / max) * 24, fillColor: color(d[metric]), color: "#fff", weight: 1, fillOpacity: .8,
       }).bindPopup(popupHtml(d, m)).addTo(markerLayer));
+      charts.mapLayer = markerLayer;
     }
   }
   const initMetric = hasRealDelitos ? "delitos_reales" : "congestion";
   if (hasRealDelitos) $("#map-metric").value = "delitos_reales";
   draw(initMetric);
+  fitPeru();
   $("#map-metric").addEventListener("change", (e) => draw(e.target.value));
 
   const lg = L.control({ position: "bottomright" });
@@ -232,7 +253,7 @@ async function renderMapa() {
     return div;
   };
   lg.addTo(map);
-  setTimeout(() => map.invalidateSize(), 120);
+  setTimeout(fitPeru, 120);
 }
 
 /* ============================================================ CORTES */
