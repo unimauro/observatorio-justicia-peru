@@ -50,6 +50,7 @@ async function boot() {
   setupTheme();
   setupAI();
   setupModal();
+  renderFooterSupport();
   renderPanel("resumen");
   window.addEventListener("resize", () => {
     Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); });
@@ -748,7 +749,7 @@ const REPO = "https://github.com/unimauro/observatorio-justicia-peru";
 const SUPPORT = {
   autor: "Carlos Mauro Cárdenas",
   github: "https://github.com/unimauro",
-  email: "carlos@cardenas.pe",
+  email: "unimauro@gmail.com",
   coffee: "https://buymeacoffee.com/unimauro",
   paypal: "https://paypal.me/unimauro",
   yape: "940584307",
@@ -795,6 +796,17 @@ const FAQ = [
    "Lo desarrolló <b>" + SUPPORT.autor + "</b> (<a href='" + SUPPORT.github + "' target='_blank' rel='noopener'>@unimauro</a>), de forma independiente y abierta. Contacto: <a href='mailto:" + SUPPORT.email + "'>" + SUPPORT.email + "</a>. " +
    "Es un proyecto sin fines de lucro para fortalecer la transparencia del sistema de justicia; si te resulta útil, puedes <b>apoyarlo</b> con una estrella ⭐ al repositorio o una donación (ver opciones abajo). Cada aporte ayuda a mantener el servidor y a integrar más fuentes de datos."],
 ];
+function renderFooterSupport() {
+  const box = $("#footer-support"); if (!box) return;
+  const chip = (href, label) => `<a href="${href}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:9px;font-size:12.5px;font-weight:700;text-decoration:none;margin:3px 4px 3px 0">${label}</a>`;
+  const items = [chip(REPO, "⭐ GitHub")];
+  if (SUPPORT.coffee) items.push(chip(SUPPORT.coffee, "☕ Café"));
+  if (SUPPORT.paypal) items.push(chip(SUPPORT.paypal, "💳 PayPal"));
+  box.innerHTML = `<h4>💚 Apoya el proyecto</h4>
+    <div style="margin-bottom:6px">${items.join("")}</div>
+    ${SUPPORT.yape ? `<p style="margin:4px 0">📱 <b>Yape:</b> ${SUPPORT.yape}${SUPPORT.yapeNombre ? " · " + SUPPORT.yapeNombre : ""}</p>` : ""}
+    <p style="margin:4px 0">✉️ <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a></p>`;
+}
 function renderFaq() {
   $("#faq-content").innerHTML = FAQ.map(([q, a], i) => `
     <div class="card" style="cursor:pointer" data-faq="${i}">
