@@ -7,6 +7,9 @@
 const DATA = {};
 const FILES = ["nacional", "departamentos", "cortes", "series", "tipos_proceso",
   "embudo", "backlog", "jueces", "fiscales", "casos_seguridad", "indicadores", "manifest"];
+const REAL = {};
+const REAL_FILES = ["manifest", "mpfn_fiscales", "mpfn_casos", "mpfn_delitos",
+  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad"];
 
 const fmt = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE"));
 const fmt1 = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE", { maximumFractionDigits: 1 }));
@@ -38,6 +41,10 @@ async function boot() {
     document.querySelector("main").innerHTML = `<div class="loading">No se pudieron cargar los datos. Ejecuta <code>python3 etl/generate_synthetic.py</code> y sirve la carpeta <code>site/</code>.</div>`;
     return;
   }
+  // datos reales (no fatal si faltan)
+  await Promise.all(REAL_FILES.map(async (f) => {
+    try { const r = await fetch(`data/real/${f}.json`); if (r.ok) REAL[f] = await r.json(); } catch (e) {}
+  }));
   $("#anio-label").textContent = DATA.nacional.anio;
   setupTabs();
   setupTheme();
@@ -125,6 +132,7 @@ const MAP_META = {
   pendientes: { label: "Pendientes", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt },
   procesos_por_1000hab: { label: "Procesos/1000 hab", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt1 },
   riesgo_seguridad: { label: "Riesgo seguridad", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: (v) => (v * 100).toFixed(0) + "%" },
+  delitos_reales: { label: "Delitos denunciados (MPFN)", colors: ["#16324f", "#f39c12", "#e74c3c"], fmt: fmt },
 };
 const normName = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 async function renderMapa() {
@@ -145,8 +153,18 @@ async function renderMapa() {
       return t < .33 ? cols[0] : t < .66 ? cols[1] : cols[2];
     };
   }
+  // enriquecer con dato REAL: delitos denunciados por departamento (MPFN)
+  let hasRealDelitos = false;
+  if (REAL.mpfn_delitos && REAL.mpfn_delitos.por_departamento) {
+    const dl = {}; REAL.mpfn_delitos.por_departamento.forEach((r) => (dl[normName(r.departamento)] = r.cantidad));
+    deps.forEach((d) => (d.delitos_reales = dl[normName(d.departamento)] || 0));
+    hasRealDelitos = deps.some((d) => d.delitos_reales > 0);
+  }
   function popupHtml(d, m) {
-    return `<div class="map-pop"><b>${d.departamento}</b><br/>
+    if (m.key === "delitos_reales") {
+      return `<div class="map-pop"><b>${d.departamento}</b><br/>🟢 ${m.label}: <b>${m.fmt(d.delitos_reales)}</b><br/><span style="color:var(--muted);font-size:11px">Dato real · MPFN (2019–2026)</span></div>`;
+    }
+    return `<div class="map-pop"><b>${d.departamento}</b> <span style="color:var(--amber);font-size:11px">🧪 sintético</span><br/>
       ${m.label}: <b>${m.fmt(d[m.key])}</b><br/>
       Ingresados: ${fmt(d.ingresados)}<br/>Pendientes: ${fmt(d.pendientes)}<br/>
       Jueces: ${fmt(d.jueces)} · Demora: ${fmt(d.demora_dias)} d<br/>
@@ -185,7 +203,9 @@ async function renderMapa() {
       }).bindPopup(popupHtml(d, m)).addTo(markerLayer));
     }
   }
-  draw("congestion");
+  const initMetric = hasRealDelitos ? "delitos_reales" : "congestion";
+  if (hasRealDelitos) $("#map-metric").value = "delitos_reales";
+  draw(initMetric);
   $("#map-metric").addEventListener("change", (e) => draw(e.target.value));
 
   const lg = L.control({ position: "bottomright" });
@@ -200,6 +220,8 @@ async function renderMapa() {
 
 /* ============================================================ CORTES */
 function renderCortes() {
+  const pj = REAL.pj_carga_nacional;
+  if (pj && pj.por_distrito_judicial) { renderCortesReal(pj); return; }
   const cols = [
     ["ranking_congestion", "#", fmt], ["corte", "Corte", (v) => v], ["departamento", "Depto.", (v) => v],
     ["ingresados", "Ingresados", fmt], ["resueltos", "Resueltos", fmt], ["pendientes", "Pendientes", fmt],
@@ -224,9 +246,49 @@ function renderCortes() {
   render();
   $("#cortes-search").addEventListener("input", (e) => { q = e.target.value; render(); });
 }
+function renderCortesReal(pj) {
+  $("#cortes .section-title").innerHTML = "🟢 Carga procesal por Distrito Judicial (Poder Judicial, 2024)";
+  $("#cortes .section-sub").innerHTML = "Datos reales del PJ (dataset jurisdiccional 2024). Ordena por columnas. ⚠️ La <b>congestión</b> es provisional (semántica de columnas del PJ sin diccionario oficial; ver Datos Reales).";
+  const data = pj.por_distrito_judicial;
+  const cols = [["distrito_judicial", "Distrito Judicial", (v) => v], ["ingresos", "Ingresos", fmt], ["resueltos", "Resueltos", fmt],
+    ["pendientes", "Pendientes", fmt], ["clearance", "Clearance %", fmt1], ["congestion", "Congestión", fmt1]];
+  let sortKey = "congestion", asc = false, q = "";
+  const maxCong = Math.max(...data.map((c) => c.congestion));
+  function render() {
+    let rows = data.filter((c) => c.distrito_judicial.toLowerCase().includes(q.toLowerCase()));
+    rows.sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1) * (asc ? 1 : -1));
+    $("#tbl-cortes").innerHTML =
+      `<thead><tr>${cols.map(([k, l]) => `<th data-k="${k}" class="${k !== "distrito_judicial" ? "num" : ""}">${l}${sortKey === k ? (asc ? " ▲" : " ▼") : ""}</th>`).join("")}</tr></thead>
+       <tbody>${rows.map((c) => `<tr>${cols.map(([k, l, f]) => {
+        if (k === "congestion") return `<td class="num bar-cell"><div class="bar" style="width:${(c[k] / maxCong) * 100}%;background:${c[k] > 3 ? "var(--red)" : "var(--amber)"}"></div><span>${f(c[k])}</span></td>`;
+        return `<td class="${k !== "distrito_judicial" ? "num" : ""}">${f(c[k])}</td>`;
+      }).join("")}</tr>`).join("")}</tbody>`;
+    $$("#tbl-cortes th").forEach((th) => th.addEventListener("click", () => {
+      const k = th.dataset.k; if (k === sortKey) asc = !asc; else { sortKey = k; asc = k === "distrito_judicial"; } render();
+    }));
+  }
+  render();
+  const inp = $("#cortes-search"); inp.placeholder = "🔎 Buscar distrito judicial...";
+  inp.addEventListener("input", (e) => { q = e.target.value; render(); });
+}
 
 /* ============================================================ PROCESOS */
 function renderProcesos() {
+  const pj = REAL.pj_carga_nacional, demora = REAL.demora_piura, tc = REAL.tc;
+  if (pj && pj.por_especialidad) {
+    $("#procesos .section-sub").innerHTML = "🟢 <b>Datos reales</b>: distribución de la carga por especialidad (PJ 2024) y demora real en días (microdata Piura + Tribunal Constitucional).";
+    mkChart("chart-pie").setOption({ ...echartsTheme(), color: PALETTE,
+      tooltip: { trigger: "item", formatter: (p) => `${p.name}<br/>${fmt(p.value)} ingresos (${p.percent}%)` },
+      legend: { type: "scroll", bottom: 0, textStyle: echartsTheme().textStyle },
+      series: [{ type: "pie", radius: ["42%", "70%"], center: ["50%", "44%"], data: pj.por_especialidad.map((x) => ({ name: x.especialidad, value: x.ingresos })),
+        label: { color: echartsTheme().textStyle.color }, itemStyle: { borderColor: "var(--surface)", borderWidth: 2 } }] });
+    // demora combinada real
+    const rows = [];
+    if (demora && demora.por_proceso) demora.por_proceso.forEach((p) => rows.push({ proceso: `Piura: ${p.proceso}`, mediana_dias: p.mediana_dias, p90_dias: p.p90_dias }));
+    if (tc && tc.demora && tc.demora.por_tipo) tc.demora.por_tipo.forEach((p) => rows.push({ proceso: `TC: ${p.tipo}`, mediana_dias: p.mediana_dias, p90_dias: p.p90_dias }));
+    demoraChart("chart-demora", rows);
+    return;
+  }
   const t = DATA.tipos_proceso;
   mkChart("chart-pie").setOption({
     ...echartsTheme(), color: PALETTE,
@@ -391,21 +453,32 @@ function renderSegTable() {
        <td><span class="pill ${x.nivel_alerta === "Critico" ? "red" : x.nivel_alerta === "Riesgo" ? "amber" : "green"}"><span class="dot" style="background:currentColor"></span>${x.nivel_alerta}</span></td></tr>`).join("")}</tbody>`;
 }
 
-/* ============================================================ SERIES */
+/* ============================================================ SERIES (real) */
 function renderSeries() {
+  const tc = REAL.tc, delitos = REAL.mpfn_delitos, casos = REAL.mpfn_casos;
+  const box = $("#series-content");
+  const hasReal = tc || delitos || casos;
+  if (hasReal) {
+    $("#series-sub").innerHTML = "🟢 <b>Series reales</b>. El Tribunal Constitucional ofrece la serie más larga (1992–2026); el MPFN, 2019–2026 (2026 parcial). Cada gráfico cita su fuente.";
+    let html = "", reg = [];
+    if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Tribunal Constitucional — expedientes ingresados por año (1992–2026)</h3><div class="chart" id="s-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["s-tc", () => lineSimple("s-tc", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
+    if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN) — 2026 parcial</h3><div class="chart" id="s-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["s-del", () => lineSimple("s-del", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
+    if (casos && casos.por_anio) { html += `<div class="card"><h3>🟢 Casos fiscales por año — ingresado vs atendido (MPFN)</h3><div class="chart" id="s-cas"></div>${metaFoot(casos._meta)}</div>`; reg.push(["s-cas", () => lineIngAt("s-cas", casos.por_anio)]); }
+    box.innerHTML = html;
+    reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
+    return;
+  }
+  // fallback sintético
   const s = DATA.series, yrs = s.map((x) => x.anio);
-  mkChart("chart-demora-serie").setOption({
-    ...echartsTheme(), color: ["#d4a437"],
-    tooltip: { trigger: "axis" }, grid: { left: 55, right: 20, top: 20, bottom: 30 },
+  $("#series-sub").innerHTML = "🧪 Datos sintéticos. Evolución 2010–2026.";
+  box.innerHTML = `<div class="card"><h3>Demora promedio nacional (días)</h3><div class="chart" id="chart-demora-serie"></div></div>
+    <div class="card"><h3>Pendientes acumulados (backlog nacional)</h3><div class="chart" id="chart-pend-serie"></div></div>`;
+  mkChart("chart-demora-serie").setOption({ ...echartsTheme(), color: ["#d4a437"], tooltip: { trigger: "axis" }, grid: { left: 55, right: 20, top: 20, bottom: 30 },
     xAxis: { type: "category", data: yrs }, yAxis: { type: "value", name: "días" },
-    series: [{ type: "line", smooth: true, data: s.map((x) => x.demora_dias), areaStyle: { color: "rgba(212,164,55,.12)" }, lineStyle: { width: 3 } }],
-  });
-  mkChart("chart-pend-serie").setOption({
-    ...echartsTheme(), color: ["#e74c3c"],
-    tooltip: { trigger: "axis" }, grid: { left: 60, right: 20, top: 20, bottom: 30 },
+    series: [{ type: "line", smooth: true, data: s.map((x) => x.demora_dias), areaStyle: { color: "rgba(212,164,55,.12)" }, lineStyle: { width: 3 } }] });
+  mkChart("chart-pend-serie").setOption({ ...echartsTheme(), color: ["#e74c3c"], tooltip: { trigger: "axis" }, grid: { left: 60, right: 20, top: 20, bottom: 30 },
     xAxis: { type: "category", data: yrs }, yAxis: { type: "value", axisLabel: { formatter: (v) => (v / 1e6).toFixed(1) + "M" } },
-    series: [{ type: "bar", data: s.map((x) => x.pendientes) }],
-  });
+    series: [{ type: "bar", data: s.map((x) => x.pendientes) }] });
 }
 
 /* ============================================================ INDICADORES */
@@ -430,11 +503,11 @@ function metaFoot(m) {
   const nota = m.nota ? `<p class="card-sub" style="color:var(--amber);margin-top:6px">⚠️ ${m.nota}</p>` : "";
   return `<p class="card-sub" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">📑 ${parts.join(" · ")}${m.url ? ` · <a href="${m.url}" target="_blank" rel="noopener">recurso</a>` : ""}</p>${nota}`;
 }
-async function renderReales() {
+function renderReales() {
   const box = $("#reales-content");
-  const manifest = await fetchReal("manifest");
-  const [fis, casos, delitos, pj, demora, tc, seg] = await Promise.all(
-    ["mpfn_fiscales", "mpfn_casos", "mpfn_delitos", "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad"].map(fetchReal));
+  const manifest = REAL.manifest;
+  const fis = REAL.mpfn_fiscales, casos = REAL.mpfn_casos, delitos = REAL.mpfn_delitos,
+    pj = REAL.pj_carga_nacional, demora = REAL.demora_piura, tc = REAL.tc, seg = REAL.mpfn_seguridad;
 
   if (!manifest && !fis && !casos && !delitos && !pj && !demora && !tc && !seg) {
     box.innerHTML = `<div class="card" style="text-align:center">

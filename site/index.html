@@ -114,15 +114,15 @@
 
 <nav class="tabs">
   <div class="tabs-inner" id="tabs">
-    <button class="tab active" data-panel="resumen">📊 Resumen Nacional</button>
+    <button class="tab active" data-panel="resumen">📊 Resumen 🧪</button>
     <button class="tab" data-panel="reales">🟢 Datos Reales</button>
-    <button class="tab" data-panel="mapa">🗺️ Mapa</button>
-    <button class="tab" data-panel="cortes">🏛️ Cortes Superiores</button>
-    <button class="tab" data-panel="procesos">📁 Tipos de Proceso</button>
-    <button class="tab" data-panel="embudo">🔻 Embudo & Backlog</button>
-    <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales</button>
-    <button class="tab" data-panel="seguridad">🚨 Seguridad</button>
-    <button class="tab" data-panel="series">📈 Series de Tiempo</button>
+    <button class="tab" data-panel="mapa">🗺️ Mapa 🟢</button>
+    <button class="tab" data-panel="cortes">🏛️ Distritos Judiciales 🟢</button>
+    <button class="tab" data-panel="procesos">📁 Tipos de Proceso 🟢</button>
+    <button class="tab" data-panel="series">📈 Series 🟢</button>
+    <button class="tab" data-panel="seguridad">🚨 Seguridad 🧪</button>
+    <button class="tab" data-panel="embudo">🔻 Embudo & Backlog 🧪</button>
+    <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🧪</button>
     <button class="tab" data-panel="indicadores">📐 Indicadores</button>
     <button class="tab" data-panel="faq">❓ FAQ</button>
   </div>
@@ -154,11 +154,12 @@
   <!-- ============ MAPA ============ -->
   <section class="panel" id="mapa">
     <h2 class="section-title">Mapa del Perú</h2>
-    <p class="section-sub">Selecciona un indicador para colorear los departamentos. Haz clic en un punto para ver el detalle.</p>
+    <p class="section-sub">Por defecto muestra <b>🟢 delitos denunciados reales (MPFN)</b> por departamento. Los demás indicadores (🧪) son del prototipo sintético. Clic en un departamento para el detalle.</p>
     <div class="controls">
       <label>Indicador:
         <select id="map-metric">
-          <option value="congestion">Congestión procesal</option>
+          <option value="delitos_reales">🟢 Delitos denunciados (real · MPFN)</option>
+          <option value="congestion">🧪 Congestión procesal</option>
           <option value="demora_dias">Demora promedio (días)</option>
           <option value="carga_por_juez">Carga por juez</option>
           <option value="pendientes">Expedientes pendientes</option>
@@ -229,9 +230,8 @@
   <!-- ============ SERIES ============ -->
   <section class="panel" id="series">
     <h2 class="section-title">Series de Tiempo</h2>
-    <p class="section-sub">Evolución 2010–2026. Nota el impacto de la pandemia (2020–2021) en los ingresos.</p>
-    <div class="card"><h3>Demora promedio nacional (días)</h3><div class="chart" id="chart-demora-serie"></div></div>
-    <div class="card"><h3>Pendientes acumulados (backlog nacional)</h3><div class="chart" id="chart-pend-serie"></div></div>
+    <p class="section-sub" id="series-sub">Evolución temporal.</p>
+    <div id="series-content"></div>
   </section>
 
   <!-- ============ INDICADORES ============ -->
