@@ -332,7 +332,34 @@ function renderProcesos() {
 }
 
 /* ============================================================ EMBUDO + BACKLOG */
+function renderEmbudoReal() {
+  const box = $("#embudo-real"); if (!box) return;
+  const pj = REAL.pj_carga_nacional, casos = REAL.mpfn_casos;
+  if (!pj && !casos) { box.innerHTML = ""; return; }
+  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Flujo real.</b> Poder Judicial 2024 (ingresos→resueltos→pendientes) y Ministerio Público (ingresado→atendido).</div>`;
+  const reg = [];
+  if (pj && pj.nacional) {
+    const n = pj.nacional;
+    html += `<div class="kpi-grid">
+      <div class="kpi"><div class="label">🟢 Ingresos PJ 2024</div><div class="value">${fmt(n.ingresos)}</div><div class="hint">expedientes</div></div>
+      <div class="kpi ok"><div class="label">🟢 Resueltos</div><div class="value">${fmt(n.resueltos)}</div><div class="hint">expedientes</div></div>
+      <div class="kpi alert"><div class="label">🟢 Pendientes</div><div class="value">${fmt(n.pendientes)}</div><div class="hint">backlog</div></div></div>`;
+    html += `<div class="card"><h3>🟢 Flujo procesal nacional (PJ 2024)</h3><div class="chart" id="er-pjflow"></div>${metaFoot(pj._meta)}</div>`;
+    reg.push(["er-pjflow", () => mkChart("er-pjflow").setOption({ ...echartsTheme(), color: ["#d4a437", "#2ecc71", "#e74c3c"],
+      tooltip: { trigger: "axis" }, grid: { left: 70, right: 24, top: 16, bottom: 24 },
+      xAxis: { type: "category", data: ["Ingresos", "Resueltos", "Pendientes"] },
+      yAxis: { type: "value", axisLabel: { formatter: (v) => (v / 1e6).toFixed(1) + "M" } },
+      series: [{ type: "bar", data: [{ value: n.ingresos, itemStyle: { color: "#d4a437" } }, { value: n.resueltos, itemStyle: { color: "#2ecc71" } }, { value: n.pendientes, itemStyle: { color: "#e74c3c" } }] }] })]);
+  }
+  if (casos && casos.por_materia) {
+    html += `<div class="card"><h3>🟢 Casos fiscales: ingresado vs atendido por materia (MPFN)</h3><div class="chart" id="er-casflow"></div>${metaFoot(casos._meta)}</div>`;
+    reg.push(["er-casflow", () => barIngRes2("er-casflow", casos.por_materia, "materia", "ingresado", "atendido")]);
+  }
+  box.innerHTML = html;
+  reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
+}
 function renderEmbudo() {
+  renderEmbudoReal();
   const e = DATA.embudo;
   mkChart("chart-funnel").setOption({
     ...echartsTheme(), color: PALETTE,
@@ -360,7 +387,30 @@ function renderEmbudo() {
 
 /* ============================================================ MAGISTRADOS */
 let magState = { rol: "Juez", q: "", esp: "", seg: false };
+function renderMagistradosReal() {
+  const box = $("#mag-real"); if (!box) return;
+  const fis = REAL.mpfn_fiscales;
+  if (!fis) { box.innerHTML = ""; return; }
+  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Dotación de fiscales por año, cargo, condición, sexo y distrito fiscal.</div>`;
+  html += `<div class="kpi-grid">
+    <div class="kpi"><div class="label">🟢 Fiscales (2026)</div><div class="value">${fmt(fis.total_fiscales)}</div><div class="hint">dotación MPFN</div></div>
+    ${fis.por_condicion ? `<div class="kpi ${(fis.por_condicion.find((c) => /PROVISIONAL/i.test(c.condicion)) || {}).total > fis.total_fiscales * 0.4 ? "warn" : ""}"><div class="label">🟢 Provisionales</div><div class="value">${fmt((fis.por_condicion.find((c) => /PROVISIONAL/i.test(c.condicion)) || {}).total || 0)}</div><div class="hint">no titulares</div></div>` : ""}
+  </div>`;
+  const reg = [];
+  if (fis.por_anio) { html += rc("🟢 Evolución de la dotación de fiscales (2019–2026)", "mr-anio", fis._meta); reg.push(["mr-anio", () => lineSimple("mr-anio", fis.por_anio, "anio", "total", "#2ecc71")]); }
+  if (fis.por_cargo) { html += rc("🟢 Fiscales por cargo", "mr-cargo", fis._meta); reg.push(["mr-cargo", () => barSimple("mr-cargo", fis.por_cargo, "cargo", "total", "#4f8cff")]); }
+  if (fis.por_distrito_fiscal) { html += rc("🟢 Fiscales por distrito fiscal (top 15)", "mr-dist", fis._meta); reg.push(["mr-dist", () => barSimple("mr-dist", fis.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#9b59b6")]); }
+  if (fis.por_condicion && fis.por_sexo) {
+    html += `<div class="grid-2"><div class="card"><h3>🟢 Por condición</h3><div class="chart" id="mr-cond"></div>${metaFoot(fis._meta)}</div><div class="card"><h3>🟢 Por sexo</h3><div class="chart" id="mr-sexo"></div>${metaFoot(fis._meta)}</div></div>`;
+    reg.push(["mr-cond", () => donut("mr-cond", fis.por_condicion, "condicion", "total")]);
+    reg.push(["mr-sexo", () => donut("mr-sexo", fis.por_sexo, "sexo", "total")]);
+  }
+  box.innerHTML = html;
+  reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
+  function rc(t, id, m) { return `<div class="card"><h3>${t}</h3><div class="chart" id="${id}"></div>${metaFoot(m)}</div>`; }
+}
 function renderMagistrados() {
+  renderMagistradosReal();
   const esps = [...new Set([...DATA.jueces, ...DATA.fiscales].map((m) => m.especialidad))].sort();
   $("#mag-esp").innerHTML = `<option value="">Todas las especialidades</option>` + esps.map((e) => `<option>${e}</option>`).join("");
   $$("#magistrados .chip[data-rol]").forEach((c) => c.addEventListener("click", () => {
@@ -734,11 +784,30 @@ function renderPrediccion() {
     <div class="kpi"><div class="label">Mejora vs. baseline</div><div class="value">${mejora}%</div><div class="hint">vs. predecir siempre la mediana (${m.baseline_mae_dias} d)</div></div>
     <div class="kpi ${m.r2 < 0.4 ? "warn" : ""}"><div class="label">R²</div><div class="value">${m.r2}</div><div class="hint">poder explicativo (honesto: modesto)</div></div>
   </div>`;
+  // --- Calculadora interactiva (llama al endpoint ML en vivo) ---
+  const PROCS = ["Alimentos", "NLPT Laboral", "Penal (pena efectiva)", "Civil"];
+  const INST = ["JUZGADO DE PAZ LETRADO", "JUZGADO LABORAL", "JUZGADO CIVIL", "JUZGADO DE FAMILIA",
+    "JUZ. INVESTIGACION PREPARATORIA", "JUZ. PENAL UNIPERSONAL", "JUZ. PENAL COLEGIADO", "SALA SUPERIOR", "OTRO"];
+  const PROV = ["PIURA", "SULLANA", "MORROPON", "AYABACA", "HUANCABAMBA", "PAITA", "TALARA", "SECHURA"];
+  const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  const opt = (arr, f) => arr.map((v, i) => `<option value="${f ? i + 1 : v}">${v}</option>`).join("");
+  html += `<div class="card"><h3>🔮 Calculadora de demora — estima tu caso</h3>
+    <p class="card-sub">Elige las características y el modelo (en vivo, desde el VPS) estima los días hasta sentencia. Cobertura: CSJ Piura.</p>
+    <div class="controls">
+      <label>Proceso <select id="pf-proceso">${opt(PROCS)}</select></label>
+      <label>Instancia <select id="pf-inst">${opt(INST)}</select></label>
+      <label>Provincia <select id="pf-prov">${opt(PROV)}</select></label>
+      <label>Ingreso <select id="pf-ing"><option>ELECTRONICO</option><option>FISICO</option></select></label>
+      <label>Mes <select id="pf-mes">${opt(MESES, true)}</select></label>
+      <button class="chip active" id="pf-go" style="border:none">Estimar demora →</button>
+    </div>
+    <div id="pf-result"></div></div>`;
   html += `<div class="card"><h3>🔮 Demora real vs. predicha por proceso (mediana, días)</h3><div class="chart" id="ml-chart"></div>${metaFoot(ml._meta)}</div>`;
-  html += `<div class="card"><h3>¿Cómo se usa?</h3><p class="card-sub" style="font-size:13.5px">El modelo estima cuánto tardará un expediente según su <b>proceso, materia, instancia, provincia y mes de ingreso</b>.
-    Sirve para <b>anticipar carga</b>, <b>priorizar</b> expedientes en riesgo de estancarse y <b>simular</b> escenarios. En producción se expone como API en el VPS
-    (<code>POST ml.tunky.net/v1/justicia/predict-demora</code>) y el dashboard la consulta en vivo. Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/ML_PLAN.md" target="_blank" rel="noopener">plan ML</a>.</p></div>`;
+  html += `<div class="card"><h3>¿Cómo se usa?</h3><p class="card-sub" style="font-size:13.5px">El modelo estima cuánto tardará un expediente según su <b>proceso, instancia, provincia y mes de ingreso</b>.
+    Sirve para <b>anticipar carga</b>, <b>priorizar</b> expedientes en riesgo de estancarse y <b>simular</b> escenarios. La predicción se sirve en vivo desde el VPS
+    (<code>POST ${ML_PREDICT_ENDPOINT.replace("https://", "")}</code>). Ver <a href="https://github.com/unimauro/observatorio-justicia-peru/blob/main/docs/ML_PLAN.md" target="_blank" rel="noopener">plan ML</a>.</p></div>`;
   box.innerHTML = html;
+  attachPredictForm(ml);
   try {
     const rows = ml.por_proceso;
     mkChart("ml-chart").setOption({ ...echartsTheme(), color: ["#4f8cff", "#9b59b6"], tooltip: { trigger: "axis" },
@@ -747,6 +816,41 @@ function renderPrediccion() {
       series: [{ name: "Demora real (mediana)", type: "bar", data: rows.map((r) => r.demora_real_mediana) },
                { name: "Demora predicha (mediana)", type: "bar", data: rows.map((r) => r.demora_predicha_mediana) }] });
   } catch (e) {}
+}
+
+function attachPredictForm(ml) {
+  const go = $("#pf-go"); if (!go) return;
+  go.addEventListener("click", async () => {
+    const proceso = $("#pf-proceso").value;
+    const body = {
+      proceso,
+      materia_f: "NA",
+      provincia_f: $("#pf-prov").value,
+      tipo_ingreso_f: $("#pf-ing").value,
+      instancia_tipo: $("#pf-inst").value,
+      mes_anio: parseInt($("#pf-mes").value, 10),
+    };
+    const res = $("#pf-result");
+    res.innerHTML = `<p class="card-sub"><span class="spin"></span> Consultando el modelo…</p>`;
+    let dias = null, live = false;
+    try {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 8000);
+      const r = await fetch(ML_PREDICT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctl.signal });
+      clearTimeout(t);
+      if (r.ok) { const j = await r.json(); if (j.dias_estimados != null) { dias = j.dias_estimados; live = true; } }
+    } catch (e) {}
+    if (dias == null) {  // fallback: mediana real precomputada del proceso
+      const p = (ml.por_proceso || []).find((x) => x.proceso === proceso);
+      dias = p ? p.demora_predicha_mediana : null;
+    }
+    if (dias == null) { res.innerHTML = `<p class="card-sub" style="color:var(--amber)">No se pudo estimar (modelo no disponible).</p>`; return; }
+    const meses = (dias / 30).toFixed(1);
+    res.innerHTML = `<div class="kpi ${dias > 365 ? "warn" : "ok"}" style="margin-top:12px;max-width:360px">
+      <div class="label">🔮 Demora estimada ${live ? "· modelo en vivo" : "· valor de referencia"}</div>
+      <div class="value">${fmt(dias)} días</div>
+      <div class="hint">≈ ${meses} meses · proceso ${proceso} · CSJ Piura</div></div>
+      <p class="card-sub" style="margin-top:8px">⚠️ Estimación basada en microdata real de Piura; no aplicable a otras cortes. Error medio del modelo ≈ ${ml.metricas.mae_dias} días.</p>`;
+  });
 }
 
 /* ============================================================ FAQ */
@@ -849,6 +953,7 @@ function aiUser(t) { $("#ai-msgs").insertAdjacentHTML("beforeend", `<div class="
    {question, context} y use la Claude API server-side (la API key NUNCA va en el cliente).
    Si el endpoint no responde, se usa el motor local de respuestas. Configurable por ?ai= o window.AI_ENDPOINT. */
 const AI_ENDPOINT = new URLSearchParams(location.search).get("ai") || window.AI_ENDPOINT || "https://ai.tunky.net/justicia-api/v1/justicia/chat";
+const ML_PREDICT_ENDPOINT = AI_ENDPOINT.replace(/\/chat$/, "/predict-demora");
 function aiContext() {
   const n = DATA.nacional;
   const real = {};

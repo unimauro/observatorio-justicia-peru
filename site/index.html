@@ -121,8 +121,8 @@
     <button class="tab" data-panel="procesos">📁 Tipos de Proceso 🟢</button>
     <button class="tab" data-panel="series">📈 Series 🟢</button>
     <button class="tab" data-panel="seguridad">🚨 Seguridad 🧪</button>
-    <button class="tab" data-panel="embudo">🔻 Embudo & Backlog 🧪</button>
-    <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🧪</button>
+    <button class="tab" data-panel="embudo">🔻 Flujo & Backlog 🟢</button>
+    <button class="tab" data-panel="magistrados">👩‍⚖️ Jueces & Fiscales 🟢</button>
     <button class="tab" data-panel="prediccion">🔮 Predicción (ML) 🟢</button>
     <button class="tab" data-panel="indicadores">📐 Indicadores</button>
     <button class="tab" data-panel="faq">❓ FAQ</button>
@@ -194,8 +194,10 @@
 
   <!-- ============ EMBUDO ============ -->
   <section class="panel" id="embudo">
-    <h2 class="section-title">Embudo Procesal & Backlog</h2>
-    <p class="section-sub">Del expediente ingresado al archivado, y los 100 juzgados con mayor acumulación.</p>
+    <h2 class="section-title">Flujo Procesal & Backlog</h2>
+    <p class="section-sub">Flujo real (Poder Judicial 2024) arriba; abajo, un explorador ilustrativo del backlog por juzgado.</p>
+    <div id="embudo-real"></div>
+    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el ranking de "top 100 juzgados" con nombres y acumulación no usa datos reales por juzgado individual (el dato abierto del PJ es agregado por distrito/especialidad).</div>
     <div class="grid-2">
       <div class="card"><h3>Embudo procesal</h3><div class="chart tall" id="chart-funnel"></div></div>
       <div class="card"><h3>Top 15 juzgados con mayor backlog</h3><div class="chart tall" id="chart-backlog"></div></div>
@@ -206,7 +208,9 @@
   <!-- ============ MAGISTRADOS ============ -->
   <section class="panel" id="magistrados">
     <h2 class="section-title">Jueces & Fiscales</h2>
-    <p class="section-sub">Magistrados, su corte actual, especialidad, condición y <b>rotaciones históricas</b>. Clic en una fila para ver la trayectoria.</p>
+    <p class="section-sub">Dotación real de fiscales (MPFN) arriba; abajo, un explorador ilustrativo de magistrados individuales.</p>
+    <div id="mag-real"></div>
+    <div class="disclaimer" style="margin-top:24px">🧪 <b>Lo que sigue es ilustrativo (sintético):</b> el explorador de magistrados individuales con nombres y <b>rotaciones</b> no usa datos reales —no existe un registro abierto oficial de rotaciones nominales de jueces/fiscales— y sirve solo para mostrar el tipo de seguimiento posible.</div>
     <div class="controls">
       <button class="chip active" data-rol="Juez">👨‍⚖️ Jueces</button>
       <button class="chip" data-rol="Fiscal">🧑‍💼 Fiscales</button>
