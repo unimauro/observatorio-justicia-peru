@@ -743,23 +743,57 @@ function attachPredictForm(ml) {
 }
 
 /* ============================================================ FAQ */
+const REPO = "https://github.com/unimauro/observatorio-justicia-peru";
+// Apoyo al proyecto — rellenar con los enlaces/numeros EXACTOS (vacío = botón oculto).
+const SUPPORT = {
+  autor: "Carlos Mauro Cárdenas",
+  github: "https://github.com/unimauro",
+  email: "carlos@cardenas.pe",
+  coffee: "",   // ej. https://buymeacoffee.com/unimauro
+  paypal: "",   // ej. https://paypal.me/unimauro
+  yape: "",     // ej. 999888777
+  yapeNombre: "",
+};
 const FAQ = [
-  ["¿Los datos de este tablero son reales?",
-   "En su mayoría, <b>sí son reales</b>. Las secciones marcadas <b>🟢</b> (Resumen, Mapa, Distritos Judiciales, Tipos de Proceso, Series, Seguridad, Flujo, Jueces & Fiscales y la Predicción ML) usan <b>datos abiertos oficiales</b> (Poder Judicial, Ministerio Público, Tribunal Constitucional, INEI) con su fuente y fecha de corte. Solo algunas partes para las que <b>no existe fuente abierta</b> —casos individuales nominales, rotaciones de magistrados, ranking por juzgado— se muestran como <b>ilustración (insignia 🧪)</b>, nunca como dato real."],
-  ["¿Por qué usan datos sintéticos al inicio?",
-   "Porque no existe una API nacional única con 'expedientes estancados por juzgado y días de demora'. Las fuentes reales son heterogéneas (CSV, PDF, tableros que bloquean scraping). El prototipo sintético permitió diseñar y probar el tablero; ahora el ETL va reemplazando esos datos por oficiales, pestaña por pestaña."],
-  ["¿Por qué no muestran la 'demora en días' en todo el país?",
-   "Porque la demora literal (fecha de ingreso → fecha de resolución) solo es calculable donde hay <b>microdata por expediente</b>: hoy, ciertos procesos de la Corte Superior de Piura (NLPT laboral, alimentos, penal) y el Tribunal Constitucional. Para el resto, derivar 'días' desde cifras agregadas sería inventar; ahí mostramos índices de <b>congestión</b> y <b>tasa de resolución</b>."],
-  ["¿Qué indicadores usan y cómo se calculan?",
-   "Tasa de resolución (clearance) = resueltos/ingresos·100; Congestión = (pendientes+ingresos)/resueltos; Tasa de pendencia = pendientes_fin/carga·100; Demora real = fecha_resolución − fecha_ingreso (mediana y P90). Ver la pestaña 📐 <b>Indicadores</b> para el glosario completo, basado en metodología CEPEJ y Banco Mundial."],
-  ["¿De dónde salen los datos reales?",
-   "De <a href='https://www.datosabiertos.gob.pe' target='_blank' rel='noopener'>datosabiertos.gob.pe</a> (API CKAN del Estado), más descargas oficiales del Portal Estadístico del PJ, INEI y CNPJ. El inventario completo y verificado está en <a href='https://github.com/unimauro/observatorio-justicia-peru/blob/main/data/INVENTARIO.md' target='_blank' rel='noopener'>data/INVENTARIO.md</a>."],
-  ["¿Rastrean jueces y fiscales con nombre propio? ¿Y su privacidad?",
-   "Mostramos <b>dotación y carga agregada</b> de fiscales (por cargo, condición, distrito) con datos oficiales del MPFN. Las 'rotaciones' individuales del prototipo son <b>ilustrativas</b>: no existe un dataset abierto oficial de rotaciones. Además, los microdata por expediente se <b>anonimizan</b> (se eliminan DNI y fecha de nacimiento) antes de procesar; nunca exponemos datos personales."],
-  ["¿El asistente IA es real?",
-   "El copiloto responde localmente sobre los datos cargados. Para respuestas con IA generativa se conecta a un endpoint configurable del ecosistema <b>tunky.net</b>; como el sitio es estático (GitHub Pages), la clave de IA nunca vive en el navegador, sino en ese servicio."],
-  ["¿Puedo usar o auditar estos datos?",
-   "Sí. El proyecto es de código abierto (licencia MIT) y los datasets sintéticos y reales están versionados en el <a href='https://github.com/unimauro/observatorio-justicia-peru' target='_blank' rel='noopener'>repositorio</a>. Es un proyecto de transparencia para ciudadanía, periodismo de datos, investigación y políticas públicas."],
+  ["¿Qué es el Observatorio Nacional de Justicia del Perú?",
+   "Es una plataforma de <b>datos abiertos e inteligencia territorial</b> sobre el sistema de justicia peruano. Reúne, en un solo lugar y de forma comparable, la <b>carga procesal</b>, la <b>demora</b>, la <b>congestión</b>, la <b>dotación de fiscales</b> y la <b>criminalidad/seguridad</b> (incluida violencia contra la mujer y feminicidios), con cada cifra citando su fuente oficial y fecha de corte. Es un proyecto de transparencia para ciudadanía, periodismo de datos, investigación y políticas públicas."],
+  ["¿Cómo se construyó? (el proceso, paso a paso)",
+   "Se siguió un método ordenado, documentado en el <a href='" + REPO + "/blob/main/SPEC.md' target='_blank' rel='noopener'>SPEC</a>:<br/>" +
+   "<b>Fase 0 — Inventario:</b> antes de programar nada, se rastrearon las fuentes reales (no se asumió que existían). Se descubrió que el portal del Estado responde por API y se catalogaron los datasets útiles.<br/>" +
+   "<b>Fase 1 — ETL:</b> scripts en Python descargan, limpian, <b>anonimizan</b> y normalizan cada fuente a un esquema único.<br/>" +
+   "<b>Fase 2 — Indicadores:</b> se calculan tasas estándar (clearance, congestión, demora real) con fórmulas reconocidas.<br/>" +
+   "<b>Fase 3 — Tablero:</b> visualización con mapas y gráficos (este sitio).<br/>" +
+   "<b>Fase 4 — Machine Learning:</b> un modelo que predice la demora de un expediente.<br/>" +
+   "<b>Fase 5 — Asistente IA:</b> un copiloto que responde preguntas sobre los datos."],
+  ["¿De dónde salen los datos? ¿Qué instituciones?",
+   "De fuentes <b>oficiales del Estado peruano</b>, principalmente vía <a href='https://www.datosabiertos.gob.pe' target='_blank' rel='noopener'>datosabiertos.gob.pe</a> (la plataforma nacional de datos abiertos):<br/>" +
+   "• <b>Poder Judicial (PJ):</b> carga procesal nacional (ingresos, resueltos, pendientes) y microdata por expediente de la Corte Superior de Piura (con fechas reales).<br/>" +
+   "• <b>Ministerio Público (MPFN):</b> casos fiscales, dotación de fiscales, delitos denunciados, flagrancia, ciberdelitos, trata de personas.<br/>" +
+   "• <b>Tribunal Constitucional (TC):</b> expedientes 1992–2026 con demora real.<br/>" +
+   "• <b>INEI / PNP:</b> denuncias policiales de delitos y faltas.<br/>" +
+   "• <b>MIMP / Programa AURORA (Centros Emergencia Mujer):</b> violencia contra la mujer y feminicidios (2012–2025).<br/>" +
+   "La lista completa, con cobertura y fecha de corte, está en la pestaña <b>📋 Fuentes & Calidad</b> y en el <a href='" + REPO + "/blob/main/data/INVENTARIO.md' target='_blank' rel='noopener'>inventario de datos</a>."],
+  ["¿Cómo verificaron que las fuentes son reales y no inventadas?",
+   "Se consultó directamente la <b>API</b> del portal de datos abiertos (compatible con CKAN) y se leyeron los <b>encabezados y diccionarios reales</b> de cada archivo antes de usarlo. De ~4,665 datasets del portal se filtraron los relevantes al sistema de justicia. Nada se transcribe a mano: todo pasa por scripts reproducibles que cualquiera puede correr desde el <a href='" + REPO + "' target='_blank' rel='noopener'>repositorio</a>."],
+  ["¿Hay datos simulados todavía?",
+   "No en lo que se presenta como dato. El tablero arrancó con un prototipo sintético para diseñar la interfaz, pero <b>ya se reemplazó por datos oficiales en todas las pestañas</b> (marcadas 🟢). Donde <b>no existe fuente abierta</b> —por ejemplo, rotaciones nominales de jueces o casos por juzgado individual— simplemente <b>no se muestra</b> y se explica por qué; no se inventa para llenar el hueco."],
+  ["¿Por qué la 'demora en días' solo aparece en algunos lugares?",
+   "Porque calcular la demora literal (fecha de ingreso → fecha de sentencia) requiere <b>microdata por expediente</b>, y eso solo está abierto para el <b>Tribunal Constitucional</b> (1992–2026) y la <b>Corte Superior de Piura</b> (laboral, alimentos, penal, civil). Para el resto del país, los datos son agregados; derivar 'días' de ahí sería inventar. En esos casos se usan índices de <b>congestión</b> y <b>tasa de resolución</b>, que sí son calculables."],
+  ["¿Qué indicadores usan y con qué fórmulas?",
+   "<b>Tasa de resolución (clearance)</b> = resueltos / ingresos × 100. <b>Congestión</b> = (pendientes + ingresos) / resueltos. <b>Tasa de pendencia</b> = pendientes / carga × 100. <b>Demora real</b> = fecha de resolución − fecha de ingreso (se reporta mediana y P90, no solo promedio). Se basan en metodologías de la <b>CEPEJ</b> (Comisión Europea para la Eficiencia de la Justicia) y el <b>Banco Mundial</b>. Glosario completo en la pestaña 📐 <b>Indicadores</b>."],
+  ["¿Cómo cuidan la privacidad de las personas?",
+   "Algunos archivos de microdata por expediente traían DNI y fecha de nacimiento; esas columnas se <b>eliminan automáticamente</b> en el ETL <b>antes</b> de procesar. El tablero <b>nunca</b> muestra datos personales de partes, jueces o fiscales nominales. De los fiscales solo se muestra la <b>dotación agregada</b> (por cargo, condición, sexo, distrito), tal como la publica el Ministerio Público."],
+  ["¿Qué es la 'Predicción (ML)' y qué tan confiable es?",
+   "Es un modelo de <b>machine learning</b> entrenado con la microdata real de Piura (11,723 expedientes) que estima cuántos <b>días</b> tardará un expediente según su proceso, instancia, provincia y mes. Su error medio es de ~76 días (mejor que el método base). <b>Honestidad:</b> solo es válido para Piura, la única corte con microdata real; no se extrapola al resto del país. Cuando haya microdata de más cortes, el modelo se amplía."],
+  ["¿Cómo funciona el asistente IA (chatbot)?",
+   "El copiloto responde preguntas sobre los datos del observatorio. Funciona con un <b>modelo de lenguaje</b> alojado en un servidor del ecosistema <b>tunky.net</b> (vía OpenRouter); como el sitio es estático y público, la clave de IA <b>nunca</b> está en el navegador. Tiene reglas estrictas: solo responde sobre el sistema de justicia, se basa en los datos cargados y no da asesoría legal personalizada."],
+  ["¿Cada cuánto se actualiza y qué cobertura tiene?",
+   "Depende de cada fuente: el MPFN cubre 2019–2026, el Tribunal Constitucional 1992–2026, el MIMP 2012–2025, y la carga del Poder Judicial actualmente solo 2024 en datos abiertos (los demás años requieren descarga manual del Portal Estadístico). Cada gráfico muestra su <b>fecha de corte</b>; el detalle de coberturas y huecos está en la pestaña <b>📋 Fuentes & Calidad</b>."],
+  ["¿Puedo usar, auditar o reproducir esto?",
+   "Sí. Es <b>código abierto</b> (licencia MIT). Todo el código (ETL, indicadores, tablero, modelo) y los datos procesados están en el <a href='" + REPO + "' target='_blank' rel='noopener'>repositorio de GitHub</a>. Puedes verificar cada cifra contra su fuente, correr los scripts o construir sobre el proyecto."],
+  ["¿Quién hizo este dashboard y cómo lo apoyo?",
+   "Lo desarrolló <b>" + SUPPORT.autor + "</b> (<a href='" + SUPPORT.github + "' target='_blank' rel='noopener'>@unimauro</a>), de forma independiente y abierta. Contacto: <a href='mailto:" + SUPPORT.email + "'>" + SUPPORT.email + "</a>. " +
+   "Es un proyecto sin fines de lucro para fortalecer la transparencia del sistema de justicia; si te resulta útil, puedes <b>apoyarlo</b> con una estrella ⭐ al repositorio o una donación (ver opciones abajo). Cada aporte ayuda a mantener el servidor y a integrar más fuentes de datos."],
 ];
 function renderFaq() {
   $("#faq-content").innerHTML = FAQ.map(([q, a], i) => `
@@ -772,6 +806,21 @@ function renderFaq() {
     const open = a.style.display !== "none";
     a.style.display = open ? "none" : "block"; arr.textContent = open ? "＋" : "−";
   }));
+  // --- Sección "Apoya el proyecto" ---
+  const btn = (href, bg, label) => `<a href="${href}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;background:${bg};color:#1a1300;padding:10px 16px;border-radius:10px;font-weight:800;font-size:13.5px;text-decoration:none">${label}</a>`;
+  const btns = [btn(REPO, "var(--gold)", "⭐ Estrella en GitHub")];
+  if (SUPPORT.coffee) btns.push(btn(SUPPORT.coffee, "#ffdd00", "☕ Cómprame un café"));
+  if (SUPPORT.paypal) btns.push(btn(SUPPORT.paypal, "#00a2ff", "💳 PayPal"));
+  let yapeHtml = "";
+  if (SUPPORT.yape) yapeHtml = `<div style="margin-top:10px;color:var(--muted);font-size:13px">📱 <b>Yape:</b> ${SUPPORT.yape}${SUPPORT.yapeNombre ? " · " + SUPPORT.yapeNombre : ""}</div>`;
+  $("#faq-content").insertAdjacentHTML("beforeend", `
+    <div class="card" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.05)">
+      <h3>💚 Apoya el proyecto</h3>
+      <p class="card-sub" style="font-size:13.5px">Hecho por <b>${SUPPORT.autor}</b> (<a href="${SUPPORT.github}" target="_blank" rel="noopener">@unimauro</a>) · <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a><br/>
+      Proyecto abierto y sin fines de lucro. Tu apoyo ayuda a mantener el servidor de IA y a integrar más fuentes de datos.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">${btns.join("")}</div>
+      ${yapeHtml}
+    </div>`);
 }
 
 /* ---------- helpers ---------- */
