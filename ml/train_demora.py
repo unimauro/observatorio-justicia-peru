@@ -8,7 +8,7 @@ real (hoy: CSJ Piura — NLPT laboral, alimentos, penal, civil). No se extrapola
 Se reporta el error real (MAE, error mediano) en un set de prueba; nada se inventa.
 
 Salidas:
-  ml/models/demora.joblib            -> modelo entrenado (para servir en la API del VPS)
+  ml/models/demora.joblib            -> modelo entrenado (para servir en la API backend)
   ml/models/demora_meta.json         -> métricas + features + cobertura
   site/data/real/ml_demora.json      -> resumen para el dashboard (métricas + predicción por proceso)
 """

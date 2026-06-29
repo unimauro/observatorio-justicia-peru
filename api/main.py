@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-API del Observatorio de Justicia — se despliega en el VPS (subdominio tunky.net) detrás de Caddy.
+API del Observatorio de Justicia — servicio backend detrás de un proxy inverso con HTTPS.
 Sirve: (1) el chatbot (Claude API, key server-side) y (2) las predicciones de los modelos ML.
 El dashboard estático (GitHub Pages) la consulta vía HTTPS. Si la API no responde, el dashboard
 degrada con elegancia (chat usa fallback local; la pestaña ML muestra el resumen precomputado).

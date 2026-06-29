@@ -120,10 +120,11 @@ docker-compose.yml
 
 Sincronizan contra este spec.
 
-## 9. Infraestructura (datos pesados → VPS)
+## 9. Infraestructura (datos pesados → servicio backend)
 
 Datos livianos (agregados, JSON de presentación) viven en el repo y se sirven por GitHub Pages.
-**Datos pesados** (microdata por expediente, históricos completos, Parquet grandes) se mueven al
-**VPS Hostinger** ([redacted-host]) para el procesamiento/almacenamiento y, de requerirse, una API
-(FastAPI) detrás de Caddy. El dashboard estático consume agregados precomputados; el análisis
-pesado corre en el VPS.
+**Datos pesados** (microdata por expediente, históricos completos, Parquet grandes) se procesan en
+un **servicio backend** (servidor propio o función serverless) y, de requerirse, exponen una API.
+El dashboard estático consume agregados precomputados; el análisis pesado corre en el backend, no
+en el navegador. Los detalles operativos (proveedor, hosts, puertos, credenciales) NO se versionan
+en este repositorio público.

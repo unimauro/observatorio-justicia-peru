@@ -701,7 +701,7 @@ function renderPrediccion() {
   if (!ml) {
     box.innerHTML = `<div class="card" style="text-align:center"><h3>🔮 Modelo en preparación</h3>
       <p class="card-sub" style="max-width:620px;margin:8px auto">El modelo de predicción de demora se entrena con la microdata real por expediente (CSJ Piura).
-      Ejecuta <code>python ml/train_demora.py</code> para generarlo. En producción se sirve desde la API del VPS (FastAPI).</p></div>`;
+      Ejecuta <code>python ml/train_demora.py</code> para generarlo. En producción se sirve desde un servicio backend.</p></div>`;
     return;
   }
   const m = ml.metricas;

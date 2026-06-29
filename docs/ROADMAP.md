@@ -21,8 +21,8 @@ inteligencia con datos reales, indicadores estándar, ML y asistente IA. Cada fa
 
 ### 🔌 Infraestructura
 Datos livianos (agregados, JSON de presentación) → **repo + GitHub Pages**. Datos pesados
-(microdata por expediente, históricos, Parquet) → **VPS Hostinger** ([redacted-host]) para
-procesamiento y, si hace falta, API FastAPI detrás de Caddy. Ver [`SPEC.md` §9](../SPEC.md).
+(microdata por expediente, históricos, Parquet) → un **servicio backend** para procesamiento y,
+si hace falta, una API. Ver [`SPEC.md` §9](../SPEC.md).
 
 ---
 

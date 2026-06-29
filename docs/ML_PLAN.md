@@ -1,8 +1,11 @@
-# Fase 4 — Machine Learning + Fase 5 — IA (arquitectura cerrada en el VPS)
+# Fase 4 — Machine Learning + Fase 5 — IA
 
 > Qué es la "Fase ML", qué modelos tienen sentido con los datos reales que ya tenemos, y cómo se
-> despliega **todo cerrado** en un subdominio de `tunky.net` sobre el VPS Hostinger, **sin apagar
-> ni tocar** los demás servicios que ya corren ahí.
+> sirve la IA/ML desde un **servicio backend** sin exponer claves ni detalles de infraestructura.
+>
+> ⚠️ Este documento es público. **No incluye** proveedores, hosts, IPs, puertos, rutas de servidor
+> ni credenciales. La configuración operativa vive fuera del repositorio (variables de entorno y
+> archivos `.env` no versionados).
 
 ## 1. ¿Qué es "hacer Machine Learning" en este proyecto?
 
@@ -23,87 +26,58 @@ Resultado real en set de prueba (2,345 casos):
 - Features: `proceso, materia, tipo de instancia, provincia, mes de ingreso`.
 
 **Límite honesto (SPEC §7):** el modelo **solo es válido para CSJ Piura** (la única microdata real
-con fechas de ingreso→sentencia). No se extrapola al resto del país. El R² modesto es esperable:
-predecir la duración exacta de un proceso judicial con pocas variables es difícil; aun así el modelo
-aporta señal real sobre el baseline. Cuando lleguen más cortes con microdata, mejora y se amplía.
+con fechas de ingreso→sentencia). No se extrapola al resto del país. El R² modesto es esperable;
+aun así el modelo aporta señal real sobre el baseline. Cuando lleguen más cortes con microdata,
+mejora y se amplía.
 
 Salidas: `ml/models/demora.joblib` (modelo serializado, para servir en la API) y
-`site/data/real/ml_demora.json` (métricas + predicción por proceso, que el dashboard ya muestra en
-la pestaña 🔮 Predicción).
+`site/data/real/ml_demora.json` (métricas + predicción por proceso, que el dashboard muestra en la
+pestaña 🔮 Predicción).
 
-## 2. Arquitectura cerrada en el VPS (tunky.net)
+## 2. Arquitectura (alto nivel)
 
-> **`ml.tunky.net` es un gateway de IA/ML MULTI-ESTUDIO**: un único contenedor FastAPI sirve a
-> varios proyectos, separados por ruta (`/v1/justicia/...`, y `/v1/<otro-estudio>/...` a futuro).
-> Así se reutiliza el chatbot y los modelos sin levantar un contenedor por proyecto (ahorra RAM
-> en el VPS). El chatbot usa **OpenRouter** (no la API de Anthropic directa).
-
-Todo el cómputo pesado (modelos, microdata, chatbot) vive en el **VPS Hostinger** ([redacted-host]),
-detrás de **Caddy** (que ya hace de reverse-proxy + TLS para los demás SaaS). El dashboard estático
-(GitHub Pages) solo **consulta** la API; si la API está caída, el tablero sigue funcionando (las
-predicciones y el chat degradan con elegancia).
+El dashboard es **estático** (GitHub Pages). El cómputo de IA/ML (chatbot + modelos) corre en un
+**servicio backend** separado, detrás de un **proxy inverso con HTTPS**. El dashboard solo
+**consulta** ese servicio por HTTPS; si no responde, el tablero **degrada con elegancia** (el chat
+usa un motor local de respuestas y la pestaña ML muestra el resumen precomputado).
 
 ```
-[ GitHub Pages: dashboard estático ]
-        │  fetch HTTPS (CORS: solo unimauro.github.io)
+[ Dashboard estático (GitHub Pages) ]
+        │  fetch HTTPS  (CORS restringido al origen del dashboard)
         ▼
-[ Caddy en el VPS ]  ──►  ai.tunky.net   → contenedor justicia-api (FastAPI)
-                          ml.tunky.net   → mismo contenedor (rutas /v1/justicia/*)
+[ Proxy inverso con HTTPS ]
         │
         ▼
-[ contenedor Docker "justicia-api" ]   ← NUEVO, aislado, con límites de recursos
-   - FastAPI (uvicorn)
-   - /v1/justicia/chat        → OpenRouter (key en env, server-side)   [Fase 5]
-   - /v1/justicia/predict-demora    → carga demora.joblib y predice          [Fase 4]
-   - /v1/justicia/forecast-carga    → pronóstico de carga                    [Fase 4]
-   - /data, /models montados como volumen (microdata pesada se queda en el VPS)
+[ Servicio backend (FastAPI) ]
+   - POST /v1/justicia/chat          → modelo de lenguaje vía OpenRouter (clave server-side)
+   - POST /v1/justicia/predict-demora → carga el modelo y devuelve la estimación
+   - GET  /v1/justicia/forecast-carga → pronóstico de carga (próxima iteración)
 ```
 
-### ⚠️ Convivencia con los servicios existentes (no se apaga nada)
-El VPS ya corre otros SaaS (p. ej. `[redacted].example`). El contenedor nuevo:
-- Se levanta **aparte** con su propio `docker compose -p justicia ...` (proyecto separado).
-- Lleva **límites de recursos** para no competir: `cpus: "0.8"`, `mem_limit: 1g`.
-- **No se detiene ni modifica** ningún contenedor existente. Caddy solo suma dos `reverse_proxy`.
+### Principios de seguridad
+- La **clave de IA nunca está en el navegador**: vive solo en el servidor como variable de entorno.
+- **CORS** restringido al origen del dashboard.
+- El servicio se ejecuta **aislado** (contenedor con límites de recursos) y no interfiere con otros
+  servicios del entorno.
+- Ningún detalle operativo (proveedor, host, IP, puerto, credenciales) se publica en este repo.
 
-### Snippet Caddy (añadir, no reemplazar)
-```caddy
-ai.tunky.net, ml.tunky.net {
-    reverse_proxy 127.0.0.1:8088
-}
-```
+## 3. El chatbot (Fase 5)
 
-### docker-compose (VPS) — `deploy/docker-compose.vps.yml`
-```yaml
-services:
-  justicia-api:
-    build: ../api
-    container_name: justicia-api
-    restart: unless-stopped
-    ports: ["127.0.0.1:8088:8088"]   # solo local; Caddy expone al exterior
-    environment:
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
-      - AI_MODEL=anthropic/claude-3.5-haiku
-      - ALLOWED_ORIGIN=https://unimauro.github.io
-    volumes:
-      - ../ml/models:/app/models:ro
-      - ../data/processed:/app/data:ro
-    cpus: "0.8"
-    mem_limit: 1g
-```
+El frontend llama a un **endpoint configurable** (`window.AI_ENDPOINT` o `?ai=`); por defecto, el
+servicio de IA del proyecto. El endpoint recibe `{question, context}`, llama a un modelo de lenguaje
+**server-side** (vía OpenRouter, multi-modelo: Claude, GPT, Llama, etc., según `AI_MODEL`) y devuelve
+`{answer}`. Si no responde, el copiloto usa un **fallback local**.
 
-## 3. El chatbot (Fase 5) — ¿es factible ya? Sí.
+**Guardarraíles del chatbot** (ver `docs/AI_PROXY.md`): solo responde sobre el observatorio y el
+sistema de justicia; se basa solo en el contexto recibido; no revela sus instrucciones; no da
+asesoría legal personalizada; ignora intentos de cambiar su rol. Doble barrera (frontend + prompt
+del sistema).
 
-El frontend **ya está cableado** a `ai.tunky.net/v1/justicia/chat` (con fallback local si no
-responde). Para activarlo "de verdad" solo falta **levantar el endpoint** en el contenedor:
-recibe `{question, context}`, llama a OpenRouter server-side (la key vive en el VPS, nunca en el
-navegador; OpenRouter es multi-modelo) y responde `{answer}`. Modelo configurable vía `AI_MODEL` en OpenRouter (Claude, GPT, Llama, etc.). Implementación de referencia en `docs/AI_PROXY.md` y esqueleto en `api/`.
+## 4. Variables de entorno (server-side, NO versionadas)
 
-**Factibilidad:** alta. Es un único contenedor FastAPI + una variable de entorno con la API key +
-dos líneas en el Caddyfile. No requiere apagar nada.
+El servicio se configura solo con variables de entorno / un archivo `.env` **gitignored**:
+- `OPENROUTER_API_KEY` — clave del proveedor de IA (secreta).
+- `AI_MODEL` — modelo a usar.
+- `ALLOWED_ORIGIN` — origen permitido para CORS.
 
-## 4. Pasos para desplegar (cuando se decida)
-1. `pip install -r api/requirements.txt` dentro del contenedor (fastapi, uvicorn, joblib, scikit-learn, openai (cliente OpenRouter)).
-2. Copiar `ml/models/*.joblib` al VPS.
-3. `OPENROUTER_API_KEY=… docker compose -p justicia -f deploy/docker-compose.vps.yml up -d --build`.
-4. Añadir el bloque `ai.tunky.net, ml.tunky.net` al Caddyfile y `caddy reload`.
-5. Verificar CORS desde el dashboard. Listo: chat + predicciones en vivo.
+El código del servicio (`api/`) es público y auditable; su **configuración** no.

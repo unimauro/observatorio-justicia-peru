@@ -2,8 +2,7 @@
 
 El dashboard es **estático** (GitHub Pages), por lo que la clave de la Claude API **no puede vivir
 en el navegador**. El copiloto del tablero llama a un **endpoint proxy** que corre server-side
-(Vercel Function, o un servicio en el VPS Hostinger detrás de Caddy, dentro del ecosistema
-`tunky.net`). Si el endpoint no responde, el copiloto usa un **motor local de respuestas** (fallback)
+(una función serverless o un servicio backend propio detrás de un proxy inverso con HTTPS). Si el endpoint no responde, el copiloto usa un **motor local de respuestas** (fallback)
 y el tablero sigue funcionando.
 
 ## Configuración en el frontend
@@ -31,7 +30,7 @@ Timeout del cliente: 6 s. Cualquier error/abort → fallback local.
 
 ## Implementación de referencia (FastAPI + OpenRouter)
 > Implementada en `api/main.py`. Usa **OpenRouter** (compatible con la API de OpenAI), no la API
-> de Anthropic directa. La key vive en el servidor (VPS). OpenRouter es multi-modelo: una sola key
+> de Anthropic directa. La key vive en el servidor. OpenRouter es multi-modelo: una sola key
 > enruta a Claude, GPT, Llama, etc. según `AI_MODEL`.
 
 ```python

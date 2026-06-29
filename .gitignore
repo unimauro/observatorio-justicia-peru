@@ -37,3 +37,8 @@ node_modules/
 Thumbs.db
 .idea/
 .vscode/
+
+# --- Infra/despliegue: NO publicar detalles operativos ---
+deploy/docker-compose.vps.yml
+deploy/Caddyfile.snippet
+deploy/.env.example
