@@ -471,6 +471,9 @@ async function renderReales() {
   }
   if (kpis.length) html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
 
+  // --- aviso de cobertura temporal (honestidad: distintos años por fuente) ---
+  html += `<div class="disclaimer">📅 <b>Cobertura temporal por fuente:</b> MPFN —delitos, casos fiscales y fiscales— cubre <b>2019–2026</b> (2026 parcial). La <b>carga del Poder Judicial solo está disponible para 2024</b> en datos abiertos (es el único año publicado); los años <b>2021–2023 y 2025–2026 no existen en el portal abierto</b> y requieren el <a href="https://portalestadistico.pj.gob.pe/" target="_blank" rel="noopener">Portal Estadístico del PJ</a> (descarga manual, sin API). La demora real (microdata Piura) varía por proceso (NLPT desde ~2021). No completamos años faltantes con estimaciones: si no hay dato, se indica.</div>`;
+
   // contenedores de charts
   const charts2 = [];
   if (pj && pj.por_especialidad) { html += card("Carga procesal por especialidad (PJ nacional)", "rc-pj", pj._meta); charts2.push(["rc-pj", () => barIngRes("rc-pj", pj.por_especialidad, "especialidad")]); }
