@@ -9,7 +9,7 @@ const FILES = ["nacional", "departamentos", "cortes", "series", "tipos_proceso",
   "embudo", "backlog", "jueces", "fiscales", "casos_seguridad", "indicadores", "manifest"];
 const REAL = {};
 const REAL_FILES = ["manifest", "mpfn_fiscales", "mpfn_casos", "mpfn_delitos",
-  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad", "ml_demora", "inei_denuncias", "mimp_violencia"];
+  "pj_carga_nacional", "demora_piura", "tc", "mpfn_seguridad", "ml_demora", "inei_denuncias", "mimp_violencia", "delitos_depto_anual"];
 
 const fmt = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE"));
 const fmt1 = (n) => (n == null ? "—" : Number(n).toLocaleString("es-PE", { maximumFractionDigits: 1 }));
@@ -261,7 +261,32 @@ async function renderMapa() {
   if (hasRealDelitos) $("#map-metric").value = "delitos_reales";
   draw(initMetric);
   fitPeru();
-  $("#map-metric").addEventListener("change", (e) => { draw(e.target.value); updateLegend(e.target.value); });
+
+  // --- Filtro por AÑO (solo para delitos reales, si hay datos anuales) ---
+  const anual = REAL.delitos_depto_anual;
+  const delitosTotal = {}; deps.forEach((d) => (delitosTotal[d.departamento] = d.delitos_reales || 0));
+  function applyYear(year) {
+    deps.forEach((d) => {
+      if (year === "todos") { d.delitos_reales = delitosTotal[d.departamento] || 0; }
+      else {
+        const tbl = (anual.por_anio_departamento || {})[year] || {};
+        d.delitos_reales = tbl[normName(d.departamento)] || tbl[d.departamento] || 0;
+      }
+    });
+    draw("delitos_reales"); updateLegend("delitos_reales");
+  }
+  const yWrap = $("#map-year-wrap"), ySel = $("#map-year");
+  if (anual && anual.anios && ySel) {
+    ySel.innerHTML = `<option value="todos">Todos (2019–2026)</option>` + anual.anios.map((a) => `<option value="${a}">${a}</option>`).join("");
+    ySel.addEventListener("change", (e) => applyYear(e.target.value));
+    if (hasRealDelitos) yWrap.style.display = "";   // visible al iniciar (metric = delitos)
+  }
+  $("#map-metric").addEventListener("change", (e) => {
+    const mt = e.target.value;
+    if (yWrap) yWrap.style.display = (mt === "delitos_reales" && anual) ? "" : "none";
+    if (mt === "delitos_reales" && anual) applyYear(ySel.value || "todos");
+    else { draw(mt); updateLegend(mt); }
+  });
 
   const lg = L.control({ position: "bottomright" });
   lg.onAdd = function () {
