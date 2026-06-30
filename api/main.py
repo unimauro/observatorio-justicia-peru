@@ -27,10 +27,12 @@ app.add_middleware(
     allow_methods=["GET", "POST"], allow_headers=["*"],
 )
 
-# ---- Rate limiting simple en memoria (defensa anti-abuso de tokens / fuzzing) ----
-RATE_MAX = int(os.environ.get("RATE_MAX", "20"))      # peticiones
-RATE_WINDOW = int(os.environ.get("RATE_WINDOW", "60"))  # por ventana (segundos)
+# ---- Rate limiting en memoria (anti-abuso de tokens / fuzzing) ----
+RATE_MAX = int(os.environ.get("RATE_MAX", "20"))        # peticiones por minuto
+RATE_WINDOW = int(os.environ.get("RATE_WINDOW", "60"))  # ventana (segundos)
+RATE_DAY_MAX = int(os.environ.get("RATE_DAY_MAX", "40"))  # tope POR DÍA por IP (control de costo)
 _hits: dict[str, deque] = defaultdict(deque)
+_day_hits: dict[str, list] = {}   # ip -> [bucket_dia, conteo]
 
 
 def client_ip(req: Request) -> str:
@@ -41,12 +43,23 @@ def client_ip(req: Request) -> str:
 def rate_limited(req: Request) -> bool:
     ip = client_ip(req)
     now = time.monotonic()
+    # tope diario por IP (no consume el cupo por minuto si ya se pasó del día)
+    day = int(time.time() // 86400)
+    rec = _day_hits.get(ip)
+    if not rec or rec[0] != day:
+        _day_hits[ip] = [day, 0]; rec = _day_hits[ip]
+    if rec[1] >= RATE_DAY_MAX:
+        return True
+    # tope por minuto
     dq = _hits[ip]
     while dq and now - dq[0] > RATE_WINDOW:
         dq.popleft()
     if len(dq) >= RATE_MAX:
         return True
     dq.append(now)
+    rec[1] += 1
+    if len(_day_hits) > 20000:
+        _day_hits.clear()
     if len(_hits) > 5000:  # evitar crecimiento ilimitado
         for k in [k for k, v in _hits.items() if not v]:
             _hits.pop(k, None)
