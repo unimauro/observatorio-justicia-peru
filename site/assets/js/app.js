@@ -53,7 +53,9 @@ async function boot() {
   setupDisclaimer();
   renderHeaderSupport();
   renderFooterSupport();
-  renderPanel("resumen");
+  // respeta el deep-link (#mapa, #seguridad, ...); si no hay hash válido, abre Resumen
+  const h = location.hash.replace("#", "");
+  if (!(h && $(`#tabs .tab[data-panel="${h}"]`))) renderPanel("resumen");
   window.addEventListener("resize", () => {
     Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); });
     if (charts.map && charts.map._fitPeru) charts.map._fitPeru();
@@ -61,20 +63,27 @@ async function boot() {
 }
 
 /* ---------- Tabs (sidebar) ---------- */
+function activateTab(id, fromHash) {
+  const tab = $(`#tabs .tab[data-panel="${id}"]`); if (!tab) return;
+  const sb = $("#sidebar");
+  $$("#tabs .tab").forEach((x) => x.classList.remove("active"));
+  $$("main .panel").forEach((x) => x.classList.remove("active"));
+  tab.classList.add("active");
+  $("#" + id).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "auto" });
+  if (sb && window.innerWidth <= 860) sb.classList.remove("open");
+  if (!fromHash && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);  // URL compartible
+  renderPanel(id);
+  setTimeout(() => Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); }), 60);
+}
 function setupTabs() {
   const tog = $("#sidebar-toggle"), sb = $("#sidebar");
   if (tog && sb) tog.addEventListener("click", () => sb.classList.toggle("open"));
-  $$("#tabs .tab").forEach((t) => t.addEventListener("click", () => {
-    $$("#tabs .tab").forEach((x) => x.classList.remove("active"));
-    $$("main .panel").forEach((x) => x.classList.remove("active"));
-    t.classList.add("active");
-    const id = t.dataset.panel;
-    $("#" + id).classList.add("active");
-    window.scrollTo({ top: 0, behavior: "auto" });
-    if (sb && window.innerWidth <= 860) sb.classList.remove("open");
-    renderPanel(id);
-    setTimeout(() => Object.values(charts).forEach((c) => { if (c && typeof c.resize === "function") c.resize(); }), 60);
-  }));
+  $$("#tabs .tab").forEach((t) => t.addEventListener("click", () => activateTab(t.dataset.panel)));
+  window.addEventListener("hashchange", () => { const id = location.hash.replace("#", ""); if (id) activateTab(id, true); });
+  // deep-link: abrir la pestaña del hash al cargar (ej. ...#mapa)
+  const initial = location.hash.replace("#", "");
+  if (initial && $(`#tabs .tab[data-panel="${initial}"]`)) activateTab(initial, true);
 }
 function renderPanel(id) {
   if (rendered[id]) { if (id === "mapa" && charts.map) { charts.map._fitPeru ? charts.map._fitPeru() : charts.map.invalidateSize(); } return; }
