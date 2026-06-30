@@ -944,7 +944,7 @@ function setupAI() {
   $("#ai-fab").addEventListener("click", () => $("#ai-panel").classList.toggle("open"));
   $("#ai-x").addEventListener("click", () => $("#ai-panel").classList.remove("open"));
   $("#ai-suggest").innerHTML = AI_SUGGEST.map((s) => `<span class="chip">${s}</span>`).join("");
-  $$("#ai-suggest .chip").forEach((c) => c.addEventListener("click", () => aiAsk(c.textContent)));
+  $$("#ai-suggest .chip").forEach((c) => c.addEventListener("click", () => aiAsk(c.textContent, true)));
   $("#ai-send").addEventListener("click", () => aiAsk($("#ai-input").value));
   $("#ai-input").addEventListener("keydown", (e) => { if (e.key === "Enter") aiAsk($("#ai-input").value); });
   aiBot("¡Hola! Soy el copiloto de justicia. Puedo responder sobre los datos del observatorio. Prueba una sugerencia 👇");
@@ -1020,10 +1020,11 @@ function aiContext() {
     aviso: "Usa DATOS_REALES_oficiales para cifras citables (con fuente). PROTOTIPO_sintetico es ilustrativo: acláralo si lo usas.",
   };
 }
-async function aiAsk(q) {
+async function aiAsk(q, trusted) {
   q = (q || "").trim(); if (!q) return;
   aiUser(q); $("#ai-input").value = "";
-  if (aiOffTopic(q)) { aiBot(aiAnswer(q)); return; }  // guardrail: no sale del tema, no llama al modelo
+  // las sugerencias predefinidas (trusted) siempre son válidas; saltan el guardrail
+  if (!trusted && aiOffTopic(q)) { aiBot(aiAnswer(q)); return; }
   const thinking = `<div class="msg bot" id="ai-think"><span class="spin"></span> pensando…</div>`;
   $("#ai-msgs").insertAdjacentHTML("beforeend", thinking); $("#ai-msgs").scrollTop = 1e9;
   let answer = null;
@@ -1043,7 +1044,7 @@ async function aiAsk(q) {
 
 /* Guardrail de tema: el copiloto SOLO trata sobre el observatorio / sistema de justicia.
    Si la pregunta es claramente de otro tema, no responde fuera de alcance. */
-const AI_TOPICS = /justic|corte|juzgad|juez|jueces|fiscal|expedient|proces|demora|congesti|carga|delito|denuncia|segurid|crimen|penal|civil|laboral|familia|alimento|tribunal|tc|mpfn|backlog|resoluci|sentenc|observatori|dato|departament|distrito|magistrad|peru|perú|inei|poder judicial|rotaci|indicador|predicc|modelo|ml/i;
+const AI_TOPICS = /justic|corte|juzgad|juez|jueces|fiscal|expedient|proces|demora|congesti|carga|delito|denuncia|segurid|crimen|penal|civil|laboral|familia|alimento|tribunal|tc|mpfn|backlog|resoluci|sentenc|observatori|dato|departament|distrito|magistrad|peru|perú|inei|poder judicial|rotaci|indicador|predicc|modelo|ml|resumen|ejecutiv|nacional|general|panorama|cifra|estad[ií]stic|feminicid|violencia|mujer|trata|kpi/i;
 function aiOffTopic(q) {
   const s = (q || "").toLowerCase();
   if (AI_TOPICS.test(s)) return false;
@@ -1058,27 +1059,43 @@ function aiAnswer(q) {
   if (aiOffTopic(q)) {
     return `Soy el copiloto del <b>Observatorio Nacional de Justicia del Perú</b>. Solo puedo ayudarte con temas de este tablero: carga procesal, demora, congestión, cortes y distritos judiciales, jueces y fiscales, delitos y seguridad, o las predicciones del modelo. ¿Qué te gustaría saber sobre el sistema de justicia? 🤔`;
   }
-  if (/congesti|saturad/.test(s)) {
-    const top = DATA.cortes[0];
-    return `La corte con mayor congestión es <b>${top.corte}</b> (${fmt1(top.congestion)}), con ${fmt(top.pendientes)} expedientes pendientes y ${fmt(top.jueces)} jueces. Le siguen ${DATA.cortes[1].corte} y ${DATA.cortes[2].corte}.`;
+  const pj = REAL.pj_carga_nacional, fis = REAL.mpfn_fiscales, del = REAL.mpfn_delitos,
+    tc = REAL.tc, seg = REAL.mpfn_seguridad, mimp = REAL.mimp_violencia;
+  if (/congesti|saturad|carga/.test(s)) {
+    if (pj && pj.por_distrito_judicial) {
+      const t = [...pj.por_distrito_judicial].sort((a, b) => b.congestion - a.congestion)[0];
+      return `🟢 <b>Dato real (PJ 2024):</b> el distrito judicial con mayor congestión es <b>${t.distrito_judicial}</b> (índice ${fmt1(t.congestion)}), con ${fmt(t.pendientes)} expedientes pendientes. A nivel nacional el PJ registró ${fmt(pj.nacional.ingresos)} ingresos y ${fmt(pj.nacional.resueltos)} resueltos. Ver pestaña 🏛️ Distritos Judiciales.`;
+    }
   }
   if (/demora|tarda|lent|tiempo/.test(s)) {
-    const d = [...DATA.departamentos].sort((a, b) => b.demora_dias - a.demora_dias)[0];
-    const t = [...DATA.tipos_proceso].sort((a, b) => b.demora_p90_dias - a.demora_p90_dias)[0];
-    return `El departamento con mayor demora promedio es <b>${d.departamento}</b> (${fmt(d.demora_dias)} días). A nivel nacional el promedio es ${fmt(n.tiempo_promedio_dias)} días. El proceso más lento es <b>${t.tipo}</b> (P90 ≈ ${fmt(t.demora_p90_dias)} días).`;
+    if (tc && tc.demora && tc.demora.global) {
+      let extra = "";
+      if (REAL.demora_piura && REAL.demora_piura.por_proceso) { const p = REAL.demora_piura.por_proceso[0]; extra = ` En la Corte de Piura, ${p.proceso} tiene mediana ${fmt(p.mediana_dias)} días.`; }
+      return `🟢 <b>Dato real:</b> en el Tribunal Constitucional la demora mediana es <b>${fmt(tc.demora.global.mediana_dias)} días</b> (P90 ${fmt(tc.demora.global.p90_dias)} d).${extra} La demora real solo se calcula donde hay microdata por expediente (TC y Piura). Ver pestaña 📁 Tipos de Proceso.`;
+    }
   }
-  if (/segurid|crimen|critic|extorsi|narco/.test(s)) {
-    const crit = DATA.casos_seguridad.filter((x) => x.nivel_alerta === "Critico");
-    const byTema = groupCount(DATA.casos_seguridad, "tema")[0];
-    return `Hay <b>${fmt(crit.length)} casos críticos</b> (más de 1000 días sin resolver) de ${fmt(DATA.casos_seguridad.length)} monitoreados. El tema más frecuente es <b>${byTema[0]}</b> (${byTema[1]} casos). Revisa la pestaña 🚨 Seguridad para el detalle.`;
+  if (/segurid|crimen|critic|extorsi|narco|feminic|violencia|mujer|delito/.test(s)) {
+    if (del || mimp) {
+      const partes = [];
+      if (del) partes.push(`<b>${fmt(del.total_denuncias)}</b> delitos denunciados (MPFN 2019–2026)`);
+      if (mimp && mimp.feminicidios) partes.push(`<b>${fmt(mimp.feminicidios.total)}</b> feminicidios (MIMP 2012–2025)`);
+      if (seg && seg.violencia_mujer) partes.push(`<b>${fmt(seg.violencia_mujer.total)}</b> casos de violencia contra la mujer`);
+      return `🟢 <b>Dato real (seguridad):</b> ${partes.join(", ")}. Detalle en la pestaña 🚨 Seguridad.`;
+    }
   }
-  if (/juez|fiscal|magistrad|rotaci/.test(s)) {
-    return `El observatorio sigue ${fmt(DATA.jueces.length)} jueces y ${fmt(DATA.fiscales.length)} fiscales (muestra), con su corte actual, especialidad y trayectoria de rotaciones. Filtra por "casos de seguridad" en la pestaña 👩‍⚖️ Jueces & Fiscales.`;
+  if (/juez|fiscal|magistrad|rotaci|dotaci/.test(s)) {
+    if (fis) return `🟢 <b>Dato real (MPFN):</b> hay <b>${fmt(fis.total_fiscales)}</b> fiscales (dotación 2026). Desglose por cargo, condición, sexo y distrito fiscal en la pestaña 👩‍⚖️ Jueces & Fiscales.`;
   }
-  if (/resumen|ejecutiv|general|nacional/.test(s)) {
-    return `<b>Resumen nacional ${n.anio}:</b> ${fmt(n.expedientes_ingresados)} ingresados, ${fmt(n.expedientes_resueltos)} resueltos (tasa ${pct(n.clearance_rate)}) y ${fmt(n.expedientes_pendientes)} pendientes. Congestión ${fmt1(n.congestion)}, demora promedio ${fmt(n.tiempo_promedio_dias)} días, ${fmt(n.jueces)} jueces (${fmt1(n.carga_por_juez)} exp./juez).`;
+  if (/resumen|ejecutiv|general|nacional|panorama|cifra/.test(s)) {
+    const b = [];
+    if (del) b.push(`${fmt(del.total_denuncias)} delitos denunciados`);
+    if (pj && pj.nacional) b.push(`PJ ${fmt(pj.nacional.ingresos)} ingresos / ${fmt(pj.nacional.resueltos)} resueltos (2024)`);
+    if (fis) b.push(`${fmt(fis.total_fiscales)} fiscales`);
+    if (tc && tc.demora) b.push(`demora mediana TC ${fmt(tc.demora.global.mediana_dias)} d`);
+    if (mimp && mimp.feminicidios) b.push(`${fmt(mimp.feminicidios.total)} feminicidios`);
+    if (b.length) return `🟢 <b>Resumen ejecutivo (datos reales):</b><br/>• ${b.join("<br/>• ")}.<br/>Fuentes: Poder Judicial, Ministerio Público, Tribunal Constitucional, INEI, MIMP. Detalle por fuente en 📋 Fuentes & Calidad.`;
   }
-  return `Puedo responder sobre congestión, demora, seguridad, jueces/fiscales o el resumen nacional. (Versión local sin IA generativa; en producción se conecta a la Claude API vía ai.tunky.net.) Pregunta, por ejemplo: "¿qué corte tiene más congestión?"`;
+  return `Puedo responder sobre <b>congestión, demora, seguridad, jueces y fiscales</b> o el <b>resumen nacional</b>, con datos reales del observatorio. Prueba: "¿qué distrito tiene más congestión?" o "resumen ejecutivo nacional".`;
 }
 
 boot();
