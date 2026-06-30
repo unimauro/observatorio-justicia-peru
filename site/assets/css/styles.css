@@ -1,33 +1,33 @@
 /* ============================================================================
-   Observatorio Nacional de Justicia del Peru - Tema institucional
+   Observatorio Nacional de Justicia del Peru - Tema Teal & Coral
    ============================================================================ */
 :root {
-  --navy: #0b1b3b;
-  --navy-2: #102449;
-  --gold: #d4a437;
-  --gold-2: #f0c75e;
-  --bg: #0a1228;
-  --surface: #101b36;
-  --surface-2: #16244a;
-  --border: #223158;
-  --text: #e8edf7;
-  --muted: #93a1c4;
-  --accent: #4f8cff;
-  --green: #2ecc71;
-  --amber: #f1c40f;
-  --red: #e74c3c;
-  --shadow: 0 8px 30px rgba(0, 0, 0, .35);
+  --navy: #0b1d20;        /* header oscuro */
+  --navy-2: #103338;      /* header gradiente */
+  --gold: #14b8a6;        /* highlight primario (teal) */
+  --gold-2: #2dd4bf;      /* highlight claro (turquesa) */
+  --bg: #0c1719;          /* fondo teal oscuro */
+  --surface: #112226;     /* paneles */
+  --surface-2: #173036;
+  --border: #244349;
+  --text: #e7f1f0;
+  --muted: #8aa6a3;
+  --accent: #2dd4bf;      /* enlaces / foco */
+  --green: #34d399;       /* ok / datos reales */
+  --amber: #fbbf24;       /* advertencia */
+  --red: #fb7185;         /* alerta (coral) */
+  --shadow: 0 8px 30px rgba(0, 0, 0, .38);
   --radius: 14px;
 }
 [data-theme="light"] {
-  --bg: #f3f5fb;
+  --bg: #eef5f3;
   --surface: #ffffff;
-  --surface-2: #f0f3fb;
-  --border: #dde3f0;
-  --text: #14213d;
-  --muted: #5b6b8c;
-  --navy: #0b1b3b;
-  --shadow: 0 8px 24px rgba(20, 33, 61, .08);
+  --surface-2: #e9f3f1;
+  --border: #d3e6e2;
+  --text: #0c2a2a;
+  --muted: #557370;
+  --navy: #0b1d20;
+  --shadow: 0 8px 24px rgba(12, 42, 42, .08);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -65,9 +65,42 @@ header.topbar {
 .icon-btn {
   background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18);
   color: #fff; width: 38px; height: 38px; border-radius: 10px; cursor: pointer;
-  font-size: 16px; display: grid; place-items: center; transition: .15s;
+  font-size: 16px; display: grid; place-items: center; transition: .15s; text-decoration: none;
 }
-.icon-btn:hover { background: rgba(255,255,255,.18); }
+.icon-btn:hover { background: rgba(255,255,255,.18); text-decoration: none; }
+
+/* ---------- Apoyo en cabecera ---------- */
+.head-support { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
+.head-support .sup-btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px;
+  border-radius: 999px; font-size: 13px; font-weight: 800; cursor: pointer; text-decoration: none;
+  border: 1px solid rgba(255,255,255,.18); transition: .15s; white-space: nowrap;
+}
+.head-support .sup-btn:hover { transform: translateY(-1px); filter: brightness(1.08); text-decoration: none; }
+.head-support .sup-coffee { background: linear-gradient(135deg, var(--gold), var(--gold-2)); color: #06201d; }
+.head-support .sup-ico {
+  width: 34px; height: 34px; border-radius: 999px; display: inline-grid; place-items: center;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); color: #fff;
+  cursor: pointer; font-size: 15px; text-decoration: none; transition: .15s;
+}
+.head-support .sup-ico:hover { background: rgba(255,255,255,.2); transform: translateY(-1px); }
+@media (max-width: 760px) { .head-support .lbl { display: none; } .head-support { gap: 4px; } }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+  background: var(--surface); color: var(--text); border: 1px solid var(--gold);
+  padding: 11px 18px; border-radius: 12px; font-size: 13.5px; font-weight: 700;
+  box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: .25s; z-index: 200;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- Apoyo en footer (card prominente) ---------- */
+.footer-support-card {
+  background: linear-gradient(135deg, rgba(20,184,166,.10), rgba(251,113,133,.08));
+  border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; margin-top: 8px;
+}
+.footer-support-card a:hover, .footer-support-card button:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
 /* ---------- Nav tabs ---------- */
 /* ---------- Layout con SIDEBAR ---------- */

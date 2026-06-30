@@ -28,7 +28,7 @@ function echartsTheme() {
     backgroundColor: "transparent",
   };
 }
-const PALETTE = ["#d4a437", "#4f8cff", "#2ecc71", "#e74c3c", "#9b59b6", "#1abc9c", "#f39c12", "#e84393", "#00cec9", "#636e72"];
+const PALETTE = ["#14b8a6", "#fb7185", "#2dd4bf", "#38bdf8", "#a78bfa", "#fbbf24", "#f472b6", "#34d399", "#22d3ee", "#94a3b8"];
 
 /* ---------- Boot ---------- */
 async function boot() {
@@ -51,6 +51,7 @@ async function boot() {
   setupAI();
   setupModal();
   setupDisclaimer();
+  renderHeaderSupport();
   renderFooterSupport();
   renderPanel("resumen");
   window.addEventListener("resize", () => {
@@ -133,22 +134,22 @@ function renderResumen() {
   const box = $("#resumen-charts"); if (!box) return;
   const delitos = REAL.mpfn_delitos, tc = REAL.tc;
   let html = "", reg = [];
-  if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN)</h3><div class="chart" id="rs-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["rs-del", () => lineSimple("rs-del", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
-  if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Expedientes del Tribunal Constitucional por año (1992–2026)</h3><div class="chart" id="rs-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["rs-tc", () => lineSimple("rs-tc", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
+  if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN)</h3><div class="chart" id="rs-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["rs-del", () => lineSimple("rs-del", delitos.por_anio, "anio", "cantidad", "#fb7185")]); }
+  if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Expedientes del Tribunal Constitucional por año (1992–2026)</h3><div class="chart" id="rs-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["rs-tc", () => lineSimple("rs-tc", tc.por_anio, "anio", "ingresados", "#a78bfa")]); }
   box.innerHTML = html;
   reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
 }
 
 /* ============================================================ MAPA */
 const MAP_META = {
-  congestion: { label: "Congestión", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: fmt1 },
-  demora_dias: { label: "Demora (días)", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: fmt },
-  carga_por_juez: { label: "Carga/juez", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: fmt1 },
-  pendientes: { label: "Pendientes", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt },
-  procesos_por_1000hab: { label: "Procesos/1000 hab", colors: ["#16324f", "#4f8cff", "#9b59b6"], fmt: fmt1 },
-  riesgo_seguridad: { label: "Riesgo seguridad", colors: ["#1a5c3a", "#f1c40f", "#e74c3c"], fmt: (v) => (v * 100).toFixed(0) + "%" },
-  delitos_reales: { label: "Delitos denunciados (MPFN)", colors: ["#16324f", "#f39c12", "#e74c3c"], fmt: fmt, real: true, fuente: "MPFN · 2019–2026" },
-  violencia_mimp: { label: "Violencia contra la mujer (MIMP/CEM)", colors: ["#2c1a3a", "#9b59b6", "#e84393"], fmt: fmt, real: true, fuente: "MIMP/CEM · 2012–2025" },
+  congestion: { label: "Congestión", colors: ["#1a5c3a", "#fbbf24", "#fb7185"], fmt: fmt1 },
+  demora_dias: { label: "Demora (días)", colors: ["#1a5c3a", "#fbbf24", "#fb7185"], fmt: fmt },
+  carga_por_juez: { label: "Carga/juez", colors: ["#1a5c3a", "#fbbf24", "#fb7185"], fmt: fmt1 },
+  pendientes: { label: "Pendientes", colors: ["#16324f", "#38bdf8", "#a78bfa"], fmt: fmt },
+  procesos_por_1000hab: { label: "Procesos/1000 hab", colors: ["#16324f", "#38bdf8", "#a78bfa"], fmt: fmt1 },
+  riesgo_seguridad: { label: "Riesgo seguridad", colors: ["#1a5c3a", "#fbbf24", "#fb7185"], fmt: (v) => (v * 100).toFixed(0) + "%" },
+  delitos_reales: { label: "Delitos denunciados (MPFN)", colors: ["#16324f", "#fbbf24", "#fb7185"], fmt: fmt, real: true, fuente: "MPFN · 2019–2026" },
+  violencia_mimp: { label: "Violencia contra la mujer (MIMP/CEM)", colors: ["#2c1a3a", "#a78bfa", "#f472b6"], fmt: fmt, real: true, fuente: "MIMP/CEM · 2012–2025" },
 };
 const normName = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().trim();
 async function renderMapa() {
@@ -347,7 +348,7 @@ function renderProcesos() {
   });
   const sorted = [...t].sort((a, b) => b.demora_p90_dias - a.demora_p90_dias);
   mkChart("chart-demora").setOption({
-    ...echartsTheme(), color: ["#d4a437", "#e74c3c"],
+    ...echartsTheme(), color: ["#14b8a6", "#fb7185"],
     tooltip: { trigger: "axis" }, legend: { top: 0, textStyle: echartsTheme().textStyle },
     grid: { left: 130, right: 24, top: 40, bottom: 24 },
     xAxis: { type: "value", name: "días" },
@@ -364,7 +365,7 @@ function renderEmbudoReal() {
   const box = $("#embudo-real"); if (!box) return;
   const pj = REAL.pj_carga_nacional, casos = REAL.mpfn_casos;
   if (!pj && !casos) { box.innerHTML = ""; return; }
-  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Flujo real.</b> Poder Judicial 2024 (ingresos→resueltos→pendientes) y Ministerio Público (ingresado→atendido).</div>`;
+  let html = `<div class="disclaimer" style="border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.07);color:var(--green)">🟢 <b>Flujo real.</b> Poder Judicial 2024 (ingresos→resueltos→pendientes) y Ministerio Público (ingresado→atendido).</div>`;
   const reg = [];
   if (pj && pj.nacional) {
     const n = pj.nacional;
@@ -373,11 +374,11 @@ function renderEmbudoReal() {
       <div class="kpi ok"><div class="label">🟢 Resueltos</div><div class="value">${fmt(n.resueltos)}</div><div class="hint">expedientes</div></div>
       <div class="kpi alert"><div class="label">🟢 Pendientes</div><div class="value">${fmt(n.pendientes)}</div><div class="hint">backlog</div></div></div>`;
     html += `<div class="card"><h3>🟢 Flujo procesal nacional (PJ 2024)</h3><div class="chart" id="er-pjflow"></div>${metaFoot(pj._meta)}</div>`;
-    reg.push(["er-pjflow", () => mkChart("er-pjflow").setOption({ ...echartsTheme(), color: ["#d4a437", "#2ecc71", "#e74c3c"],
+    reg.push(["er-pjflow", () => mkChart("er-pjflow").setOption({ ...echartsTheme(), color: ["#14b8a6", "#34d399", "#fb7185"],
       tooltip: { trigger: "axis" }, grid: { left: 70, right: 24, top: 16, bottom: 24 },
       xAxis: { type: "category", data: ["Ingresos", "Resueltos", "Pendientes"] },
       yAxis: { type: "value", axisLabel: { formatter: (v) => (v / 1e6).toFixed(1) + "M" } },
-      series: [{ type: "bar", data: [{ value: n.ingresos, itemStyle: { color: "#d4a437" } }, { value: n.resueltos, itemStyle: { color: "#2ecc71" } }, { value: n.pendientes, itemStyle: { color: "#e74c3c" } }] }] })]);
+      series: [{ type: "bar", data: [{ value: n.ingresos, itemStyle: { color: "#14b8a6" } }, { value: n.resueltos, itemStyle: { color: "#34d399" } }, { value: n.pendientes, itemStyle: { color: "#fb7185" } }] }] })]);
   }
   if (casos && casos.por_materia) {
     html += `<div class="card"><h3>🟢 Casos fiscales: ingresado vs atendido por materia (MPFN)</h3><div class="chart" id="er-casflow"></div>${metaFoot(casos._meta)}</div>`;
@@ -388,7 +389,7 @@ function renderEmbudoReal() {
     const rows = [...pj.por_distrito_judicial].sort((a, b) => b.pendientes - a.pendientes);
     html += `<div class="card"><h3>🟢 Backlog real — expedientes pendientes por distrito judicial (PJ 2024)</h3>
       <div class="chart tall" id="er-backlog"></div>${metaFoot(pj._meta)}</div>`;
-    reg.push(["er-backlog", () => barSimple("er-backlog", rows.slice(0, 20), "distrito_judicial", "pendientes", "#e74c3c")]);
+    reg.push(["er-backlog", () => barSimple("er-backlog", rows.slice(0, 20), "distrito_judicial", "pendientes", "#fb7185")]);
     html += `<div class="card"><h3>🟢 Carga por distrito judicial (PJ 2024)</h3>
       <div class="table-wrap" style="max-height:420px"><table><thead><tr><th>Distrito judicial</th><th class="num">Ingresos</th><th class="num">Resueltos</th><th class="num">Pendientes</th><th class="num">Congestión</th></tr></thead>
       <tbody>${[...pj.por_distrito_judicial].sort((a, b) => b.congestion - a.congestion).map((r) => `<tr><td>${r.distrito_judicial}</td><td class="num">${fmt(r.ingresos)}</td><td class="num">${fmt(r.resueltos)}</td><td class="num">${fmt(r.pendientes)}</td><td class="num">${fmt1(r.congestion)}</td></tr>`).join("")}</tbody></table></div>${metaFoot(pj._meta)}</div>`;
@@ -404,15 +405,15 @@ function renderMagistradosReal() {
   const box = $("#mag-real"); if (!box) return;
   const fis = REAL.mpfn_fiscales;
   if (!fis) { box.innerHTML = ""; return; }
-  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Dotación de fiscales por año, cargo, condición, sexo y distrito fiscal.</div>`;
+  let html = `<div class="disclaimer" style="border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.07);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Dotación de fiscales por año, cargo, condición, sexo y distrito fiscal.</div>`;
   html += `<div class="kpi-grid">
     <div class="kpi"><div class="label">🟢 Fiscales (2026)</div><div class="value">${fmt(fis.total_fiscales)}</div><div class="hint">dotación MPFN</div></div>
     ${fis.por_condicion ? `<div class="kpi ${(fis.por_condicion.find((c) => /PROVISIONAL/i.test(c.condicion)) || {}).total > fis.total_fiscales * 0.4 ? "warn" : ""}"><div class="label">🟢 Provisionales</div><div class="value">${fmt((fis.por_condicion.find((c) => /PROVISIONAL/i.test(c.condicion)) || {}).total || 0)}</div><div class="hint">no titulares</div></div>` : ""}
   </div>`;
   const reg = [];
-  if (fis.por_anio) { html += rc("🟢 Evolución de la dotación de fiscales (2019–2026)", "mr-anio", fis._meta); reg.push(["mr-anio", () => lineSimple("mr-anio", fis.por_anio, "anio", "total", "#2ecc71")]); }
-  if (fis.por_cargo) { html += rc("🟢 Fiscales por cargo", "mr-cargo", fis._meta); reg.push(["mr-cargo", () => barSimple("mr-cargo", fis.por_cargo, "cargo", "total", "#4f8cff")]); }
-  if (fis.por_distrito_fiscal) { html += rc("🟢 Fiscales por distrito fiscal (top 15)", "mr-dist", fis._meta); reg.push(["mr-dist", () => barSimple("mr-dist", fis.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#9b59b6")]); }
+  if (fis.por_anio) { html += rc("🟢 Evolución de la dotación de fiscales (2019–2026)", "mr-anio", fis._meta); reg.push(["mr-anio", () => lineSimple("mr-anio", fis.por_anio, "anio", "total", "#34d399")]); }
+  if (fis.por_cargo) { html += rc("🟢 Fiscales por cargo", "mr-cargo", fis._meta); reg.push(["mr-cargo", () => barSimple("mr-cargo", fis.por_cargo, "cargo", "total", "#38bdf8")]); }
+  if (fis.por_distrito_fiscal) { html += rc("🟢 Fiscales por distrito fiscal (top 15)", "mr-dist", fis._meta); reg.push(["mr-dist", () => barSimple("mr-dist", fis.por_distrito_fiscal.slice(0, 15), "distrito_fiscal", "total", "#a78bfa")]); }
   if (fis.por_condicion && fis.por_sexo) {
     html += `<div class="grid-2"><div class="card"><h3>🟢 Por condición</h3><div class="chart" id="mr-cond"></div>${metaFoot(fis._meta)}</div><div class="card"><h3>🟢 Por sexo</h3><div class="chart" id="mr-sexo"></div>${metaFoot(fis._meta)}</div></div>`;
     reg.push(["mr-cond", () => donut("mr-cond", fis.por_condicion, "condicion", "total")]);
@@ -496,19 +497,19 @@ function renderSeguridadReal() {
   if (seg && seg.ciberdelitos) kpis.push(["Ciberdelitos", fmt(seg.ciberdelitos.total), "denunciados", "alert"]);
   if (seg && seg.flagrancia) kpis.push(["Flagrancia delictiva", fmt(seg.flagrancia.total), "casos 2025–26", "warn"]);
   if (seg && seg.trata) kpis.push(["Trata de personas", fmt(seg.trata.total), "casos intervenidos", "warn"]);
-  let html = `<div class="disclaimer" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.06);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Cada gráfico cita su fuente y fecha de corte.</div>`;
+  let html = `<div class="disclaimer" style="border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.07);color:var(--green)">🟢 <b>Datos reales (Ministerio Público).</b> Cada gráfico cita su fuente y fecha de corte.</div>`;
   html += `<div class="kpi-grid">${kpis.map(([l, v, h, c]) => `<div class="kpi ${c}"><div class="label">🟢 ${l}</div><div class="value">${v}</div><div class="hint">${h}</div></div>`).join("")}</div>`;
   const reg = [];
-  if (delitos && delitos.top_delitos) { html += rcard("🟢 Top delitos denunciados (MPFN)", "sr-topdel", delitos._meta); reg.push(["sr-topdel", () => barSimple("sr-topdel", delitos.top_delitos.slice(0, 12), "generico", "cantidad", "#e74c3c")]); }
-  if (delitos && delitos.por_departamento) { html += rcard("🟢 Delitos por departamento (MPFN)", "sr-deptodel", delitos._meta); reg.push(["sr-deptodel", () => barSimple("sr-deptodel", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#c0392b")]); }
+  if (delitos && delitos.top_delitos) { html += rcard("🟢 Top delitos denunciados (MPFN)", "sr-topdel", delitos._meta); reg.push(["sr-topdel", () => barSimple("sr-topdel", delitos.top_delitos.slice(0, 12), "generico", "cantidad", "#fb7185")]); }
+  if (delitos && delitos.por_departamento) { html += rcard("🟢 Delitos por departamento (MPFN)", "sr-deptodel", delitos._meta); reg.push(["sr-deptodel", () => barSimple("sr-deptodel", delitos.por_departamento.slice(0, 15), "departamento", "cantidad", "#f43f5e")]); }
   if (seg && seg.violencia_mujer && seg.violencia_mujer.por_anio) { html += rcard("🟢 Violencia contra la mujer por año (MPFN)", "sr-vcm", seg.violencia_mujer._meta); reg.push(["sr-vcm", () => lineIngAt("sr-vcm", seg.violencia_mujer.por_anio)]); }
-  if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += rcard("🟢 Top tipos de ciberdelito (MPFN)", "sr-ciber", seg.ciberdelitos._meta); reg.push(["sr-ciber", () => barSimple("sr-ciber", seg.ciberdelitos.top_tipos.slice(0, 10), "tipo", "cantidad", "#00cec9")]); }
+  if (seg && seg.ciberdelitos && seg.ciberdelitos.top_tipos) { html += rcard("🟢 Top tipos de ciberdelito (MPFN)", "sr-ciber", seg.ciberdelitos._meta); reg.push(["sr-ciber", () => barSimple("sr-ciber", seg.ciberdelitos.top_tipos.slice(0, 10), "tipo", "cantidad", "#22d3ee")]); }
   // MIMP / Programa AURORA (CEM) — feminicidios y violencia contra la mujer (serie larga 2012-2025)
   if (mimp) {
-    if (mimp.feminicidios && mimp.feminicidios.por_anio) { html += rcard("🟢 Feminicidios por año (MIMP/CEM, 2012–2025)", "sr-femi", mimp._meta); reg.push(["sr-femi", () => lineSimple("sr-femi", mimp.feminicidios.por_anio, "anio", "cantidad", "#c0392b")]); }
-    if (mimp.feminicidios && mimp.feminicidios.por_vinculo) { html += rcard("🟢 Feminicidios por vínculo con el agresor (MIMP)", "sr-vinc", mimp._meta); reg.push(["sr-vinc", () => barSimple("sr-vinc", mimp.feminicidios.por_vinculo, "vinculo", "cantidad", "#e74c3c")]); }
-    if (mimp.casos_violencia && mimp.casos_violencia.por_anio) { html += rcard("🟢 Violencia contra la mujer — casos atendidos por año (CEM)", "sr-vcmanio", mimp._meta); reg.push(["sr-vcmanio", () => lineSimple("sr-vcmanio", mimp.casos_violencia.por_anio, "anio", "cantidad", "#e84393")]); }
-    if (mimp.casos_violencia && mimp.casos_violencia.por_departamento) { html += rcard("🟢 Violencia contra la mujer por departamento (CEM)", "sr-vcmdep", mimp._meta); reg.push(["sr-vcmdep", () => barSimple("sr-vcmdep", mimp.casos_violencia.por_departamento.slice(0, 15), "departamento", "cantidad", "#9b59b6")]); }
+    if (mimp.feminicidios && mimp.feminicidios.por_anio) { html += rcard("🟢 Feminicidios por año (MIMP/CEM, 2012–2025)", "sr-femi", mimp._meta); reg.push(["sr-femi", () => lineSimple("sr-femi", mimp.feminicidios.por_anio, "anio", "cantidad", "#f43f5e")]); }
+    if (mimp.feminicidios && mimp.feminicidios.por_vinculo) { html += rcard("🟢 Feminicidios por vínculo con el agresor (MIMP)", "sr-vinc", mimp._meta); reg.push(["sr-vinc", () => barSimple("sr-vinc", mimp.feminicidios.por_vinculo, "vinculo", "cantidad", "#fb7185")]); }
+    if (mimp.casos_violencia && mimp.casos_violencia.por_anio) { html += rcard("🟢 Violencia contra la mujer — casos atendidos por año (CEM)", "sr-vcmanio", mimp._meta); reg.push(["sr-vcmanio", () => lineSimple("sr-vcmanio", mimp.casos_violencia.por_anio, "anio", "cantidad", "#f472b6")]); }
+    if (mimp.casos_violencia && mimp.casos_violencia.por_departamento) { html += rcard("🟢 Violencia contra la mujer por departamento (CEM)", "sr-vcmdep", mimp._meta); reg.push(["sr-vcmdep", () => barSimple("sr-vcmdep", mimp.casos_violencia.por_departamento.slice(0, 15), "departamento", "cantidad", "#a78bfa")]); }
   }
   // INEI / PNP — denuncias policiales (complemento a la mirada fiscal del MPFN)
   const inei = REAL.inei_denuncias;
@@ -516,7 +517,7 @@ function renderSeguridadReal() {
     html += `<div class="card"><h3>🟢 Denuncias policiales por tipo de delito (INEI / PNP, 2016–2017)</h3>
       <p class="card-sub">Mirada <b>policial</b> de la criminalidad (${fmt(inei.total_denuncias)} denuncias), complementa la mirada fiscal del MPFN.</p>
       <div class="chart" id="sr-inei"></div>${metaFoot(inei._meta)}</div>`;
-    reg.push(["sr-inei", () => barSimple("sr-inei", inei.top_delitos.slice(0, 12), "tipo", "cantidad", "#e67e22")]);
+    reg.push(["sr-inei", () => barSimple("sr-inei", inei.top_delitos.slice(0, 12), "tipo", "cantidad", "#fb923c")]);
   }
   box.innerHTML = html;
   reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
@@ -531,8 +532,8 @@ function renderSeries() {
   if (hasReal) {
     $("#series-sub").innerHTML = "🟢 <b>Series reales</b>. El Tribunal Constitucional ofrece la serie más larga (1992–2026); el MPFN, 2019–2026 (2026 parcial). Cada gráfico cita su fuente.";
     let html = "", reg = [];
-    if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Tribunal Constitucional — expedientes ingresados por año (1992–2026)</h3><div class="chart" id="s-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["s-tc", () => lineSimple("s-tc", tc.por_anio, "anio", "ingresados", "#9b59b6")]); }
-    if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN) — 2026 parcial</h3><div class="chart" id="s-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["s-del", () => lineSimple("s-del", delitos.por_anio, "anio", "cantidad", "#e74c3c")]); }
+    if (tc && tc.por_anio) { html += `<div class="card"><h3>🟢 Tribunal Constitucional — expedientes ingresados por año (1992–2026)</h3><div class="chart" id="s-tc"></div>${metaFoot(tc._meta)}</div>`; reg.push(["s-tc", () => lineSimple("s-tc", tc.por_anio, "anio", "ingresados", "#a78bfa")]); }
+    if (delitos && delitos.por_anio) { html += `<div class="card"><h3>🟢 Delitos denunciados por año (MPFN) — 2026 parcial</h3><div class="chart" id="s-del"></div>${metaFoot(delitos._meta)}</div>`; reg.push(["s-del", () => lineSimple("s-del", delitos.por_anio, "anio", "cantidad", "#fb7185")]); }
     if (casos && casos.por_anio) { html += `<div class="card"><h3>🟢 Casos fiscales por año — ingresado vs atendido (MPFN)</h3><div class="chart" id="s-cas"></div>${metaFoot(casos._meta)}</div>`; reg.push(["s-cas", () => lineIngAt("s-cas", casos.por_anio)]); }
     box.innerHTML = html;
     reg.forEach(([id, fn]) => { try { fn(); } catch (e) {} });
@@ -543,10 +544,10 @@ function renderSeries() {
   $("#series-sub").innerHTML = "🧪 Datos sintéticos. Evolución 2010–2026.";
   box.innerHTML = `<div class="card"><h3>Demora promedio nacional (días)</h3><div class="chart" id="chart-demora-serie"></div></div>
     <div class="card"><h3>Pendientes acumulados (backlog nacional)</h3><div class="chart" id="chart-pend-serie"></div></div>`;
-  mkChart("chart-demora-serie").setOption({ ...echartsTheme(), color: ["#d4a437"], tooltip: { trigger: "axis" }, grid: { left: 55, right: 20, top: 20, bottom: 30 },
+  mkChart("chart-demora-serie").setOption({ ...echartsTheme(), color: ["#14b8a6"], tooltip: { trigger: "axis" }, grid: { left: 55, right: 20, top: 20, bottom: 30 },
     xAxis: { type: "category", data: yrs }, yAxis: { type: "value", name: "días" },
-    series: [{ type: "line", smooth: true, data: s.map((x) => x.demora_dias), areaStyle: { color: "rgba(212,164,55,.12)" }, lineStyle: { width: 3 } }] });
-  mkChart("chart-pend-serie").setOption({ ...echartsTheme(), color: ["#e74c3c"], tooltip: { trigger: "axis" }, grid: { left: 60, right: 20, top: 20, bottom: 30 },
+    series: [{ type: "line", smooth: true, data: s.map((x) => x.demora_dias), areaStyle: { color: "rgba(20,184,166,.14)" }, lineStyle: { width: 3 } }] });
+  mkChart("chart-pend-serie").setOption({ ...echartsTheme(), color: ["#fb7185"], tooltip: { trigger: "axis" }, grid: { left: 60, right: 20, top: 20, bottom: 30 },
     xAxis: { type: "category", data: yrs }, yAxis: { type: "value", axisLabel: { formatter: (v) => (v / 1e6).toFixed(1) + "M" } },
     series: [{ type: "bar", data: s.map((x) => x.pendientes) }] });
 }
@@ -634,7 +635,7 @@ function barSimple(id, rows, kx, ky, color) {
 }
 function barIngRes(id, rows, kx) {
   rows = [...rows].sort((a, b) => (b.ingresos || 0) - (a.ingresos || 0));
-  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#2ecc71"], tooltip: { trigger: "axis" },
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#14b8a6", "#34d399"], tooltip: { trigger: "axis" },
     legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 140, right: 30, top: 36, bottom: 24 },
     xAxis: { type: "value" }, yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
     series: [{ name: "Ingresos", type: "bar", data: rows.map((r) => r.ingresos).reverse() },
@@ -642,7 +643,7 @@ function barIngRes(id, rows, kx) {
 }
 function barIngRes2(id, rows, kx, k1, k2) {
   rows = [...rows].sort((a, b) => (b[k1] || 0) - (a[k1] || 0));
-  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#4f8cff"], tooltip: { trigger: "axis" },
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#14b8a6", "#38bdf8"], tooltip: { trigger: "axis" },
     legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 140, right: 30, top: 36, bottom: 24 },
     xAxis: { type: "value" }, yAxis: { type: "category", data: rows.map((r) => r[kx]).reverse(), axisLabel: { fontSize: 10 } },
     series: [{ name: k1, type: "bar", data: rows.map((r) => r[k1]).reverse() },
@@ -650,7 +651,7 @@ function barIngRes2(id, rows, kx, k1, k2) {
 }
 function demoraChart(id, rows) {
   rows = [...rows].sort((a, b) => b.p90_dias - a.p90_dias);
-  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#e74c3c"], tooltip: { trigger: "axis" },
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#14b8a6", "#fb7185"], tooltip: { trigger: "axis" },
     legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 210, right: 30, top: 36, bottom: 30 },
     xAxis: { type: "value", name: "días" },
     yAxis: { type: "category", data: rows.map((r) => r.proceso), axisLabel: { fontSize: 11, width: 195, overflow: "truncate" } },
@@ -666,7 +667,7 @@ function lineSimple(id, rows, kx, ky, color) {
 }
 function lineIngAt(id, rows) {
   rows = [...rows].sort((a, b) => a.anio - b.anio);
-  mkChart(id).setOption({ ...echartsTheme(), color: ["#d4a437", "#4f8cff"], tooltip: { trigger: "axis" },
+  mkChart(id).setOption({ ...echartsTheme(), color: ["#14b8a6", "#38bdf8"], tooltip: { trigger: "axis" },
     legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 60, right: 24, top: 36, bottom: 30 },
     xAxis: { type: "category", data: rows.map((r) => r.anio) },
     yAxis: { type: "value", axisLabel: { formatter: (v) => v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : (v / 1e3).toFixed(0) + "k" } },
@@ -707,7 +708,7 @@ function renderPrediccion() {
   }
   const m = ml.metricas;
   const mejora = Math.round((1 - m.mae_dias / m.baseline_mae_dias) * 100);
-  let html = `<div class="disclaimer" style="border-color:rgba(155,89,182,.35);background:rgba(155,89,182,.08);color:#c39bd3">🔮 <b>Modelo:</b> ${ml._meta.modelo} · entrenado con microdata real por expediente (${ml._meta.cobertura}). Predice <b>días hasta sentencia</b>. ${ml.nota}</div>`;
+  let html = `<div class="disclaimer" style="border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08);color:#a78bfa">🔮 <b>Modelo:</b> ${ml._meta.modelo} · entrenado con microdata real por expediente (${ml._meta.cobertura}). Predice <b>días hasta sentencia</b>. ${ml.nota}</div>`;
   html += `<div class="kpi-grid">
     <div class="kpi ok"><div class="label">Error medio (MAE)</div><div class="value">${m.mae_dias} d</div><div class="hint">en ${fmt(m.n_test)} casos de prueba</div></div>
     <div class="kpi ok"><div class="label">Error mediano</div><div class="value">${m.error_mediano_dias} d</div><div class="hint">la mitad de los casos, menos de esto</div></div>
@@ -740,7 +741,7 @@ function renderPrediccion() {
   attachPredictForm(ml);
   try {
     const rows = ml.por_proceso;
-    mkChart("ml-chart").setOption({ ...echartsTheme(), color: ["#4f8cff", "#9b59b6"], tooltip: { trigger: "axis" },
+    mkChart("ml-chart").setOption({ ...echartsTheme(), color: ["#38bdf8", "#a78bfa"], tooltip: { trigger: "axis" },
       legend: { top: 0, textStyle: echartsTheme().textStyle }, grid: { left: 150, right: 30, top: 36, bottom: 24 },
       xAxis: { type: "value", name: "días" }, yAxis: { type: "category", data: rows.map((r) => r.proceso) },
       series: [{ name: "Demora real (mediana)", type: "bar", data: rows.map((r) => r.demora_real_mediana) },
@@ -793,6 +794,7 @@ const SUPPORT = {
   coffee: "https://buymeacoffee.com/unimauro",
   paypal: "https://paypal.me/unimauro",
   yape: "940584307",
+  plin: "940584307",
   yapeNombre: "Carlos Mauro Cárdenas",
 };
 const FAQ = [
@@ -833,6 +835,27 @@ const FAQ = [
   ["¿Puedo usar, auditar o reproducir esto?",
    "Sí. Es <b>código abierto</b> (licencia MIT). Todo el código (ETL, indicadores, tablero, modelo) y los datos procesados están en el <a href='" + REPO + "' target='_blank' rel='noopener'>repositorio de GitHub</a>. Puedes verificar cada cifra contra su fuente, correr los scripts o construir sobre el proyecto."],
 ];
+/* ---------- Apoyo (cabecera + footer) ---------- */
+function toast(msg) {
+  const t = $("#toast"); if (!t) return;
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200);
+}
+function copyNum(label, num) {
+  const done = () => toast(`📋 ${label} ${num} copiado`);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(num).then(done, () => toast(`${label}: ${num}`));
+  else toast(`${label}: ${num}`);
+}
+window.__copyNum = copyNum;
+function renderHeaderSupport() {
+  const box = $("#head-support"); if (!box) return;
+  let h = "";
+  if (SUPPORT.coffee) h += `<a class="sup-btn sup-coffee" href="${SUPPORT.coffee}" target="_blank" rel="noopener" title="Cómprame un café"><span>☕</span><span class="lbl">Apóyanos</span></a>`;
+  if (SUPPORT.paypal) h += `<a class="sup-ico" href="${SUPPORT.paypal}" target="_blank" rel="noopener" title="Donar por PayPal">💳</a>`;
+  if (SUPPORT.yape) h += `<button class="sup-ico" title="Yape ${SUPPORT.yape} — clic para copiar" onclick="__copyNum('Yape','${SUPPORT.yape}')">📱</button>`;
+  if (SUPPORT.plin) h += `<button class="sup-ico" title="Plin ${SUPPORT.plin} — clic para copiar" onclick="__copyNum('Plin','${SUPPORT.plin}')" style="font-size:12px;font-weight:800">Plin</button>`;
+  box.innerHTML = h;
+}
 // Banner "Cómo leer": se auto-colapsa a los 10s (no se elimina). Clic para expandir, × para colapsar.
 function setupDisclaimer() {
   const d = $("#main-disclaimer"); if (!d) return;
@@ -845,14 +868,22 @@ function setupDisclaimer() {
 }
 function renderFooterSupport() {
   const box = $("#footer-support"); if (!box) return;
-  const chip = (href, label) => `<a href="${href}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:9px;font-size:12.5px;font-weight:700;text-decoration:none;margin:3px 4px 3px 0">${label}</a>`;
-  const items = [chip(REPO, "⭐ GitHub")];
-  if (SUPPORT.coffee) items.push(chip(SUPPORT.coffee, "☕ Café"));
-  if (SUPPORT.paypal) items.push(chip(SUPPORT.paypal, "💳 PayPal"));
-  box.innerHTML = `<h4>💚 Apoya el proyecto</h4>
-    <div style="margin-bottom:6px">${items.join("")}</div>
-    ${SUPPORT.yape ? `<p style="margin:4px 0">📱 <b>Yape:</b> ${SUPPORT.yape}${SUPPORT.yapeNombre ? " · " + SUPPORT.yapeNombre : ""}</p>` : ""}
-    <p style="margin:4px 0">✉️ <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a></p>`;
+  const big = (href, bg, fg, label) => `<a href="${href}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;background:${bg};color:${fg};padding:9px 15px;border-radius:11px;font-size:13px;font-weight:800;text-decoration:none;margin:4px 6px 4px 0;box-shadow:var(--shadow)">${label}</a>`;
+  const numBtn = (label, num) => `<button onclick="__copyNum('${label}','${num}')" style="display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);color:var(--text);border:1px solid var(--border);padding:9px 15px;border-radius:11px;font-size:13px;font-weight:800;cursor:pointer;margin:4px 6px 4px 0">📱 ${label} ${num}</button>`;
+  let btns = "";
+  if (SUPPORT.coffee) btns += big(SUPPORT.coffee, "linear-gradient(135deg,var(--gold),var(--gold-2))", "#06201d", "☕ Cómprame un café");
+  if (SUPPORT.paypal) btns += big(SUPPORT.paypal, "#0070ba", "#fff", "💳 PayPal");
+  btns += big(REPO, "var(--surface-2)", "var(--text)", "⭐ Estrella en GitHub");
+  let nums = "";
+  if (SUPPORT.yape) nums += numBtn("Yape", SUPPORT.yape);
+  if (SUPPORT.plin) nums += numBtn("Plin", SUPPORT.plin);
+  box.innerHTML = `<div class="footer-support-card">
+    <h4 style="font-size:15px;margin:0 0 4px">💚 Apoya el proyecto</h4>
+    <p style="margin:0 0 10px;color:var(--muted);font-size:12.5px">Proyecto abierto y sin fines de lucro. Tu aporte mantiene el servidor de IA y suma más fuentes de datos. ¡Gracias! 🙏</p>
+    <div>${btns}</div>
+    <div style="margin-top:4px">${nums}</div>
+    <p style="margin:10px 0 0;color:var(--muted);font-size:12.5px">${SUPPORT.yapeNombre ? "Titular: <b>" + SUPPORT.yapeNombre + "</b> · " : ""}✉️ <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a></p>
+  </div>`;
 }
 function renderFaq() {
   $("#faq-content").innerHTML = FAQ.map(([q, a], i) => `
@@ -873,7 +904,7 @@ function renderFaq() {
   let yapeHtml = "";
   if (SUPPORT.yape) yapeHtml = `<div style="margin-top:10px;color:var(--muted);font-size:13px">📱 <b>Yape:</b> ${SUPPORT.yape}${SUPPORT.yapeNombre ? " · " + SUPPORT.yapeNombre : ""}</div>`;
   $("#faq-content").insertAdjacentHTML("beforeend", `
-    <div class="card" style="border-color:rgba(46,204,113,.3);background:rgba(46,204,113,.05)">
+    <div class="card" style="border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.06)">
       <h3>💚 Apoya el proyecto</h3>
       <p class="card-sub" style="font-size:13.5px">Hecho por <b>${SUPPORT.autor}</b> (<a href="${SUPPORT.github}" target="_blank" rel="noopener">@unimauro</a>) · <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a><br/>
       Proyecto abierto y sin fines de lucro. Tu apoyo ayuda a mantener el servidor de IA y a integrar más fuentes de datos.</p>
