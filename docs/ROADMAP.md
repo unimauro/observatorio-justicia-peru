@@ -11,13 +11,17 @@ inteligencia con datos reales, indicadores estándar, ML y asistente IA. Cada fa
 
 | Fase | Nombre | Estado |
 |------|--------|--------|
-| 0 | Inventario de datos reales (datosabiertos API + manuales) | ✅ **Hecho** — pendiente revisión |
+| 0 | Inventario de datos reales (datosabiertos API + manuales) | ✅ **Hecho** |
 | 1 (proto) | Dashboard nacional + datos **sintéticos** (prototipo UI) | ✅ **Hecho** (live GH Pages) |
-| 1 (real) | ETL de fuentes oficiales → esquema tidy en `data/processed/` | 🔜 Siguiente |
-| 2 | Indicadores estándar (clearance, congestión, demora real microdata) | 🔜 Planificado |
-| 3 | Dashboard de producción (Streamlit / FastAPI) + vista calidad del dato | 🔜 Planificado |
-| 4 | Machine Learning predictivo | 🔮 Futuro |
-| 5 | Asistente IA (LLM) + capa socioeconómica | 🔮 Futuro |
+| 1 (real) | ETL de fuentes oficiales → JSON reales en `site/data/real/` | ✅ **Hecho** (MPFN, PJ, TC, MIMP, microdata Piura) |
+| 2 | Indicadores estándar (clearance ⚠️ provisional, congestión, demora real) | 🟡 **Mayormente hecho** — falta fijar clearance con diccionario oficial PJ |
+| 3 | Dashboard de producción + chatbot LLM + API | ✅ **Hecho y LIVE** (gateway OpenRouter, rate-limit, red-team) |
+| 4 | Machine Learning predictivo | 🟡 **Iniciado** — modelo de demora entrenado (Piura, MAE ~76d); falta riesgo + forecast |
+| 5 | Asistente IA (LLM) + capa socioeconómica | 🟡 **Parcial** — LLM en vivo; falta capa socioeconómica + recomendador de juzgados |
+
+> 📋 El detalle operativo y priorizado de lo pendiente vive en [`BACKLOG.md`](BACKLOG.md).
+> Estado real a **2026-08-05**: el observatorio ya está **LIVE con datos reales, ML y chatbot**;
+> lo que resta es cobertura de datos (huecos PJ), modelos adicionales y la capa de política pública.
 
 ### 🔌 Infraestructura
 Datos livianos (agregados, JSON de presentación) → **repo + GitHub Pages**. Datos pesados
